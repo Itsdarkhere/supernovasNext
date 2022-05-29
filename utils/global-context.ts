@@ -21,6 +21,7 @@ import { Link, ImmutableXClient } from "@imtbl/imx-sdk";
 import { useNavigate } from "react-router-dom";
 import { SwalHelper } from "./helpers/swal-helper";
 import { IdentityService } from "./identity-context";
+import React from "react";
 
 export enum ConfettiSvg {
   DIAMOND = "diamond",

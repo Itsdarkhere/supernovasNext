@@ -1,5 +1,5 @@
-import Head from '../node_modules/next/head'
-import styles from '../styles/Home.module.css'
+import Head from "../node_modules/next/head";
+import styles from "../styles/Home.module.css";
 
 export default function Home() {
   return (
@@ -14,12 +14,9 @@ export default function Home() {
         <h1 className={styles.title}>
           Welcome to <a href="https://nextjs.org">Next.js!</a>
         </h1>
-
       </main>
 
-      <footer className={styles.footer}>
-        
-      </footer>
+      <footer className={styles.footer}></footer>
     </div>
-  )
+  );
 }
