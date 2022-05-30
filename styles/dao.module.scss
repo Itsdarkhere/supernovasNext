@@ -1,0 +1,478 @@
+.dao_banner_container {
+    width: 100%;
+    height: 420px;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+    padding: 5%;
+    background-image: url("/public/img/dao_banner.png");
+    background-position: center;
+    background-size: cover;
+    @media  screen and (max-width: 1000px) {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+    h4 {
+        font-size: 24px;
+        color: #A3A3A3;
+        font-weight: 500;
+
+    }
+    h2 {
+        color: #ffffff;
+        font-size: 61px;
+        font-weight: 500;
+        text-align: start;
+        margin-bottom: 20px;
+        @media screen and (max-width: 767px) {
+            font-size: 50px;
+        }
+    }
+}
+.referrals_faq {
+    width: 100%;
+    margin-top: 50px;
+    display: grid;
+    grid-template-columns: repeat(1fr);
+    grid-row: 1fr;
+    gap: 40px;
+    padding: 0 5%;
+    padding-bottom: 75px;
+    h2 {
+        color: #171717;
+        font-weight: 500;
+        font-size: 48px;
+        line-height: 105px;
+        @media screen and (max-width: 767px) {
+            font-size: 35px;
+        }
+    }
+    h4 {
+        color: #171717;
+        font-size: 24px;
+        font-weight: 500;
+    }
+    p {
+        color: #6f6f6f;
+        font-size: 18px;
+        font-weight: medium;
+        margin-top: 10px;
+    }
+}
+.dao_explanation {
+    width: 95%;
+    padding-left: 2%;
+    padding-right: 5%;
+    border-bottom: 1px solid #E7E7E7;
+    padding-bottom: 50px;
+    h3 {
+        color: #282828;
+        font-size: 48px;
+        font-weight: 500;
+        text-align: start;
+        margin-top: 50px;
+        margin-bottom: 25px;
+    }
+    h4 {
+        color: #5f5f5f;
+        font-size: 18px;
+        font-weight: medium;
+        line-height: 30px;
+        word-break: keep-all;
+        word-wrap: break-word;
+    }
+    @media screen and (max-width: 767px) {
+        h3 {
+            font-size: 35px;
+        }
+        h4 {
+            font-size: 18px;
+        }
+    }
+}
+.dao_what_you_get {
+    padding: 0 5%;
+    margin-top: 50px;
+    h3 {
+        color: #282828;
+        font-size: 48px;
+        font-weight: 500;
+        text-align: start;
+        line-height: 105px;
+    }
+    @media screen and (max-width: 767px) {
+            h3 {
+                font-size: 35px;
+            }
+    }
+    .dao_wyg_wrap {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-row: 1fr;
+        gap: 40px;
+        section {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
+            flex: 2 1 auto;
+            label {
+                color: #171717;
+                font-size: 24px;
+                font-weight: 500;
+                margin-top: 20px;
+                @media screen and (min-width: 900px) {
+                    min-height: 50px;
+                }
+            }
+            p {
+                padding-top: 20px;
+                color: #5f5f5f;
+                font-size: 18px;
+                font-weight: medium;
+            }
+        }
+        @media screen and (max-width: 900px) {
+            grid-template-columns: 1fr;
+            grid-template-rows: 1fr 1fr 1fr;
+
+        }
+    }
+}
+.dao_nft_info_sec {
+    background: #ffffff;
+    width: 100%;
+    border-radius: 25px;
+    box-shadow: 4px 4px 60px rgba(0, 0, 0, 0.05);
+    margin-top: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.dao_total_cap_invested {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 0 5%;
+    margin-bottom: 50px;
+    section {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        margin-top: 30px;
+        h4 {
+            color: #6a6a6a;
+            font-size: 28px;
+            font-weight: 500;
+            text-align: start;
+        }
+        h3 {
+            color: #282828;
+            font-size: 78px;
+            font-weight: normal;
+            text-align: start;
+        }
+        @media screen and (max-width: 767px) {
+            h4 {
+                font-size: 22px;
+            }
+            h3 {
+                font-size: 50px;
+            }
+        }
+    }
+}
+.dao_card {
+    margin: 25px 0;
+    width: 95%;
+    height: 492px;
+    background: #ffffff;
+    border: 7px solid #ebebeb;
+    border-radius: 50px;
+    box-shadow: 4px 4px 40px rgba(0, 0, 0, 0.1);
+    display: flex;
+    // padding: 3% 5%;
+    position: relative;
+    overflow: hidden;
+    @media screen and (max-width: 1100px) {
+        display: block;
+        height: auto;
+        min-height: 492px;
+    }
+    img {
+        height: 100%;
+        min-height: 300px;
+        aspect-ratio: 1/1;
+        @media screen and (max-width: 1100px) {
+          width: 100%;
+        }
+    }
+    .card_info_section {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: flex-start;
+        padding-top: 2.5%;
+        padding-bottom: 2.5%;
+        padding-right: 5%;
+        padding-left: 2.5%;
+        @media screen and (max-width: 576px) {
+          padding: 5% 5%;
+        }
+        .card_info_top {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #E7E7E7;
+            @media screen and (max-width: 576px) {
+              margin-bottom: 20px;
+              padding-bottom: 20px;
+            }
+            h3 {
+                color: #282828;
+                font-family: Poppins;
+                font-size: 59.5px;
+                font-weight: 500;
+                text-align: start;
+                @media screen and (max-width: 576px) {
+                  font-size: 28px;
+                }
+            }
+            label {
+                background: #eaeaea;
+                border-radius: 23.6px;
+                color: #5f5f5f;
+                font-size: 18px;
+                font-weight: 500;
+                text-align: center;
+                margin-bottom: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 6px 16px;
+                @media screen and (max-width: 576px) {
+                  font-size: 12px;
+                  padding: 4px 12px;
+                }
+            }
+        }
+        .dao_card_price_info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr;
+            gap: 20px;
+            width: 100%;
+            padding-bottom: 20px;
+            label {
+                color: #6a6a6a;
+                font-family: Poppins;
+                font-size: 20.5px;
+                font-weight: 500;
+                text-align: start;
+                margin-bottom: 15px;
+                @media screen and (max-width: 576px) {
+                  font-size: 17px;
+                }
+            }
+            section {
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: flex-start;
+                width: 100%;
+                height: 100%;
+                margin-top: 10px;
+            }
+            @media screen and (max-width: 750px) {
+                grid-template-columns: 1fr;
+                grid-template-rows: 1fr 1fr;
+            }
+            .price_info_one {
+                color: #282828;
+                font-size: 44px;
+                font-weight: 500;
+                text-align: start;
+                @media screen and (max-width: 576px) {
+                  font-size: 36px;
+                }
+            }
+            .price_info_two {
+                color: #7b7b7b;
+                font-size: 34.5px;
+                font-weight: normal;
+                text-align: start;
+                margin-top: 10px;
+                @media screen and (max-width: 576px) {
+                  font-size: 28px;
+                }
+            }
+            .price_info_three {
+                color: #282828;
+                font-size: 45px;
+                font-weight: 500;
+                text-align: start;
+                @media screen and (max-width: 576px) {
+                  font-size: 36px;
+                }
+            }
+            .price_info_four {
+                color: #7b7b7b;
+                font-size: 30px;
+                font-weight: normal;
+                text-align: start;
+                margin-top: 10px;
+                @media screen and (max-width: 576px) {
+                  font-size: 28px;
+                }
+            }
+        }
+        .dao_card_actions {
+          display: flex;
+          width: 100%;
+          justify-content: space-between;
+          @media screen and (max-width: 576px) {
+            flex-direction: column;
+            button {
+              width: 100%;
+              margin: 8px 0;
+            }
+          }
+        }
+        button {
+            width: 48%;
+            height: 62px;
+            font-family: 15.5px;
+            font-weight: bold;
+            transition-duration: 0.2s;
+                &:hover {
+                    transition-duration: all 0.2s;
+                    transform: scale(1.05) !important;
+                }
+                &:active {
+                    transition-duration: all 0.2s;
+                    transform: scale(0.9) !important;
+                }
+        }
+        .white_rounded_button {
+            color: #282828;
+        }
+    }
+}
+.dao_subscribe {
+    width: 90%;
+    min-height: 388px;
+    background: #151515;
+    border-radius: 50px;
+    padding: 50px 7.5%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-top: 100px;
+    h3 {
+        color: #ffffff;
+        font-size: 48px;
+        font-weight: 500;
+    }
+    p {
+        color: #828282;
+        font-size: 24px;
+        font-weight: normal;
+        padding-bottom: 5%;
+    }
+    @media screen and (max-width: 767px) {
+        width: 100%;
+        border-radius: 0;
+            h3 {
+                font-size: 35px;
+            }
+            p {
+                font-size: 18px;
+            }
+    }
+    .dao_input {
+        width: 659px;
+        max-width: 80%;
+        height: 74px;
+        background: #010101;
+        border: 3px solid #ffffff;
+        border-radius: 18px;
+        box-shadow: 0px 8px 60px rgba(58, 58, 58, 1);
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding-left: 0.75%;
+        padding-right: 2%;
+        @media screen and (max-width: 767px) {
+            max-width: 100%;
+        }
+        input {
+            height: 80%;
+            width: 75%;
+            background-color: #FFFFFF;
+            border-radius: 14px;
+            padding-left: 2.5%;
+        }
+        button {
+            width: 22.5%;
+            min-width: 110px;
+            margin-left: 1%;
+            height: 75%;
+            background-image: url("/public/img/create_button.png");
+            background-position: center;
+            background-size: cover;
+            padding: 0;
+            border: none;
+            outline: none;
+            border-radius: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            label {
+                cursor: pointer;
+                color: #282828;
+                background-color: #FFFFFF;
+                border-radius: 16px;
+                width: calc(100% - 5px);
+                height: calc(100% - 5px);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-weight: bold;
+                font-size: 12px;
+            }
+            &:active {
+                transform: scale(0.95);
+                transition-duration: 0.2s;
+            }
+        }
+    }
+}
+.dao_after_sub {
+    position: absolute;
+    bottom: 15px;
+    color: #f9f9f9;
+    font-size: 18px;
+    font-weight: medium;
+    text-align: center;
+    margin-top: 10px;
+    margin-left: 10px;
+    &.color_red {
+        color: red !important;
+    }
+}
+.space {
+    height: 100px;
+}

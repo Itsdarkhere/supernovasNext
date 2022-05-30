@@ -1,294 +1,312 @@
 import { Observable, Subject } from "rxjs";
 import { v4 as uuid } from "uuid";
-import { URLSearchParams } from "url";
 
-export class IdentityService {
-  // Requests that were sent before the iframe initialized
-  private pendingRequests = [];
+// Requests that were sent before the iframe initialized
+let pendingRequests = [];
 
-  // All outbound request promises we still need to resolve
-  private outboundRequests = {};
+// All outbound request promises we still need to resolve
+let outboundRequests = {};
 
-  // The currently active identity window
-  private identityWindow;
-  private identityWindowSubject;
+// The currently active identity window
+let identityWindow;
+let identityWindowSubject;
 
-  // The URL of the identity service
-  identityServiceURL: string;
-  sanitizedIdentityServiceURL;
+// The URL of the identity service
+let identityServiceURL: string;
+let sanitizedIdentityServiceURL;
 
-  // User data
-  identityServiceUsers;
-  identityServicePublicKeyAdded: string;
+// User data
+export let identityServiceUsers;
+export let identityServicePublicKeyAdded: string;
 
-  private initialized = false;
-  private iframe = null;
+let initialized = false;
+let iframe = null;
 
-  // Wait for storageGranted broadcast
-  storageGranted = new Subject();
+// Wait for storageGranted broadcast
+export let storageGranted = new Subject();
 
-  // Using testnet or mainnet
-  isTestnet = false;
+// Using testnet or mainnet
+let isTestnet = false;
 
-  constructor() {
-    window.addEventListener("message", (event) => this.handleMessage(event));
+// figure out in react
+// this used to be the constructor...
+// also all functions were private so idk check it out
+// useEffect(() => {
+// window.addEventListener("message", (event) => handleMessage(event));
+// }, []);
+
+export function setIsTestNet(testNet: boolean) {
+  isTestnet = testNet;
+}
+
+export function setIdentityServiceURL(url: string) {
+  identityServiceURL = url;
+}
+export function setSanitizedIdentityServiceURL(sanitizedURL: string) {
+  sanitizedIdentityServiceURL = sanitizedURL;
+}
+
+export function setIdentityServiceUsersVariable(users: any) {
+  identityServiceUsers = users;
+}
+export function setIdentityServicePKAddedVariable(publicKeyAdded?: string) {
+  identityServicePublicKeyAdded = publicKeyAdded;
+}
+
+// Launch a new identity window
+
+export function launch(
+  path?: string,
+  params?: {
+    publicKey?: string;
+    tx?: string;
+    referralCode?: string;
+    public_key?: string;
+    hideJumio?: boolean;
+    accessLevelRequest?: number;
+  }
+): Observable<any> {
+  let url = identityServiceURL as string;
+  if (path) {
+    url += path;
+  }
+  // CHECK WORKS
+  let httpParams = new URLSearchParams();
+  if (isTestnet) {
+    httpParams.append("testnet", "true");
   }
 
-  // Launch a new identity window
+  if (params?.publicKey) {
+    httpParams.append("publicKey", params.publicKey);
+  }
 
-  launch(
-    path?: string,
-    params?: {
-      publicKey?: string;
-      tx?: string;
-      referralCode?: string;
-      public_key?: string;
-      hideJumio?: boolean;
-      accessLevelRequest?: number;
-    }
-  ): Observable<any> {
-    let url = this.identityServiceURL as string;
-    if (path) {
-      url += path;
-    }
-    // CHECK WORKS
-    let httpParams = new URLSearchParams();
-    if (this.isTestnet) {
-      httpParams.append("testnet", "true");
-    }
+  if (params?.tx) {
+    httpParams.append("tx", params.tx);
+  }
 
-    if (params?.publicKey) {
-      httpParams.append("publicKey", params.publicKey);
-    }
+  if (params?.referralCode) {
+    httpParams.append("referralCode", params.referralCode);
+  }
 
-    if (params?.tx) {
-      httpParams.append("tx", params.tx);
-    }
+  if (params?.public_key) {
+    httpParams.append("public_key", params.public_key);
+  }
 
-    if (params?.referralCode) {
-      httpParams.append("referralCode", params.referralCode);
-    }
+  if (params?.hideJumio) {
+    httpParams.append("hideJumio", params.hideJumio.toString());
+  }
 
-    if (params?.public_key) {
-      httpParams.append("public_key", params.public_key);
-    }
-
-    if (params?.hideJumio) {
-      httpParams.append("hideJumio", params.hideJumio.toString());
-    }
-
-    if (params?.accessLevelRequest) {
-      httpParams.append(
-        "accessLevelRequest",
-        params.accessLevelRequest.toString()
-      );
-    }
-
-    const paramsStr = httpParams.toString();
-    if (paramsStr) {
-      url += `?${paramsStr}`;
-    }
-
-    // center the window
-    const h = 1000;
-    const w = 800;
-    const y = window.outerHeight / 2 + window.screenY - h / 2;
-    const x = window.outerWidth / 2 + window.screenX - w / 2;
-
-    this.identityWindow = window.open(
-      url,
-      null,
-      `toolbar=no, width=${w}, height=${h}, top=${y}, left=${x}`
+  if (params?.accessLevelRequest) {
+    httpParams.append(
+      "accessLevelRequest",
+      params.accessLevelRequest.toString()
     );
-    this.identityWindowSubject = new Subject();
-
-    return this.identityWindowSubject;
   }
 
-  // Outgoing messages
-
-  burn(payload: {
-    accessLevel: number;
-    accessLevelHmac: string;
-    encryptedSeedHex: string;
-    unsignedHashes: string[];
-  }): Observable<any> {
-    return this.send("burn", payload);
+  const paramsStr = httpParams.toString();
+  if (paramsStr) {
+    url += `?${paramsStr}`;
   }
 
-  signETH(payload: {
-    accessLevel: number;
-    accessLevelHmac: string;
-    encryptedSeedHex: string;
-    unsignedHashes: string[];
-  }): Observable<any> {
-    return this.send("signETH", payload);
-  }
+  // center the window
+  const h = 1000;
+  const w = 800;
+  const y = window.outerHeight / 2 + window.screenY - h / 2;
+  const x = window.outerWidth / 2 + window.screenX - w / 2;
 
-  sign(payload: {
-    accessLevel: number;
-    accessLevelHmac: string;
-    encryptedSeedHex: string;
-    transactionHex: string;
-  }): Observable<any> {
-    return this.send("sign", payload);
-  }
+  identityWindow = window.open(
+    url,
+    null,
+    `toolbar=no, width=${w}, height=${h}, top=${y}, left=${x}`
+  );
+  identityWindowSubject = new Subject();
 
-  encrypt(payload: {
-    accessLevel: number;
-    accessLevelHmac: string;
-    encryptedSeedHex: string;
-    recipientPublicKey: string;
-    message: string;
-  }): Observable<any> {
-    return this.send("encrypt", payload);
-  }
+  return identityWindowSubject;
+}
 
-  decrypt(payload: {
-    accessLevel: number;
-    accessLevelHmac: string;
-    encryptedSeedHex: string;
-    encryptedMessages: any;
-  }): Observable<any> {
-    return this.send("decrypt", payload);
-  }
+// Outgoing messages
 
-  jwt(payload: {
-    accessLevel: number;
-    accessLevelHmac: string;
-    encryptedSeedHex: string;
-  }): Observable<any> {
-    return this.send("jwt", payload);
-  }
+export function burn(payload: {
+  accessLevel: number;
+  accessLevelHmac: string;
+  encryptedSeedHex: string;
+  unsignedHashes: string[];
+}): Observable<any> {
+  return send("burn", payload);
+}
 
-  info(): Observable<any> {
-    return this.send("info", {});
-  }
+export function signETH(payload: {
+  accessLevel: number;
+  accessLevelHmac: string;
+  encryptedSeedHex: string;
+  unsignedHashes: string[];
+}): Observable<any> {
+  return send("signETH", payload);
+}
 
-  launchPhoneNumberVerification(
-    public_key: string
-  ): Observable<{ phoneNumberSuccess: boolean }> {
-    return this.launch("/verify-phone-number", {
-      public_key,
-    });
-  }
+export function sign(payload: {
+  accessLevel: number;
+  accessLevelHmac: string;
+  encryptedSeedHex: string;
+  transactionHex: string;
+}): Observable<any> {
+  return send("sign", payload);
+}
 
-  // Helpers
+export function encrypt(payload: {
+  accessLevel: number;
+  accessLevelHmac: string;
+  encryptedSeedHex: string;
+  recipientPublicKey: string;
+  message: string;
+}): Observable<any> {
+  return send("encrypt", payload);
+}
 
-  identityServiceParamsForKey(publicKey: string) {
-    const { encryptedSeedHex, accessLevel, accessLevelHmac } =
-      this.identityServiceUsers[publicKey];
-    return { encryptedSeedHex, accessLevel, accessLevelHmac };
-  }
+export function decrypt(payload: {
+  accessLevel: number;
+  accessLevelHmac: string;
+  encryptedSeedHex: string;
+  encryptedMessages: any;
+}): Observable<any> {
+  return send("decrypt", payload);
+}
 
-  // Incoming messages
+export function jwt(payload: {
+  accessLevel: number;
+  accessLevelHmac: string;
+  encryptedSeedHex: string;
+}): Observable<any> {
+  return send("jwt", payload);
+}
 
-  private handleInitialize(event: MessageEvent) {
-    if (!this.initialized) {
-      this.initialized = true;
-      this.iframe = document.getElementById("identity");
-      for (const request of this.pendingRequests) {
-        this.postMessage(request);
-      }
-      this.pendingRequests = [];
+export function info(): Observable<any> {
+  return send("info", {});
+}
+
+export function launchPhoneNumberVerification(
+  public_key: string
+): Observable<{ phoneNumberSuccess: boolean }> {
+  return launch("/verify-phone-number", {
+    public_key,
+  });
+}
+
+// Helpers
+
+export function identityServiceParamsForKey(publicKey: string) {
+  const { encryptedSeedHex, accessLevel, accessLevelHmac } =
+    identityServiceUsers[publicKey];
+  return { encryptedSeedHex, accessLevel, accessLevelHmac };
+}
+
+// Incoming messages
+
+export function handleInitialize(event: MessageEvent) {
+  if (!initialized) {
+    initialized = true;
+    iframe = document.getElementById("identity");
+    for (const request of pendingRequests) {
+      postMessage(request);
     }
-
-    // acknowledge, provides hostname data
-    this.respond(event.source as Window, event.data.id, {});
+    pendingRequests = [];
   }
 
-  private handleStorageGranted() {
-    this.storageGranted.next(true);
-    this.storageGranted.complete();
+  // acknowledge, provides hostname data
+  respond(event.source as Window, event.data.id, {});
+}
+
+export function handleStorageGranted() {
+  storageGranted.next(true);
+  storageGranted.complete();
+}
+
+export function handleLogin(payload: any) {
+  identityWindow.close();
+  identityWindow = null;
+
+  identityWindowSubject.next(payload);
+  identityWindowSubject.complete();
+  identityWindowSubject = null;
+}
+
+export function handleInfo(id: string) {
+  respond(identityWindow, id, {});
+}
+
+// Message handling
+
+export function handleMessage(event: MessageEvent) {
+  const { data } = event;
+  const { service, method } = data;
+
+  if (service !== "identity") {
+    return;
   }
 
-  private handleLogin(payload: any) {
-    this.identityWindow.close();
-    this.identityWindow = null;
-
-    this.identityWindowSubject.next(payload);
-    this.identityWindowSubject.complete();
-    this.identityWindowSubject = null;
+  // Methods are present on incoming requests but not responses
+  if (method) {
+    handleRequest(event);
+  } else {
+    handleResponse(event);
   }
+}
 
-  private handleInfo(id: string) {
-    this.respond(this.identityWindow, id, {});
+export function handleRequest(event: MessageEvent) {
+  const {
+    data: { id, method, payload },
+  } = event;
+
+  if (method === "initialize") {
+    handleInitialize(event);
+  } else if (method === "storageGranted") {
+    handleStorageGranted();
+  } else if (method === "login") {
+    handleLogin(payload);
+  } else if (method === "info") {
+    handleInfo(id);
+  } else {
+    console.error("Unhandled identity request");
+    console.error(event);
   }
+}
 
-  // Message handling
+export function handleResponse(event: MessageEvent) {
+  const {
+    data: { id, payload },
+  } = event;
 
-  private handleMessage(event: MessageEvent) {
-    const { data } = event;
-    const { service, method } = data;
+  const req = outboundRequests[id];
+  req.next(payload);
+  req.complete();
+  delete outboundRequests[id];
+}
 
-    if (service !== "identity") {
-      return;
-    }
+// Send a new message and expect a response
+export function send(method: string, payload: any) {
+  const req = {
+    id: uuid(),
+    method,
+    payload,
+    service: "identity",
+  };
 
-    // Methods are present on incoming requests but not responses
-    if (method) {
-      this.handleRequest(event);
-    } else {
-      this.handleResponse(event);
-    }
+  const subject = new Subject();
+  postMessage(req);
+  outboundRequests[req.id] = subject;
+
+  return subject;
+}
+
+export function postMessage(req: any) {
+  if (initialized) {
+    iframe.contentWindow.postMessage(req, "*");
+  } else {
+    pendingRequests.push(req);
   }
+}
 
-  private handleRequest(event: MessageEvent) {
-    const {
-      data: { id, method, payload },
-    } = event;
-
-    if (method === "initialize") {
-      this.handleInitialize(event);
-    } else if (method === "storageGranted") {
-      this.handleStorageGranted();
-    } else if (method === "login") {
-      this.handleLogin(payload);
-    } else if (method === "info") {
-      this.handleInfo(id);
-    } else {
-      console.error("Unhandled identity request");
-      console.error(event);
-    }
-  }
-
-  private handleResponse(event: MessageEvent) {
-    const {
-      data: { id, payload },
-    } = event;
-
-    const req = this.outboundRequests[id];
-    req.next(payload);
-    req.complete();
-    delete this.outboundRequests[id];
-  }
-
-  // Send a new message and expect a response
-  private send(method: string, payload: any) {
-    const req = {
-      id: uuid(),
-      method,
-      payload,
-      service: "identity",
-    };
-
-    const subject = new Subject();
-    this.postMessage(req);
-    this.outboundRequests[req.id] = subject;
-
-    return subject;
-  }
-
-  private postMessage(req: any) {
-    if (this.initialized) {
-      this.iframe.contentWindow.postMessage(req, "*");
-    } else {
-      this.pendingRequests.push(req);
-    }
-  }
-
-  // Respond to a received message
-  private respond(window: Window, id: string, payload: any): void {
-    window.postMessage({ id, service: "identity", payload }, "*");
-  }
+// Respond to a received message
+export function respond(window: Window, id: string, payload: any): void {
+  window.postMessage({ id, service: "identity", payload }, "*");
 }
