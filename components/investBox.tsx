@@ -21,7 +21,12 @@ const InvestBox = () => {
           <div>
             {/* (click)="linkToInvest()" */}
             <button className={styles.btn_invest_now}>
-              <Image alt="button icon" height="26px" src={buttonIcon} />
+              <Image
+                alt="button icon"
+                className={styles.mr_5px}
+                height="26px"
+                src={buttonIcon}
+              />
               Invest Now
             </button>
             <label className={"mb-0px " + styles.powered_by}>
@@ -50,7 +55,7 @@ const InvestBox = () => {
                   <Image height="26px" alt="icon-selected" src={completeIcon} />
                   Pre-sale
                 </label>
-                <div className="sec_bottom">
+                <div className={styles.sec_bottom}>
                   <div>
                     <label className="mb-0px">PRICE</label>
                     <p>~$0.08</p>
@@ -64,13 +69,20 @@ const InvestBox = () => {
             </section>
 
             <section>
-              <div className="line line_selected"></div>
-              <div className="section_text_container">
-                <label className="mb-0px section_header text_selected">
+              <div className={styles.line + " " + styles.line_selected}></div>
+              <div className={styles.section_text_container}>
+                <label
+                  className={
+                    "mb-0px " +
+                    styles.section_header +
+                    " " +
+                    styles.text_selected
+                  }
+                >
                   <Image height="20px" alt="icon-selected" src={selectedIcon} />
                   Early bird
                 </label>
-                <div className="sec_bottom">
+                <div className={styles.sec_bottom}>
                   <div>
                     <label className="mb-0px">PRICE</label>
                     <p className="text_selected">0.0059</p>
@@ -87,7 +99,7 @@ const InvestBox = () => {
             <section>
               <div className={styles.line}></div>
               <div className={styles.section_text_container}>
-                <label className={"mb-0px" + styles.section_header}>
+                <label className={"mb-0px " + styles.section_header}>
                   <div className={styles.ib_to_come}></div>
                   Round A
                 </label>
@@ -97,7 +109,7 @@ const InvestBox = () => {
                     <p>~0.0061</p>
                     <p>DESO</p>
                   </div>
-                  <div className="ml_10p">
+                  <div className={styles.ml_10p}>
                     <label className="mb-0px">TOKENS FOR SALE</label>
                     <p>~9%</p>
                   </div>
@@ -117,7 +129,7 @@ const InvestBox = () => {
                     <label className="mb-0px">PRICE</label>
                     <p>TBD</p>
                   </div>
-                  <div className="ml_10p">
+                  <div className={styles.ml_10p}>
                     <label className="mb-0px">TOKENS FOR SALE</label>
                     <p>~15%</p>
                   </div>

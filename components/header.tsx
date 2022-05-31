@@ -4,7 +4,7 @@ import notificationIcon from "../public/icons/notification-icon.svg";
 import searchIcon from "../public/icons/search-icon-mobile.svg";
 import { useState } from "react";
 import { unreadNotifications } from "../utils/global-context";
-import { loggedInUser, GetNav } from "../utils/global-context";
+import { loggedInUser } from "../utils/global-context";
 import { RouteNames } from "../utils/backendapi-context";
 import Link from "next/link";
 const Header = () => {
@@ -106,15 +106,17 @@ const Header = () => {
         </li>
       );
     }
+    console.log(loggedInUser);
     return null;
   };
 
   const checkCanMint = () => {
-    let navigate = GetNav();
+    // FIX NAVIGATE
+    // let navigate = GetNav();
     if (loggedInUser?.ProfileEntryResponse?.Username) {
-      navigate("/" + RouteNames.MINT_PAGE);
+      // navigate("/" + RouteNames.MINT_PAGE);
     } else {
-      navigate("/" + RouteNames.COMPLETE_PROFILE);
+      // navigate("/" + RouteNames.COMPLETE_PROFILE);
     }
   };
 
@@ -163,7 +165,7 @@ const Header = () => {
                     onClick={() => showNotification()}
                     alt="notification bell"
                     src={notificationIcon}
-                    layout="fill"
+                    height="25px"
                     title="Notification"
                   />
                   {showNotificationAmount()}

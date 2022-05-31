@@ -2,11 +2,26 @@ import Head from "../node_modules/next/head";
 import styles from "../styles/Home.module.scss";
 import Header from "../components/header";
 import LeftNav from "../components/leftNav";
+import {
+  requestingStorageAccess,
+  launchLoginFlow,
+} from "../utils/global-context";
+import { useEffect, useState } from "react";
+import { handleMessage } from "../utils/identity-context";
 export default function Home() {
-
+  const [identityURL, setIdentityURL] = useState("");
   function login() {
-    console.log(process.env.NEXT_PUBLIC_id);
+    launchLoginFlow();
   }
+  useEffect(() => {
+    // This used to be inside the identityService / context
+    window.addEventListener("message", (event) => {
+      event.stopImmediatePropagation();
+      handleMessage(event);
+    });
+    setIdentityURL("https://identity.deso.org/embed?v=2");
+  }, []);
+
   return (
     <div className={styles.container}>
       <Head>
@@ -16,7 +31,18 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
+        <iframe
+          id="identity"
+          frameBorder="0"
+          style={
+            requestingStorageAccess ? { display: "block" } : { display: "none" }
+          }
+          src={identityURL}
+          className="global__iframe"
+        ></iframe>
+        {/* USE HERE sanitizedIdentityServiceURL */}
         <Header></Header>
+        <button onClick={() => login()}>CLICK</button>
         <LeftNav></LeftNav>
       </main>
 

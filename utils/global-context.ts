@@ -93,7 +93,7 @@ let createdNFTsToShow = [];
 let collectedNFTsToShow = [];
 
 //   ----------------------------- imx global vars -----------------------------
-let imxWalletConnected: boolean;
+export let imxWalletConnected: boolean;
 let imxWalletAddress: string;
 let imxClient: any;
 let imxBalance: any;
@@ -125,7 +125,7 @@ const CREATOR_COIN_TRADE_FEED_BASIS_POINTS = 1;
 let loadingInitialAppState = true;
 
 // We're waiting for the user to grant storage access (full-screen takeover)
-let requestingStorageAccess = false;
+export let requestingStorageAccess = false;
 // Check if we have requested storage access, if so dont show supernovas loader anymore
 let requestedStorageAccess = false;
 
@@ -411,6 +411,7 @@ export function setUpdateEverything(updateEverythingSet: any) {
   updateEverything = updateEverythingSet;
 }
 export function setRequestingStorageAccess(requestingAccess: boolean) {
+  console.log("requesting storage access: " + requestingAccess);
   requestingStorageAccess = requestingAccess;
 }
 export function setRequestedStorageAccess(requestedStorageAccessSet: boolean) {
@@ -1174,22 +1175,19 @@ export function _alertError(
       : "Ok",
     reverseButtons: true,
   }).then((res) => {
-    let navigate = GetNav();
+    // FIX NAVIGATE
+    // let navigate = GetNav();
     if (showBuyDeSo && res.isConfirmed) {
       // CHECK WORKS,,, same for all these
-      navigate(routeNames.BUY_DESO, {
-        replace: false,
-      });
+      // navigate(routeNames.BUY_DESO, {
+      //   replace: false,
+      // });
     }
     if (showBuyCreatorCoin && res.isConfirmed) {
-      navigate(routeNames.CREATORS);
+      // navigate(routeNames.CREATORS);
     }
   });
 }
-
-export const GetNav = () => {
-  return useNavigate();
-};
 
 export function celebrate(svgList: ConfettiSvg[] = []) {
   const canvasID = "my-canvas-" + canvasCount;
@@ -1314,20 +1312,21 @@ export async function flowRedirect(
 ): Promise<void> {
   //   flowRedirect(signedUp: boolean, publicKey: string): void {
   // if they are signedup, they need to pick creator or collector
-  let navigate = GetNav();
+  // FIX NAVIGATE
+  // let navigate = GetNav();
   if (signedUp) {
     // If this node supports phone number verification, go to step 3, else proceed to step 4.
     const stepNum = 2;
     // Check works,,, previous had '/' before routename
     // Also check it works idk about the search...
-    navigate({
-      pathname: routeNames.SIGNUP,
-      search: "?stepNum=" + stepNum,
-    });
+    // navigate({
+    //   pathname: routeNames.SIGNUP,
+    //   search: "?stepNum=" + stepNum,
+    // });
   } else {
     //   this.checkOnboardingStatus();
     // Check works,,, previous had '/' before routename
-    navigate(routeNames.BROWSE);
+    // navigate(routeNames.BROWSE);
   }
 }
 
@@ -1417,8 +1416,6 @@ export function getTargetComponentSelectorFromRouter(): string {
 }
 
 export function _updateDeSoExchangeRate() {
-  console.log(localNode);
-  console.log("GET EXHANGE RATE");
   GetExchangeRate(localNode).subscribe(
     (res: any) => {
       // BTC
@@ -1510,10 +1507,11 @@ export function skipTutorial(): void {
         true
       ).subscribe(
         (response) => {
-          let navigate = GetNav();
+          // FIX NAVIGATE
+          // let navigate = GetNav();
           // Auto update logged in user's tutorial status - we don't need to fetch it via get users stateless right now.
           loggedInUser.TutorialStatus = TutorialStatus.SKIPPED;
-          navigate(routeNames.BROWSE);
+          // navigate(routeNames.BROWSE);
         },
         (err) => {
           _alertError(err.error.error);

@@ -1,3 +1,4 @@
+@import "./themes.scss";
 .left_bar_button {
     &:active {
        transform: scale(0.9);
@@ -16,14 +17,14 @@
         }
         &.active {
             transform: scale(1.05);
-            background-color: var(--secondary);
+            background-color: $secondary;
             font-weight: bolder !important;
             color: #121212;
         }
         &:hover {
             transform: scale(1.05);
             transition-duration: 0.2s;
-            background-color: var(--secondary);
+            background-color: $secondary;
         }
         .icon-cover {
             width: 18px;
@@ -77,11 +78,6 @@
     top: 77px;
     left: 10px;
     position: fixed;
-    @media (max-width: 900px) {
-        top: 0;
-        position: relative;
-        padding: 10px 15px 0;
-    }
     hr {
         background-color: #D8D8D8;
         height: 1px;

@@ -15,8 +15,8 @@ import {
   burn,
   encrypt,
   decrypt,
-  setIdentityServiceUsersVariable,
   setIdentityServicePKAddedVariable,
+  setIdentityServiceUsersVariable,
 } from "./identity-context";
 import Axios from "axios-observable";
 import { AxiosError } from "axios";
@@ -714,7 +714,7 @@ export function setIdentityServiceUsers(users: any, publicKeyAdded?: string) {
   SetStorage(IdentityUsersKey, users);
   console.log("setIdentityServiceUsers");
   // Check works ,,, this used to be just var = value;
-  setIdentityServiceUsers(users);
+  setIdentityServiceUsersVariable(users);
   setIdentityServicePKAddedVariable(publicKeyAdded);
 }
 

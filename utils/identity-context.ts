@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Observable, Subject } from "rxjs";
 import { v4 as uuid } from "uuid";
 
@@ -13,7 +14,7 @@ let identityWindowSubject;
 
 // The URL of the identity service
 let identityServiceURL: string;
-let sanitizedIdentityServiceURL;
+export let sanitizedIdentityServiceURL;
 
 // User data
 export let identityServiceUsers;
@@ -27,13 +28,6 @@ export let storageGranted = new Subject();
 
 // Using testnet or mainnet
 let isTestnet = false;
-
-// figure out in react
-// this used to be the constructor...
-// also all functions were private so idk check it out
-// useEffect(() => {
-// window.addEventListener("message", (event) => handleMessage(event));
-// }, []);
 
 export function setIsTestNet(testNet: boolean) {
   isTestnet = testNet;
@@ -239,11 +233,9 @@ export function handleInfo(id: string) {
 export function handleMessage(event: MessageEvent) {
   const { data } = event;
   const { service, method } = data;
-
   if (service !== "identity") {
     return;
   }
-
   // Methods are present on incoming requests but not responses
   if (method) {
     handleRequest(event);
@@ -256,7 +248,6 @@ export function handleRequest(event: MessageEvent) {
   const {
     data: { id, method, payload },
   } = event;
-
   if (method === "initialize") {
     handleInitialize(event);
   } else if (method === "storageGranted") {
@@ -275,7 +266,6 @@ export function handleResponse(event: MessageEvent) {
   const {
     data: { id, payload },
   } = event;
-
   const req = outboundRequests[id];
   req.next(payload);
   req.complete();
@@ -290,11 +280,9 @@ export function send(method: string, payload: any) {
     payload,
     service: "identity",
   };
-
   const subject = new Subject();
   postMessage(req);
   outboundRequests[req.id] = subject;
-
   return subject;
 }
 

@@ -5,15 +5,16 @@
 // $success: #32ed4b;
 // $info: #689eff;
 // @import "variables.scss";
-@import "./themes.scss";
 // @import "../node_modules/@angular/material/prebuilt-themes/indigo-pink.css";
 // @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
 // // regular style toast
 // @import "~ngx-toastr/toastr";
 // CSS FIX END
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
 $feed-border-radius: 12px;
 // New themeing class
 
+@import "./themes.scss";
 $dark-color: #ffffff;
 $light-color: #333333;
 $light-gray: #ecf0f1;
@@ -71,10 +72,21 @@ $diamond-hover: #005bf734;
 $link-btn-color: #0059F7;
 $link-btn-hover:rgba(75, 181, 214, 0.158);
 .main {
-  background: var(--background) !important; // TODO: remove all !important, this is a platform to extend
-  color: var(--text) !important; // TODO: remove all !important, this is a platform to extend
+  background: $background !important; // TODO: remove all !important, this is a platform to extend
+  color: $text !important; // TODO: remove all !important, this is a platform to extend
 }
 
+button {
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+.hide_on_mobile {
+  @media screen and (max-width: 992px) {
+    display: none !important;
+  }
+}
 .profile-type-card {
   width: 190px;
   height: 220px;
@@ -86,7 +98,7 @@ $link-btn-hover:rgba(75, 181, 214, 0.158);
 }
 
 .background-secondary {
-  background-color: var(--secondary);
+  background-color: $secondary;
 }
 
 .background-white {
@@ -198,7 +210,7 @@ div {
 .nft-post-property-box {
   width: calc(50% - 5px);
   min-height: 75px;
-  background-color: var(--secondary);
+  background-color: $secondary;
   border: 1px solid #cacaca;
   border-radius: 7.037036895751953px;
   text-overflow: ellipsis;
@@ -213,7 +225,7 @@ div {
     font-size: 8px !important;
   }
   .space-between {
-    justify-content: start !important;
+    justify-content: flex-start !important;
   }
 }
 
@@ -237,7 +249,7 @@ body {
 
 h1 {
   margin: 0;
-  color: var(--text);
+  color: $text;
 }
 
 h2,
@@ -247,19 +259,19 @@ h5,
 h6,
 p {
   margin: 0;
-  color: var(--text);
+  color: $text;
   font-family: "Poppins", sans-serif;
   font-weight: normal;
 }
 
 a {
   cursor: pointer; // for anchors without hrefs
-  color: var(--link);
+  color: $link;
   &:hover,
   &:active,
   &:focus {
     text-decoration: inherit; // I prefer no underline when you hover over links
-    color: var(--hover);
+    color: $hover;
   }
 }
 
@@ -340,7 +352,7 @@ $border-grey: #e5e5e5;
 $staking-grey: #f0f0f0;
 $light-grey-for-divider: #f8f8f8;
 $light-grey-for-divider-2: #fafafa;
-$buy-button-blue: var(--button);
+$buy-button-blue: $button;
 // Font colors.
 $light-font-color: #777777;
 $normal-font-color: #222222;
@@ -384,7 +396,7 @@ $green-font-color: #19b028;
 }
 
 .text-grey5 {
-  color: var(--grey);
+  color: $grey;
 } // mocks call this G1
 .text-grey6 {
   color: #666666;
@@ -436,7 +448,7 @@ $green-font-color: #19b028;
   color: #f5f5f5;
 } // mocks call this G4
 .text-grey-loading {
-  color: var(--loading);
+  color: $loading;
 }
 
 // Set toast-info to use system blue
@@ -552,31 +564,31 @@ $green-font-color: #19b028;
 }
 .hover-background-secalt {
   &:hover {
-    background-color: var(--secalt) !important;
+    background-color: $secalt !important;
   }
 }
 
 // Custom font classes.
 .fc-default {
-  color: var(--norm);
+  color: $norm;
 }
 .fc-secalt {
-  color: var(--secalt);
+  color: $secalt;
 }
 .fc-muted {
-  color: var(--textalt);
+  color: $textalt;
 }
 
 .fc-blue {
-  color: var(--cblue);
+  color: $cblue;
 }
 
 .fc-red {
-  color: var(--cred);
+  color: $cred;
 }
 
 .fc-green {
-  color: var(--cgreen);
+  color: $cgreen;
 }
 
 .font-weight-500 {
@@ -672,7 +684,7 @@ $green-font-color: #19b028;
 }
 
 .background-color-secondary {
-  background-color: var(--secondary) !important;
+  background-color: $secondary !important;
 }
 
 .fs-16px {
@@ -762,7 +774,7 @@ $green-font-color: #19b028;
 
 // Custom border classes.
 .border-color-grey {
-  border-color: var(--border) !important;
+  border-color: $border !important;
 }
 
 .border-color-blue {
@@ -787,15 +799,15 @@ $green-font-color: #19b028;
 }
 
 .background-color-grey {
-  background-color: var(--border);
+  background-color: $border;
 } // mocks call this G4
 
 .background-color-light-grey {
-  background-color: var(--secondary);
+  background-color: $secondary;
 }
 
 .background-color-light-grey-important {
-  background-color: var(--secondary) !important;
+  background-color: $secondary !important;
 }
 
 .background-color-light-pink {
@@ -803,7 +815,7 @@ $green-font-color: #19b028;
 }
 
 .background-color-white {
-  background-color: var(--background);
+  background-color: $background;
 }
 
 // Custom padding classes.
@@ -1452,13 +1464,13 @@ $green-font-color: #19b028;
   width: 400px;
   margin-right: 10px;
   margin-left: 10px;
-  border-top-color: var(--border);
-  background-color: var(--formbg);
+  border-top-color: $border;
+  background-color: $formbg;
 }
 
 .diamond-popover-container .arrow::after,
 .diamond-popover-container .arrow::before {
-  border-top-color: var(--formbg);
+  border-top-color: $formbg;
 }
 
 .diamond-popover-container-mobile {
@@ -1466,12 +1478,12 @@ $green-font-color: #19b028;
 }
 
 #diamond-popover {
-  color: var(--text);
+  color: $text;
 }
 
 .fixed-top-bar {
   position: fixed;
-  background-color: var(--background);
+  background-color: $background;
   z-index: 10;
 }
 
@@ -1497,7 +1509,7 @@ $green-font-color: #19b028;
   left: 0;
   bottom: 0px;
   width: 100%;
-  background-color: var(--background);
+  background-color: $background;
   height: auto;
   padding: 0 15px 10px;
   display: flex;
@@ -1530,12 +1542,12 @@ $green-font-color: #19b028;
 .menu-item {
   cursor: default;
   padding: 1rem;
-  color: var(--text);
+  color: $text;
 }
 
 .menu-item.selected {
-  background-color: var(--secondary);
-  color: var(--text);
+  background-color: $secondary;
+  color: $text;
 }
 
 .menu-item:hover:not(.selected) {
@@ -1562,7 +1574,7 @@ input.bs-timepicker-field {
 
 .btn-default {
   font-size: 15px;
-  border-color: var(--border) !important;
+  border-color: $border !important;
 }
 
 //
@@ -1584,7 +1596,7 @@ input.bs-timepicker-field {
 }
 
 .light-grey-divider {
-  background-color: var(--secondary);
+  background-color: $secondary;
 }
 .top-bar-mobile-navigation-control__dark-color {
   color: #8a8a8a;
@@ -1678,7 +1690,7 @@ input.bs-timepicker-field {
   top: calc(50% - 6px);
   left: 0;
   background-color: #ffffff;
-  border: 1px solid var(--text);
+  border: 1px solid $text;
 }
 .marketplace-flyout-checkbox-label:before {
   content: "";
@@ -1691,7 +1703,7 @@ input.bs-timepicker-field {
   top: calc(50% - 6px);
   left: 0px;
   background-color: #ffffff;
-  border: 1px solid var(--text);
+  border: 1px solid $text;
 }
 
 .marketplace-button-checkbox:checked + .marketplace-checkbox-label:before {
@@ -1799,8 +1811,8 @@ input.bs-timepicker-field {
 .global__desktop .global__content__inner {
   min-height: 100vh;
   width: $global__content__width;
-  border-left: var(--border) solid 1px;
-  border-right: var(--border) solid 1px;
+  border-left: $border solid 1px;
+  border-right: $border solid 1px;
 }
 
 .global__sidebar__width {
@@ -1856,7 +1868,7 @@ input.bs-timepicker-field {
 
 .global__top-bar {
   position: fixed;
-  background: var(--background);
+  background: $background;
   z-index: 30;
   width: $global__center__width - 50; // subtract 2 for borders
   @media (max-width: 1170px) {
@@ -2015,9 +2027,9 @@ input.bs-timepicker-field {
   background-position: center;
   height: 100px;
   width: 100px;
-  border: 6px solid var(--background);
+  border: 6px solid $background;
   box-shadow: 0px 3px 10px 3px rgb(0 0 0 / 10%);
-  background-color: var(--secondary);
+  background-color: $secondary;
   transition: all 0.1s linear;
   border-radius: 100%;
 }
@@ -2037,7 +2049,7 @@ input.bs-timepicker-field {
 }
 .holdings__divider {
   height: 66px;
-  background-color: var(--secondary);
+  background-color: $secondary;
 }
 
 .holdings__avatar {
@@ -2138,7 +2150,7 @@ input.bs-timepicker-field {
 .change-account-selector__down-arrow {
   margin-top: 2px;
   font-size: 18px;
-  color: var(--norm);
+  color: $norm;
   margin-left: 10px;
 }
 
@@ -2147,12 +2159,12 @@ input.bs-timepicker-field {
 }
 
 .change-account-selector_list {
-  background-color: var(--secondary);
+  background-color: $secondary;
   padding: 0px 0px 10px;
   margin-top: 0;
   width: 100%;
   z-index: 99;
-  border: 1px solid var(--border);
+  border: 1px solid $secondary;
 }
 
 .change-account-selector_list-item {
@@ -2192,7 +2204,7 @@ input.bs-timepicker-field {
 }
 
 .text-link_hover:hover {
-  color: var(--hover);
+  color: $hover;
 }
 
 .search-bar__icon {
@@ -2201,8 +2213,8 @@ input.bs-timepicker-field {
   font-size: 19px;
   border-top-left-radius: 30px;
   border-bottom-left-radius: 30px;
-  background-color: var(--formbg);
-  border-color: var(--border);
+  background-color: $formbg;
+  border-color: $border;
   border-right-color: rgba(0, 0, 0, 0);
 }
 
@@ -2214,10 +2226,10 @@ input.bs-timepicker-field {
   box-shadow: rgba(101, 119, 134, 0.2) 0px 0px 15px, rgba(101, 119, 134, 0.15) 0px 0px 3px 1px;
   border-radius: 0px 0px 3px 3px;
   cursor: pointer;
-  background-color: var(--background);
+  background-color: $background;
   position: relative;
   top: 0px;
-  border: solid 1px var(--border);
+  border: solid 1px $border;
   z-index: 5; // the input has a z-index of 3 at one point.
   max-height: 600px;
   overflow-y: scroll;
@@ -2233,17 +2245,17 @@ input.bs-timepicker-field {
 }
 
 .search-bar__selected-color {
-  background-color: var(--border);
+  background-color: $border;
 }
 
 .search-bar__fix-active {
-  border-color: var(--secondary);
+  border-color: $secondary;
   border-left: 0px;
 }
 
 .search-bar__fix-active:active,
 .search-bar__fix-active:focus {
-  border-color: var(--secondary);
+  border-color: $secondary;
   border-left: 0px;
 }
 
@@ -2266,7 +2278,7 @@ input.bs-timepicker-field {
   width: 50px;
   margin-right: 15px;
   border-radius: 50%;
-  border: 3px solid var(--background);
+  border: 3px solid $background;
   //box-shadow: 0px 4px 5px 3px rgb(0 0 0 / 10%);
   background-size: cover;
   background-repeat: no-repeat;
@@ -2277,7 +2289,7 @@ input.bs-timepicker-field {
   margin: 0;
   padding: 0;
   float: none;
-  color: var(--text);
+  color: $text;
   text-shadow: 0 1px 0 #fff;
 }
 
@@ -2310,10 +2322,10 @@ input.bs-timepicker-field {
 }
 .feed-post__dropdown-menu-item {
   background-color: #ffffff;
-  color: var(--text);
+  color: $text;
   &:hover {
     background-color: #ececec;
-    color: var(--text);
+    color: $text;
   }
 }
 
@@ -2406,7 +2418,7 @@ input.bs-timepicker-field {
   justify-content: center;
   align-items: baseline;
   &:hover {
-    background-color: var(--secondary)
+    background-color: $secondary;
   }
 }
 .background-hover-red:hover {
@@ -2430,7 +2442,7 @@ input.bs-timepicker-field {
 .feed-post-icon-row__icon.icon-repost {
   &:hover {
     background-color: #d8f5e5;
-    color: var(--text);
+    color: $text;
   }
 }
 
@@ -2438,7 +2450,6 @@ input.bs-timepicker-field {
 
 .feed-post-icon-row__icon.icon-heart,
 .feed-post-icon-row__icon.icon-heart-fill {
-  //color: var(--pink);
   &:hover {
     background-color: $like-hover;
     color: $like-color;
@@ -2476,7 +2487,7 @@ input.bs-timepicker-field {
 }
 
 .feed-post__coin-price-holder {
-  background-color: var(--secalt);
+  background-color: $secalt;
 }
 
 .feed-post__avatar {
@@ -2508,8 +2519,8 @@ input.bs-timepicker-field {
 }
 .feed-post__parent-thread-connector {
   height: 100%;
-  border-right: 2px solid var(--secondary);
-  border-color: var(--secondary);
+  border-right: 2px solid $secondary;
+  border-color: $secondary;
   width: 55%;
 }
 
@@ -2560,7 +2571,7 @@ input.bs-timepicker-field {
 }
 
 .right-bar-creators__balance-box {
-  color: var(--text);
+  color: $text;
 }
 .right-bar-creators__balance-box.smaller-font {
   .rb-name {
@@ -2572,7 +2583,7 @@ input.bs-timepicker-field {
 }
 
 .creator-leaderboard__load-more:hover {
-  background-color: var(--secondary);
+  background-color: $secondary;
 }
 
 .creator-profile-details__hodler-avatar {
@@ -2619,7 +2630,7 @@ input.bs-timepicker-field {
 
 .messages-inbox__threads {
   overflow-y: scroll;
-  border-right: 1px solid var(--border);
+  border-right: 1px solid $border;
   // Subtract the height of the search and header
   height: calc(100% - 160px);
 }
@@ -2712,7 +2723,7 @@ input.bs-timepicker-field {
   outline: none;
   font-size: 12px;
   background: #2b2b2b;
-  color: var(--background);
+  color: $background;
   border-radius: 30px;
   transition: 0.3s linear;
   display: flex;
@@ -2728,7 +2739,7 @@ input.bs-timepicker-field {
   padding-left: 10px;
   height: 36.5px;
   width: calc(100% - 30px);
-  border: 0.9287535548210144px solid var(--border);
+  border: 0.9287535548210144px solid $border;
   //background: url(http://cdn1.iconfinder.com/data/icons/cc_mono_icon_set/blacks/16x16/br_down.png) no-repeat right rgb(255, 255, 255);
   background: url("../public/icons/chevron-down.svg") no-repeat right rgb(255, 255, 255);
   background-size: 12px;
@@ -2750,7 +2761,7 @@ input.bs-timepicker-field {
 
 .messages-thread__ellipsis-restriction {
   font-size: 12px;
-  color: var(--textalt);
+  color: $textalt;
   display: block;
   overflow: hidden;
   white-space: nowrap;
@@ -2759,7 +2770,7 @@ input.bs-timepicker-field {
 
 .messages-thread__ellipsis-restriction-username {
   font-size: 14px;
-  color: var(--text);
+  color: $text;
   display: block;
   overflow: hidden;
   white-space: nowrap;
@@ -2796,7 +2807,7 @@ input.bs-timepicker-field {
 
 .message__sender-bubble-color {
   //background-color: #eeeded;
-  color: var(--text);
+  color: $text;
 }
 
 .admin__get-user-admin-data-line {
@@ -2903,10 +2914,10 @@ input.bs-timepicker-field {
 
 .black-rounded-button {
   box-shadow: 2.8181443214416504px 2.8181443214416504px 7.045360565185547px rgba(0, 0, 0, 0.25);
-  border: 1px solid var(--text);
+  border: 1px solid $text;
   border-radius: 30px;
-  background: var(--text);
-  color: var(--background);
+  background: $text;
+  color: $background;
   &:disabled {
     background-color: grey;
     border: 1px solid grey;
@@ -3104,9 +3115,9 @@ input.bs-timepicker-field {
 }
 
 .form-control {
-  color: var(--text) !important;
-  background: var(--formbg) !important;
-  border-color: var(--border) !important;
+  color: $text !important;
+  background: $formbg !important;
+  border-color: $border !important;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -3137,11 +3148,11 @@ input.bs-timepicker-field {
 }
 
 .become_creator {
-  background-color: var(--background);
-  border: 3px solid var(--mborder);
+  background-color: $background;
+  border: 3px solid $mborder;
   font-weight: 700;
   font-size: 12px;
-  color: var(--text);
+  color: $text;
   border-radius: 5px;
   padding: 8px;
   box-sizing: border-box;
@@ -3178,8 +3189,8 @@ input {
 
 textarea {
   background-color: transparent;
-  border: 1px solid var(--border);
-  color: var(--text);
+  border: 1px solid $border;
+  color: $text;
   padding-left: 0.5rem;
   padding-right: 0.5rem;
   max-width: 100%;
@@ -3230,7 +3241,7 @@ em {
 }
 
 .apply_to_crt {
-  background: var(--secondary);
+  background: $secondary;
   padding: 15px;
   border-radius: 10px;
   position: relative;
@@ -3246,12 +3257,12 @@ em {
   right: 8px;
   font-size: 12px;
   cursor: pointer;
-  color: var(--grey);
+  color: $grey;
 }
 
 .apply_to_crt h4 {
   font-size: 13px;
-  color: var(--text);
+  color: $text;
   font-weight: 600;
   margin-bottom: 12px;
 }
@@ -3263,11 +3274,11 @@ em {
 
 .apply_to_crt p {
   font-size: 11px;
-  color: var(--text);
+  color: $text;
 }
 
 .apply_to_crt a {
-  color: var(--text);
+  color: $text;
   font-weight: 600;
   font-size: 12px;
   display: inline-block;
@@ -3277,7 +3288,7 @@ em {
 }
 
 .apply_to_crt a:hover {
-  color: var(--hover);
+  color: $hover;
   text-decoration: none;
 }
 
@@ -3324,6 +3335,15 @@ em {
   justify-content: center;
   align-items: center;
 }
+.justify-content-between {
+  justify-content: space-between;
+}
+.flex-row {
+  flex-direction: row;
+}
+.d-flex {
+  display: flex;
+}
 .flex-column {
   flex-direction: column;
 }
@@ -3342,7 +3362,7 @@ em {
 }
 .flex-start-start {
   justify-content: flex-start;
-  align-items: start;
+  align-items: flex-start;
 }
 .flex-start-end {
   justify-content: flex-start;
@@ -3369,7 +3389,7 @@ em {
 }
 
 input {
-  color: var(--text);
+  color: $text;
   width: 100%;
 }
 
@@ -3393,8 +3413,8 @@ input {
 
 .btn-primary:hover {
   color: #fff;
-  background-color: var(--hover);
-  border-color: var(--hover);
+  background-color: $hover;
+  border-color: $hover;
 }
 
 .btn-primary.disabled,
@@ -3406,7 +3426,7 @@ input {
 
 .btn-secondary {
   background-color: #ffffff;
-  border-color: var(--border);
+  border-color: $border;
 }
 
 #foobarxyz p {
@@ -3459,39 +3479,38 @@ input {
 
 // Added BootStrap and Custom CSS for Themeing
 .border-bottom {
-  border-bottom: 1px solid var(--border) !important;
+  border-bottom: 1px solid $border !important;
 }
 
 .border-top {
-  border-top: 1px solid var(--border) !important;
+  border-top: 1px solid $border !important;
 }
 
 .border-left {
-  border-left: 1px solid var(--border) !important;
+  border-left: 1px solid $border !important;
 }
 
 .border-right {
-  border-right: 1px solid var(--border) !important;
+  border-right: 1px solid $border !important;
 }
 
 .text-black {
-  color: var(--text) !important;
+  color: $text !important;
 }
 
 .table {
-  color: var(--text) !important;
+  color: $text !important;
 }
 
 .clout {
-  filter: var(--filter);
 }
 
 .selector {
-  background: var(--secondary);
+  background: $secondary;
   outline: none;
   border-radius: 5px;
   padding: 5px;
-  color: var(--text);
+  color: $text;
 }
 
 .selector option:active,
@@ -3520,7 +3539,7 @@ input {
 }
 
 .bg-light {
-  background-color: var(--secondary) !important;
+  background-color: $secondary !important;
 }
 
 // Animations by Carsen Klock @carsenk
@@ -3557,9 +3576,9 @@ input {
 }
 
 .comment-modal {
-  color: var(--text);
-  border: 1px solid var(--mborder);
-  background-color: var(--secondary);
+  color: $text;
+  border: 1px solid $mborder;
+  background-color: $secondary;
   background-clip: padding-box;
   opacity: 1;
   flex-direction: column;
@@ -3574,26 +3593,26 @@ input {
 }
 
 .ddropdown {
-  background: var(--background);
-  color: var(--text);
-  border-bottom: 1px solid var(--border);
+  background: $background;
+  color: $text;
+  border-bottom: 1px solid $border;
 }
 
 .ddropdown option {
-  background: var(--background);
-  color: var(--text);
-  border-bottom: 1px solid var(--border);
+  background: $background;
+  color: $text;
+  border-bottom: 1px solid $border;
 }
 
 .formbg {
-  background-color: var(--formbg) !important;
+  background-color: $formbg !important;
 }
 
 .modal-content {
   position: relative;
-  background-color: var(--secalt);
-  color: var(--text);
-  border: 1px solid var(--mborder);
+  background-color: $secalt;
+  color: $text;
+  border: 1px solid $mborder;
   background-clip: padding-box;
   opacity: 1;
   flex-direction: column;
@@ -3604,7 +3623,7 @@ input {
 }
 
 .modal-header {
-  border-bottom: 1px solid var(--mborder) !important;
+  border-bottom: 1px solid $mborder !important;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -3617,9 +3636,9 @@ input {
 .quote-reclouts-modal-container,
 .reclouts-modal-container,
 .diamonds-modal-container {
-  background-color: var(--background);
-  color: var(--text);
-  border: var(--mborder);
+  background-color: $background;
+  color: $text;
+  border: $mborder;
   border-top-left-radius: 0.3rem;
   border-top-right-radius: 0.3rem;
   border-bottom-right-radius: 0.3rem;
@@ -3627,20 +3646,20 @@ input {
 }
 
 .nft-modal-container {
-  color: var(--text);
+  color: $text;
   background-clip: padding-box;
   flex-direction: column;
   width: 100%;
   display: flex;
   outline: 0;
   position: relative;
-  background: var(--secondary);
-  border: 0.5px solid var(--mborder);
+  background: $secondary;
+  border: 0.5px solid $mborder;
   box-sizing: border-box;
   box-shadow: 4px 4px 20px 2px rgba(0, 0, 0, 0.16);
   border-radius: 30px;
   &.gray_bg {
-    background: var(--secondary) !important;
+    background: $secondary !important;
   }
 }
 
@@ -3666,7 +3685,7 @@ input {
   &:active,
   &:focus {
     text-decoration: inherit; // I prefer no underline when you hover over links
-    color: var(--grey);
+    color: $grey;
   }
 }
 
@@ -3674,39 +3693,39 @@ input {
 [class*="mat-option-"],
 .mat-form-field-label,
 select {
-  color: var(--text);
+  color: $text;
 }
 
 .mat-option,
 option {
-  background-color: var(--formbg);
-  color: var(--text);
+  background-color: $formbg;
+  color: $text;
 }
 
 .mat-option:hover:not(.mat-option-disabled),
 .mat-option:focus:not(.mat-option-disabled) {
-  background-color: var(--secondary);
+  background-color: $secondary;
 }
 
 .mat-select-panel .mat-option.mat-selected:not(.mat-option-multiple) {
-  background-color: var(--unread);
+  background-color: $unread;
 }
 
 .mat-form-field-appearance-fill .mat-form-field-underline::before {
-  background-color: var(--border);
+  background-color: $border;
 }
 
 .mat-form-field-ripple {
-  background-color: var(--link);
+  background-color: $link;
 }
 
 .mat-form-field.mat-focused .mat-form-field-ripple {
-  background-color: var(--hover);
+  background-color: $hover;
 }
 
 .swal2-popup {
-  background-color: var(--background) !important;
-  color: var(--text);
+  background-color: $background !important;
+  color: $text;
 }
 
 .creator-coin-button {
@@ -3774,15 +3793,15 @@ option {
 }
 
 .borderbg {
-  background-color: var(--border);
+  background-color: $border;
 }
 
 .border {
-  border: 1px solid var(--border) !important;
+  border: 1px solid $border !important;
 }
 
 .border-2 {
-  border: 2px solid var(--border) !important;
+  border: 2px solid $border !important;
 }
 
 .border-radius-10 {
@@ -3803,7 +3822,7 @@ option {
       width: 100%;
     }
     p {
-      color: var(--text) !important;
+      color: $text !important;
       margin: 15px 0 15px 0;
       font-size: 15px;
     }
@@ -3845,8 +3864,8 @@ option {
       position: absolute;
       width: 340px;
       height: 55px;
-      background: var(--background);
-      border: 1px solid var(--border);
+      background: $background;
+      border: 1px solid $border;
       border-radius: 20px;
       // On mobile, need to position this box further left so it doesn't leave the screen
       @media (max-width: 991.98px) {
@@ -3868,7 +3887,7 @@ option {
         width: 47px;
         height: 25px;
         display: inline-block;
-        background: var(--secondary);
+        background: $secondary;
         background-color: transparent;
         content: "\f219";
         border-radius: 15px;
@@ -3882,7 +3901,7 @@ option {
           transition: color 0.1s;
         }
         .diamond-help {
-          color: var(--grey);
+          color: $grey;
         }
         label {
           padding: 3px 5px 3px 5px;
@@ -4005,7 +4024,7 @@ option {
     top: 45px;
     left: 0;
     right: 0;
-    background: var(--norm);
+    background: $norm;
     visibility: hidden;
     opacity: 0;
     transition: visibility 0s linear 300ms, opacity 300ms, background-color 300ms ease;
@@ -4020,7 +4039,7 @@ option {
       text-align: center;
       position: relative;
       display: table-cell;
-      color: var(--secalt);
+      color: $secalt;
     }
   }
   .diamond-mobile-drag-grab {
@@ -4074,7 +4093,7 @@ option {
   }
   #check + label {
     display: block;
-    border: 2px solid var(--grey);
+    border: 2px solid $grey;
     width: var(--d);
     height: var(--d);
     border-radius: 5px;
@@ -4085,7 +4104,7 @@ option {
       vertical-align: top;
       path {
         fill: none;
-        stroke: var(--grey);
+        stroke: $grey;
         stroke-width: 11px;
         stroke-linecap: round;
         stroke-linejoin: round;
@@ -4136,7 +4155,7 @@ option {
     margin-left: 0rem !important;
   }
   margin-left: 3.5rem !important;
-  border: 1px solid var(--secalt);
+  border: 1px solid $secalt;
   display: inline-flex;
   align-items: center;
   font-weight: 500;
@@ -4144,7 +4163,7 @@ option {
     padding: 1px 10px;
   }
   .buy_bg {
-    background-color: var(--background);
+    background-color: $background;
     padding: 2px 8px;
     border-radius: 0 12px 12px 0;
     font-size: 11px;
@@ -4418,7 +4437,7 @@ option {
   }
 }
 .mrk_top {
-  border-bottom: 2px solid var(--border);
+  border-bottom: 2px solid $border;
   height: 85px;
   width: 100%;
   -webkit-align-items: flex-end;
@@ -4483,7 +4502,7 @@ option {
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    background-color: var(--secondary);
+    background-color: $secondary;
     border-bottom-left-radius: 30px;
     border-bottom-right-radius: 30px;
     @media screen and (max-width: 1050px) {
@@ -4632,12 +4651,12 @@ option {
         .bids_avatar {
           width: 50px;
           height: 50px;
-          background: var(--textalt);
+          background: $text;
           border-radius: 50%;
           margin: 0 10px 0 0;
           cursor: pointer;
           overflow: hidden;
-          border: 3px solid var(--background);
+          border: 3px solid $background;
           box-shadow: 0px 4px 5px 3px rgb(0 0 0 / 7%);
           background-size: cover;
         }
@@ -4647,7 +4666,7 @@ option {
           }
           p {
             font-size: 14px;
-            color: var(--textalt);
+            color: $text;
             span {
               font-weight: 700;
             }
@@ -4673,7 +4692,7 @@ option {
 }
 
 .nft_place_bid_sec {
-  background: var(--background);
+  background: $background;
   padding: 30px;
   border: 5px solid #e9e9e9;
   box-shadow: 2px 2px 20px rgb(0 0 0 / 9%);
@@ -4705,7 +4724,7 @@ option {
       }
       .val_st {
         font-size: 17.4692px;
-        color: var(--textalt);
+        color: $text;
         @media screen and (max-width: 767px) {
           font-size: 14px;
         }
@@ -4714,7 +4733,7 @@ option {
     .auction_detl {
       width: 58%;
       padding-left: 50px;
-      border-left: 1px solid var(--border);
+      border-left: 1px solid $text;
       @media screen and (max-width: 767px) {
         padding-left: 20px;
       }
@@ -4728,7 +4747,7 @@ option {
       }
       .val_st {
         font-size: 10.18px;
-        color: var(--textalt);
+        color: $text;
         @media screen and (max-width: 767px) {
           font-size: 9px;
         }
@@ -4753,7 +4772,7 @@ option {
       }
       .val_st {
         font-size: 10.18px;
-        color: var(--textalt);
+        color: $text;
         @media screen and (max-width: 767px) {
           font-size: 9px;
         }
@@ -4766,7 +4785,7 @@ option {
     .nft_done_by {
       width: 58%;
       padding-left: 50px;
-      border-left: 1px solid var(--border);
+      border-left: 1px solid $border;
       @media screen and (max-width: 767px) {
         padding-left: 20px;
       }
@@ -4784,7 +4803,7 @@ option {
         cursor: pointer;
         overflow: hidden;
         border-radius: 50%;
-        border: 3px solid var(--background);
+        border: 3px solid $background;
         box-shadow: 0px 4px 5px 3px rgb(0 0 0 / 10%);
         background-size: cover;
         margin-right: 15px;
@@ -4803,7 +4822,7 @@ option {
         cursor: pointer;
         overflow: hidden;
         border-radius: 50%;
-        border: 3px solid var(--background);
+        border: 3px solid $background;
         box-shadow: 0px 4px 5px 3px rgb(0 0 0 / 10%);
         background-size: cover;
         margin-right: 12px;
@@ -4828,7 +4847,7 @@ option {
       margin-bottom: 10px;
       text-transform: uppercase;
       font-weight: 600;
-      color: var(--textalt);
+      color: $textalt;
       @media screen and (max-width: 767px) {
         font-size: 13px;
       }
@@ -4837,7 +4856,7 @@ option {
   .center_sec {
     display: flex;
     width: 100%;
-    color: var(--textalt);
+    color: $textalt;
     justify-content: center;
     font-size: 12px;
     margin: 1px 0;
@@ -4857,7 +4876,7 @@ option {
       margin: 0 auto;
       max-width: 100%;
       border: none;
-      color: var(--formbg);
+      color: $formbg;
       font-weight: 600;
     }
   }
@@ -4875,7 +4894,7 @@ option {
     margin: 0 auto 20px;
     margin-top: 30px;
     border: none;
-    color: var(--background);
+    color: $background;
     font-weight: 600;
     box-shadow: 3px 3px 5px 2px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s ease-in-out;
@@ -4893,10 +4912,10 @@ option {
     max-width: 619px;
     max-width: calc(100% - 18px);
     .modal-content {
-        background: var(--background);
+        background: $background;
         border: 0;
         .nft-modal-container {
-            background: var(--background);
+            background: $background;
             border: 0;
             padding: 30px 30px;
             min-height: 550px;
@@ -4923,10 +4942,10 @@ option {
   max-width: 619px;
   max-width: calc(100% - 18px);
   .modal-content {
-    background: var(--background);
+    background: $background;
     border: 0;
     .nft-modal-container {
-      background: var(--background);
+      background: $background;
       border: 0;
       border-radius: 30px;
       padding: 30px 30px;
@@ -4942,7 +4961,7 @@ option {
         .head_txt {
           font-size: 36px !important;
           font-weight: 600;
-          color: var(--topbar);
+          color: $topbar;
           width: 100%;
           line-height: 1;
           justify-content: center;
@@ -4976,7 +4995,7 @@ option {
           .txt {
             font-size: 13px !important;
             font-weight: 600;
-            color: var(--textalt);
+            color: $textalt;
             text-transform: uppercase;
             &:first-child {
               text-align: left !important;
@@ -4994,7 +5013,7 @@ option {
             }
           }
           &:hover {
-            background-color: var(--secalt);
+            background-color: $secalt;
           }
         }
       }
@@ -5062,7 +5081,7 @@ option {
     display: block;
     margin-bottom: 10px;
     font-weight: 600;
-    color: var(--textalt);
+    color: $textalt;
   }
   .val {
     font-size: 28.2247px;
@@ -5079,7 +5098,7 @@ option {
   }
   .val_sm {
     font-size: 22.4692px;
-    color: var(--secalt);
+    color: $secalt;
     @media screen and (max-width: 767px) {
       font-size: 17.2247px;
     }
@@ -5112,7 +5131,7 @@ option {
     margin-bottom: 10px;
     text-transform: uppercase;
     font-weight: 600;
-    color: var(--textalt);
+    color: $textalt;
   }
 }
 .bio-cover {
@@ -5187,8 +5206,8 @@ option {
 }
 
 .add_comment_btn {
-  border: 2px solid var(--button);
-  background: var(--background);
+  border: 2px solid $button;
+  background: $background;
   min-width: 100px;
   margin: 20px auto;
   display: flex;
@@ -5284,7 +5303,7 @@ option {
     cursor: pointer;
     overflow: hidden;
     border-radius: 50%;
-    border: 3px solid var(--background);
+    border: 3px solid $background;
     //box-shadow: 0px 4px 5px 3px rgb(0 0 0 / 10%);
     background-size: cover;
   }
@@ -5351,7 +5370,7 @@ option {
   box-shadow: 1px 1px 5px rgb(0 0 0 / 15%);
   padding: 20px;
   top: 36px;
-  color: var(--textalt);
+  color: $textalt;
   font-size: 14px;
   display: block;
 }
@@ -5423,7 +5442,7 @@ option {
       font-family: "Poppins", "Roboto";
       line-height: 88px;
       &:first-child {
-        border-bottom: 1px solid var(--border);
+        border-bottom: 1px solid $border;
       }
       &:last-child {
         .icon-cover {
@@ -5781,7 +5800,7 @@ option {
   }
 }
 .color-text {
-  color: var(--text) !important;
+  color: $text !important;
 }
 .blk_fill_btn {
   background: #313131;
@@ -5967,7 +5986,7 @@ option {
     .head_txt {
       font-size: 36px !important;
       font-weight: 600;
-      color: var(--topbar);
+      color: $topbar;
       width: 100%;
       line-height: 1;
       justify-content: center;
@@ -5986,7 +6005,7 @@ option {
     font-size: 18px;
     margin: auto;
     max-width: 100%;
-    color: var(--background);
+    color: $background;
     font-weight: bold;
     background: #313131;
     border: 0.28458px solid #000;
@@ -6104,7 +6123,7 @@ option {
   font-size: 18px;
   margin: auto;
   max-width: 100%;
-  color: var(--background);
+  color: $background;
   font-weight: bold;
   background: #313131;
   border: 0.28458px solid #000;
@@ -6114,7 +6133,7 @@ option {
   transition: all 0.3s ease;
   cursor: pointer;
   &:hover {
-    color: var(--background);
+    color: $background;
     transform: scale(1.02);
     -webkit-transform: scale(1.02);
   }
@@ -6131,8 +6150,8 @@ option {
 
 .unlockable_content_popwrp {
   padding: 20px;
-  background-color: var(--background);
-  border: 2px solid var(--border);
+  background-color: $background;
+  border: 2px solid $border;
   border-radius: 10px;
   min-height: 230px;
   margin: 30px 0 40px;
@@ -6218,7 +6237,7 @@ option {
       cursor: pointer;
       overflow: hidden;
       border-radius: 50%;
-      border: 3px solid var(--background);
+      border: 3px solid $background;
       box-shadow: 0px 4px 5px 3px rgb(0 0 0 / 10%);
       background-size: cover;
       margin-right: 10px;
@@ -6374,7 +6393,7 @@ option {
     }
   }
   .modal-bids-container .selected {
-    background-color: var(--secalt);
+    background-color: $secalt;
   }
 }
 

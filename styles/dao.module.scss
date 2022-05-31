@@ -8,7 +8,7 @@
     justify-content: flex-end;
     align-items: flex-start;
     padding: 5%;
-    background-image: url("/public/img/dao_banner.png");
+    background-image: url("../public/img/dao_banner.png");
     background-position: center;
     background-size: cover;
     @media  screen and (max-width: 1000px) {
@@ -430,7 +430,7 @@
             min-width: 110px;
             margin-left: 1%;
             height: 75%;
-            background-image: url("/public/img/create_button.png");
+            background-image: url("../public/img/create_button.png");
             background-position: center;
             background-size: cover;
             padding: 0;

@@ -8,13 +8,20 @@ const Page = ({ children, isNFTProfile, noCap }) => {
   const [mobile, setMobile] = useState(false);
 
   useEffect(() => {
+    const setMobileBasedOnViewport = () => {
+      setMobile(isMobile());
+    };
+
     setMobileBasedOnViewport();
 
     window.addEventListener("resize", setMobileBasedOnViewport, false);
   }, []);
 
-  const setMobileBasedOnViewport = () => {
-    setMobile(isMobile());
+  const getNav = () => {
+    if (!mobile) {
+      return <LeftNav></LeftNav>;
+    }
+    return null;
   };
 
   return (
@@ -33,8 +40,7 @@ const Page = ({ children, isNFTProfile, noCap }) => {
           styles.m_inner_wrapper + " " + styles.end + `${noCap ? " noCap" : ""}`
         }
       >
-        {/* *ngIf="!mobile" */}
-        <LeftNav></LeftNav>
+        {getNav()}
         {/* *ngIf="mobile" */}
         {/* <left-bar-mobile></left-bar-mobile> */}
         <div className={"w-100"}>{children}</div>

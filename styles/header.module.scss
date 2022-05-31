@@ -1,3 +1,4 @@
+@import "./themes.scss";
 .header {
     padding: 15px 15px;
     background-color: #FEFEFE;
@@ -137,7 +138,7 @@
         }
       }
       .btn-create {
-        color: var(--background);
+        color: $background;
         background-image: url("../public/img/btnbg.png");
         background-position: center;
         background-repeat: no-repeat;
@@ -263,7 +264,7 @@
     .triangle-up {
       display: inline-block;
       transform: scaleX(1.2);
-      color: var(--background);
+      color: $background;
       text-shadow: 0px -3px 3px rgba(0, 0, 0, 0.1);
       font-size: 20px;
       position: absolute;
@@ -276,7 +277,7 @@
       width: 416px;
       right: -180px;
       border-radius: 8px;
-      background: var(--background);
+      background: $background;
       border: 0.952182px solid #fcfcfc;
       box-shadow: 1px 1.52px 7.62px rgba(0, 0, 0, 0.11);
       border-radius: 14.2827px;
@@ -292,7 +293,7 @@
           display: flex;
           align-items: center;
           justify-content: space-between;
-          border-top: 1px solid var(--border);
+          border-top: 1px solid $border;
           padding: 8px 10px;
           cursor: pointer;
           .left-portion {
@@ -308,7 +309,7 @@
                 font-size: 25px;
                 width: 100%;
                 &.icon-heart-fill {
-                  color: var(--cred);
+                  color: $cred;
                 }
                 &.icon-wallet {
                   font-size: 20px;
@@ -398,10 +399,10 @@
         padding: 15px 10px;
         display: block;
         width: 100%;
-        border-top: 1px solid var(--border);
+        border-top: 1px solid $border;
         text-align: center;
         display: inline-block;
-        color: var(--link) !important;
+        color: $link !important;
         font-weight: 600;
         font-size: 15.4488px;
         margin-top: -1px;

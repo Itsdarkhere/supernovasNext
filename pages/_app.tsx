@@ -5,7 +5,7 @@ import {
   setUpdateEverything,
 } from "../utils/global-context";
 import "../styles/globals.scss";
-import { Subscription } from "rxjs";
+import { Subscription, take } from "rxjs";
 import { User } from "../utils/backendapi-context";
 import * as _ from "lodash";
 import {
@@ -134,13 +134,11 @@ function MyApp({ Component, pageProps }) {
       _updateDeSoExchangeRate();
     }, 5 * 60 * 1000);
 
-    console.log("Update everything...");
     setUpdateEverything(_updateEverything);
 
     // We need to fetch this data before we start an import. Can remove once import code is gone.
     _updateDeSoExchangeRate();
     _updateAppState();
-
     info().subscribe((res) => {
       // If the browser is not supported, display the browser not supported screen.
       if (!res.browserSupported) {
@@ -148,10 +146,9 @@ function MyApp({ Component, pageProps }) {
         setRequestedStorageAccess(true);
         return;
       }
-
       const isLoggedIn = GetStorage(LastLoggedInUserKey);
       if (res.hasStorageAccess || !isLoggedIn) {
-        this.loadApp();
+        loadApp();
       } else {
         setRequestingStorageAccess(true);
         storageGranted.subscribe(() => {
@@ -180,7 +177,7 @@ function MyApp({ Component, pageProps }) {
   }, []);
 
   useEffect(function mount() {
-    function onClick() {
+    function onClick(event) {
       if (event.target instanceof HTMLAnchorElement) {
         const element = event.target as HTMLAnchorElement;
         if (element.className === DYNAMICALLY_ADDED_ROUTER_LINK_CLASS) {
@@ -195,8 +192,9 @@ function MyApp({ Component, pageProps }) {
             // FYI, this seems to give a js error if the route isn't in our list
             // of routes, which should help prevent attackers from tricking users into
             // clicking misleading links
-            let navigate = GetNav();
-            navigate(route, { replace: false });
+            // fix navigate
+            // let navigate = GetNav();
+            // navigate(route, { replace: false });
           }
         }
       }
@@ -209,8 +207,6 @@ function MyApp({ Component, pageProps }) {
     if (callingUpdateTopLevelData) {
       return new Subscription();
     }
-    console.log(callingUpdateTopLevelData);
-    console.log(identityServiceUsers);
     const publicKeys = Object.keys(identityServiceUsers);
 
     let loggedInUserPublicKey =
@@ -234,13 +230,15 @@ function MyApp({ Component, pageProps }) {
       (res: any) => {
         problemWithNodeConnection = false;
         callingUpdateTopLevelData = false;
-
-        const loggedInUser: User = res.UserList[0];
+        const loggedInUserr: User = res.data.UserList[0];
         // Check works ,,, this might take too long to iterate for it to work...
-        iterateAndSetUserList(loggedInUser, loggedInUserPublicKey);
+        iterateAndSetUserList(loggedInUserr, loggedInUserPublicKey);
         // Only call setLoggedInUser if logged in user has changed.
-        if (!_.isEqual(loggedInUser, loggedInUser) && loggedInUserPublicKey) {
-          setLoggedInUser(loggedInUser);
+        console.log(loggedInUser);
+        console.log(loggedInUserr);
+        if (!_.isEqual(loggedInUser, loggedInUserr) && loggedInUserPublicKey) {
+          console.log("set logged in");
+          setLoggedInUser(loggedInUserr);
 
           checkOnboardingStatus();
         }
@@ -357,7 +355,6 @@ function MyApp({ Component, pageProps }) {
         notificationMap: {},
       });
     }
-
     // If we have a transaction to wait for, we do a GetTxn call for a maximum of 10s (250ms * 40).
     // There is a success and error callback so that the caller gets feedback on the polling.
     if (waitTxn !== "") {
@@ -403,13 +400,12 @@ function MyApp({ Component, pageProps }) {
   };
 
   function loadApp() {
-    console.log("setIdentityServiceUsers");
-    console.log(GetStorage(IdentityUsersKey) || {});
     setIdentityServiceUsersVariable(GetStorage(IdentityUsersKey) || {});
     // Filter out invalid public keys
     const publicKeys = Object.keys(identityServiceUsers);
     for (const publicKey of publicKeys) {
       if (!publicKey.match(/^[a-zA-Z0-9]{54,55}$/)) {
+        console.log("DELETING identityServiceUsers");
         delete identityServiceUsers[publicKey];
       }
     }
@@ -449,7 +445,11 @@ function MyApp({ Component, pageProps }) {
     firstScript.parentNode.insertBefore(datadomeScript, firstScript);
   }
 
-  return <Component {...pageProps} />;
+  return (
+    <>
+      <Component {...pageProps} />;
+    </>
+  );
 }
 
 export default MyApp;
