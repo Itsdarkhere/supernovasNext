@@ -1,0 +1,10 @@
+.hideBeforeLoad {
+    display: none;
+    border-radius: 3px!important;
+    max-width: 525px;
+    max-height: 525px;
+    cursor: pointer;
+    &.visible {
+        display: block;
+    }
+}

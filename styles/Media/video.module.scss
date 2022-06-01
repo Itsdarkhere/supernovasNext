@@ -1,0 +1,9 @@
+.hideBeforeLoad {
+    display: none;
+    max-width: 450px;
+    max-width: 525px;
+    max-height: 525px;
+    &.visible {
+        display: block;
+    }
+}

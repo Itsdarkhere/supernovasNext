@@ -1976,11 +1976,6 @@ input.bs-timepicker-field {
     height: 45px;
   }
 }
-
-.nft-page-audio-cover-image {
-  max-width: 80%;
-  border-radius: 2.1255195140838623px;
-}
 .left-bar-mobile__flyout-div {
   z-index: 100; // Needs to be higher than the bottom bar and staked posts.
   position: fixed;
@@ -2740,7 +2735,6 @@ input.bs-timepicker-field {
   height: 36.5px;
   width: calc(100% - 30px);
   border: 0.9287535548210144px solid $border;
-  //background: url(http://cdn1.iconfinder.com/data/icons/cc_mono_icon_set/blacks/16x16/br_down.png) no-repeat right rgb(255, 255, 255);
   background: url("../public/icons/chevron-down.svg") no-repeat right rgb(255, 255, 255);
   background-size: 12px;
   -webkit-appearance: none;
@@ -4879,7 +4873,7 @@ option {
 
 .cta-button-gradient {
   &.btn {
-    background-image: url("/assets/img/popup-btnbg.png");
+    background-image: url("/public/img/popup-btnbg.png");
     background-size: cover;
     background-position: center;
     width: 350px;

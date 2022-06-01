@@ -8,7 +8,7 @@ import "../styles/globals.scss";
 import { Subscription, take } from "rxjs";
 import { User } from "../utils/backendapi-context";
 import * as _ from "lodash";
-import Loader from "../components/loader";
+import Loader from "../components/Loading/loader";
 import {
   GetStorage,
   MessageMetaKey,

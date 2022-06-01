@@ -1,9 +1,9 @@
 import { ConfettiSvg } from "../utils/global-context";
-import Page from "../components/page";
-import styles from "../styles/dao.module.scss";
+import Page from "../components/Wrappers/page";
+import styles from "../styles/Dao/dao.module.scss";
 import Image from "next/image";
 import emailIcon from "/public/icons/email_icon.svg";
-import InvestBox from "../components/investBox";
+import InvestBox from "../components/Dao/investBox";
 const dao = () => {
   return (
     <Page isNFTProfile={false} noCap={false}>

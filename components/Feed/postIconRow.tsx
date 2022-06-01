@@ -1,4 +1,4 @@
-import styles from "../public/postIconRow.module.scss";
+import styles from "../../styles/Feed/postIconRow.module.scss"
 import {
   abbreviateRepostsNumber,
   getUSDForDiamond,

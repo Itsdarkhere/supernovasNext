@@ -1,0 +1,9 @@
+model-viewer {
+    --poster-color: var(--secondary);
+}
+.hideBeforeLoad {
+    display: none;
+    &.visible {
+        display: block;
+    }
+}

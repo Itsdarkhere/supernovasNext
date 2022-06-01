@@ -1,8 +1,8 @@
-import WalletComponent from "../components/walletComponent";
-import Page from "../components/page";
-import TabSelector from "../components/tabSelector";
+import WalletComponent from "../components/Wallet/walletComponent";
+import Page from "../components/Wrappers/page";
+import TabSelector from "../components/Reusables/tabSelector";
 import { useState } from "react";
-import ReferralsComponent from "../components/referralsComponent";
+import ReferralsComponent from "../components/Wallet/referralsComponent";
 const Wallet = () => {
   const [activeTab, setActiveTab] = useState("Wallet");
 
