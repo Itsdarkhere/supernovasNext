@@ -122,12 +122,12 @@ const CREATOR_COIN_RESERVE_RATIO = 0.3333333;
 const CREATOR_COIN_TRADE_FEED_BASIS_POINTS = 1;
 
 // This is set to false immediately after our first attempt to get a loggedInUser.
-let loadingInitialAppState = true;
+export let loadingInitialAppState = true;
 
 // We're waiting for the user to grant storage access (full-screen takeover)
 export let requestingStorageAccess = false;
 // Check if we have requested storage access, if so dont show supernovas loader anymore
-let requestedStorageAccess = false;
+export let requestedStorageAccess = false;
 
 // Track if the user is dragging the diamond selector. If so, need to disable text selection in the app.
 let userIsDragging = false;
@@ -329,6 +329,9 @@ let nodes: { [id: number]: DeSoNode };
 let NFTRoyaltyToCoinBasisPoints: any;
 let NFTRoyaltyToCreatorBasisPoints: any;
 
+export function setImxWalletAddress(address: string) {
+  imxWalletAddress = address;
+}
 export function setLoadingInitialAppState(appState) {
   loadingInitialAppState = appState;
 }
@@ -859,7 +862,6 @@ export function abbreviateNumber(
 
 export function abbreviateRepostsNumber(
   value1: number,
-  value2: number,
   decimals: number,
   formatUSDbool: boolean = false
 ): string {

@@ -4,8 +4,6 @@ import Image from "next/image";
 const TabSelector = ({ tabClick, tabs, icons, extraTab, activeTab }) => {
   const getIcon = (index: number) => {
     if (icons !== null) {
-      console.log(icons);
-      return null;
       return <Image src={icons[index]} className="mr-5px" alt="tab icon" />;
     }
     return null;
@@ -24,9 +22,9 @@ const TabSelector = ({ tabClick, tabs, icons, extraTab, activeTab }) => {
             <div
               className={[
                 styles.tab_selector_button,
-                tab == activeTab
-                  ? "fc-default tab_selector_box_active"
-                  : "tab_selector_box_inactive",
+                tab === activeTab
+                  ? "fc-default " + styles.tab_selector_box_active
+                  : styles.tab_selector_box_inactive,
               ].join(" ")}
             >
               {/* *ngIf="icons" */}

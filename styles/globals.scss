@@ -4450,11 +4450,6 @@ option {
   justify-content: space-between !important;
 }
 
-.single-card.feed-post__quoted-content {
-  box-shadow: none !important;
-  border-radius: 12px !important;
-}
-
 .default-banner-color {
   background-color: #f6f6f6;
 }
@@ -5063,7 +5058,9 @@ option {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
-
+.flex-wrap {
+  flex-wrap: wrap !important;
+}
 .feed-text-wrap a[href],
 .caption-cover.auto-h a[href] {
   background: #0000ee;

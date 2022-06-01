@@ -8,6 +8,7 @@ import "../styles/globals.scss";
 import { Subscription, take } from "rxjs";
 import { User } from "../utils/backendapi-context";
 import * as _ from "lodash";
+import Loader from "../components/loader";
 import {
   GetStorage,
   MessageMetaKey,
@@ -67,8 +68,9 @@ import {
   updateEverything,
   pausePolling,
   setRequestedStorageAccess,
-  GetNav,
   setUserList,
+  loadingInitialAppState,
+  requestedStorageAccess,
 } from "../utils/global-context";
 
 function MyApp({ Component, pageProps }) {
@@ -448,6 +450,9 @@ function MyApp({ Component, pageProps }) {
   return (
     <>
       <Component {...pageProps} />;
+      {/* {loadingInitialAppState && !requestedStorageAccess ? (
+        <Loader></Loader>
+      ) : null} */}
     </>
   );
 }
