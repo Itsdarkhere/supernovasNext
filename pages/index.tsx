@@ -3,16 +3,26 @@ import styles from "../styles/Home.module.scss";
 import Header from "../components/Navigation/header";
 import LeftNav from "../components/Navigation/leftNav";
 import {
-  requestingStorageAccess,
   launchLoginFlow,
 } from "../utils/global-context";
 import { useEffect, useState } from "react";
 import { handleMessage } from "../utils/identity-context";
+import { useAppSelector } from "../utils/Redux/hooks";
 export default function Home() {
+  // Redux
+  let requestingStorageAccess = useAppSelector((state) => state.app.requestingStorageAccess);
+  
+  // State
   const [identityURL, setIdentityURL] = useState("");
+  // State end
+
+  // Functions
   function login() {
     launchLoginFlow();
   }
+  // Functions end
+
+  // Lifecycle methods
   useEffect(() => {
     // This used to be inside the identityService / context
     window.addEventListener("message", (event) => {
@@ -21,6 +31,7 @@ export default function Home() {
     });
     setIdentityURL("https://identity.deso.org/embed?v=2");
   }, []);
+  // Lifycycle methods end
 
   return (
     <div className={styles.container}>

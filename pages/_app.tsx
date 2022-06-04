@@ -1,14 +1,7 @@
 import { useEffect } from "react";
-import {
-  Init,
-  setRequestingStorageAccess,
-  setUpdateEverything,
-} from "../utils/global-context";
 import "../styles/globals.scss";
-import { Subscription, take } from "rxjs";
-import { User } from "../utils/backendapi-context";
+import { Observable, Subscription, take } from "rxjs";
 import * as _ from "lodash";
-import Loader from "../components/Loading/loader";
 import {
   GetStorage,
   MessageMetaKey,
@@ -22,6 +15,10 @@ import {
   GetAppState,
   GetTxn,
   LegacySeedListKey,
+  GetReferralInfoForReferralHash, 
+  LastIdentityServiceKey, 
+  LastLocalNodeKey, 
+  User
 } from "../utils/backendapi-context";
 import {
   identityServicePublicKeyAdded,
@@ -30,66 +27,179 @@ import {
   setIdentityServiceUsersVariable,
   info,
   storageGranted,
-  setIsTestNet,
+  setIdentityServiceURL,
+  setSanitizedIdentityServiceURL,
 } from "../utils/identity-context";
 import {
-  localNode,
-  userList,
-  loggedInUser,
   setLoggedInUser,
   checkOnboardingStatus,
   SetupMessages,
   GetUnreadNotifications,
-  setYouHodlMap,
-  setLoadingInitialAppState,
-  setDefaultFeeRateNanosPerKB,
-  setGloboMods,
   _updateDeSoExchangeRate,
-  setminSatoshisBurnedForProfileCreation,
-  setShowBuyWithETH,
-  setShowBuyWithUSD,
-  showPhoneNumberVerification,
-  setShowJumio,
-  setJumioDeSoNanos,
-  setIsTestNetGlob,
-  setTransactionFeeInfo,
-  setShowPhoneNumberVerification,
-  setCreateProfileFeeNanos,
-  setIsCompProfileCreation,
-  setBuyETHAddress,
-  setNodes,
-  setTransactionFeeMap,
-  setTransactionFeeMax,
-  setdiamondLevelMap,
   nanosToUSD,
-  messageMeta,
-  setMessageMeta,
   iterateAndSetUserList,
-  updateEverything,
-  pausePolling,
-  setRequestedStorageAccess,
-  setUserList,
-  loadingInitialAppState,
-  requestedStorageAccess,
 } from "../utils/global-context";
+// Redux
+import { Provider } from "react-redux";
+import store from "../utils/Redux/store";
+import { useAppSelector, useAppDispatch } from "../utils/Redux/hooks";
+import { setBuyETHAddress, setJumioDeSoNanos, setMinSatoshisBurnedForProfileCreation, 
+  setReferralUSDCents, 
+  setUpdateEverything } from "../utils/Redux/Slices/otherSlice";
+import { setGloboMods, setLoadingInitialAppState, setRequestedStorageAccess, 
+  setRequestingStorageAccess, setShowBuyWithETH, setShowBuyWithUSD, setShowJumio, 
+  setShowPhoneNumberVerification } from "../utils/Redux/Slices/appSlice";
+import { pushToLoggedInUserObservers, setLoggedInUserObservable, setUserList } from "../utils/Redux/Slices/loggedInSlice";
+import { setMessageMeta } from "../utils/Redux/Slices/messagesSlice";
+import { setDefaultFeeRateNanosPerKB, setFeeRateDeSoPerKB, setTransactionFeeInfo, setTransactionFeeMap, 
+  setTransactionFeeMax } from "../utils/Redux/Slices/feesSlice";
+import { createYouHodlMap, setDiamondLevelMap } from "../utils/Redux/Slices/userSlice";
+import { setIsCompProfileCreation, setIsTestnetGlob, setLocalNode, setNodes } from "../utils/Redux/Slices/nodeSlice";
+import { pushToFollowChangeObservers, setFollowChangeObservable } from "../utils/Redux/Slices/followsSlice";
+import { setNanosPerUSDExchangeRate, setSatoshisPerDeSoExchangeRate, setUSDPerBitcoinExchangeRate } from "../utils/Redux/Slices/exhangeRatesSlice";
+// Redux end
 
 function MyApp({ Component, pageProps }) {
+  // Redux
+  let dispatch = useAppDispatch();
+
   const DYNAMICALLY_ADDED_ROUTER_LINK_CLASS =
     "js-app-component__dynamically-added-router-link-class";
 
   let showUsernameTooltip = false;
-
   let desoToUSDExchangeRateToDisplay = "fetching...";
-
   // Throttle the calls to update the top-level data so they only happen after a
   // previous call has finished.
   let callingUpdateTopLevelData = false;
   let problemWithNodeConnection = false;
   let callingUpdateNodeInfo = false;
 
+
+  const Init = () => {
+    _setUpLoggedInUserObservable();
+    _setUpFollowChangeObservable();
+  
+    // Rewrite in react ,,, this handles referralcode, which we dont use... but still..
+    // route.queryParams.subscribe((queryParams) => {
+    //   if (queryParams.r) {
+    //     localStorage.setItem("referralCode", queryParams.r);
+    //     // Check works ...
+    //     this.navigate(
+    //       {
+    //         pathname: "",
+    //         search: "?r=undefined",
+    //       },
+    //       {
+    //         replace: false,
+    //       }
+    //     );
+    //     this.getReferralUSDCents();
+    //   }
+    // });
+    // Rewrite in react END
+  
+    // Redux
+    const dispatch = useAppDispatch();
+    const DEFAULT_NANOS_PER_USD_EXCHANGE_RATE = useAppSelector((state) => state.exhange.DEFAULT_NANOS_PER_USD_EXCHANGE_RATE)
+  
+    getReferralUSDCents();
+    dispatch(setSatoshisPerDeSoExchangeRate(0))
+    dispatch(setNanosPerUSDExchangeRate(DEFAULT_NANOS_PER_USD_EXCHANGE_RATE))
+    dispatch(setUSDPerBitcoinExchangeRate(10000))
+    // Set temp vars for state that needs to be done comparisons on
+    const tempDefaultFeeRateNanosPerKB = 1000.0;
+    let tempLocalNode = GetStorage(LastLocalNodeKey);
+    // Also set them to state
+    dispatch(setDefaultFeeRateNanosPerKB(1000.0));
+    dispatch(setLocalNode(GetStorage(LastLocalNodeKey)));
+  
+    if (!tempLocalNode) {
+      const hostname = (window as any).location.hostname;
+      if (process.env.NEXT_PUBLIC_production) {
+        dispatch(setLocalNode(hostname))
+        tempLocalNode = hostname;
+      } else {
+        dispatch(setLocalNode(`${hostname}:17001`))
+        tempLocalNode = `${hostname}:17001`
+      }
+  
+      SetStorage(LastLocalNodeKey, tempLocalNode);
+    }
+    // Var at the end since the naming convention is the same here and in identity-context
+    let identityServiceURL = GetStorage(LastIdentityServiceKey);
+    if (!identityServiceURL) {
+      identityServiceURL = process.env.NEXT_PUBLIC_identityURL;
+      SetStorage(LastIdentityServiceKey, identityServiceURL);
+    }
+    // Check works ,,, these used to be var = value
+    setIdentityServiceURL(identityServiceURL);
+    setSanitizedIdentityServiceURL(`${identityServiceURL}/embed?v=2`);
+    // Rewrite in react ,,, perhaps not even needed but check ....
+    //   this.sanitizer.bypassSecurityTrustResourceUrl(
+    //     `${identityServiceURL}/embed?v=2`
+    //   );
+    // Rewrite in react end
+  
+    _globopoll(() => {
+      if (!tempDefaultFeeRateNanosPerKB) {
+        return false;
+      }
+      dispatch(setFeeRateDeSoPerKB(tempDefaultFeeRateNanosPerKB / 1e9))
+      return true;
+    });
+  }
+
+  const getReferralUSDCents = (): void => {
+    const referralHash = localStorage.getItem("referralCode");
+    if (referralHash) {
+      GetReferralInfoForReferralHash(
+        process.env.NEXT_PUBLIC_verificationEndpointHostname,
+        referralHash
+      ).subscribe((res) => {
+        const referralInfo = res.ReferralInfoResponse.Info;
+        if (
+          res.ReferralInfoResponse.IsActive &&
+          (referralInfo.TotalReferrals < referralInfo.MaxReferrals ||
+            referralInfo.MaxReferrals == 0)
+        ) {
+          // Redux
+          const dispatch = useAppDispatch();
+          dispatch(setReferralUSDCents(referralInfo.RefereeAmountUSDCents));
+        }
+      });
+    }
+  }
+
+  const _globopoll = (passedFunc: any, expirationSecs?: any) => {
+    const startTime = new Date();
+    const interval = setInterval(() => {
+      if (passedFunc()) {
+        clearInterval(interval);
+      }
+      if (
+        expirationSecs &&
+        new Date().getTime() - startTime.getTime() > expirationSecs * 1000
+      ) {
+        return true;
+      }
+    }, 1000);
+  }
+
+  const _setUpLoggedInUserObservable = () => {
+    dispatch(setLoggedInUserObservable(new Observable((observer) => {
+      dispatch(pushToLoggedInUserObservers(observer));
+    })))
+  }
+  
+  const _setUpFollowChangeObservable = () => {
+    dispatch(setFollowChangeObservable(new Observable((observer) => {
+      dispatch(pushToFollowChangeObservers(observer))
+    })))
+  }
+
   useEffect(() => {
-    // Init global-context
-    Init(null, []);
+    // Init app
+    Init();
 
     // Rewrite in react
     // this.router.events.subscribe((event) => {
@@ -136,7 +246,11 @@ function MyApp({ Component, pageProps }) {
       _updateDeSoExchangeRate();
     }, 5 * 60 * 1000);
 
-    setUpdateEverything(_updateEverything);
+    // Redux
+    const dispatch = useAppDispatch();
+
+    // Check works,,, its missing this.
+    dispatch(setUpdateEverything(_updateEverything));
 
     // We need to fetch this data before we start an import. Can remove once import code is gone.
     _updateDeSoExchangeRate();
@@ -144,18 +258,18 @@ function MyApp({ Component, pageProps }) {
     info().subscribe((res) => {
       // If the browser is not supported, display the browser not supported screen.
       if (!res.browserSupported) {
-        setRequestingStorageAccess(true);
-        setRequestedStorageAccess(true);
+        dispatch(setRequestingStorageAccess(true));
+        dispatch(setRequestedStorageAccess(true));
         return;
       }
       const isLoggedIn = GetStorage(LastLoggedInUserKey);
       if (res.hasStorageAccess || !isLoggedIn) {
         loadApp();
       } else {
-        setRequestingStorageAccess(true);
+        dispatch(setRequestingStorageAccess(true));
         storageGranted.subscribe(() => {
-          setRequestingStorageAccess(false);
-          setRequestedStorageAccess(true);
+          dispatch(setRequestingStorageAccess(false));
+          dispatch(setRequestedStorageAccess(true));
           loadApp();
         });
       }
@@ -206,6 +320,11 @@ function MyApp({ Component, pageProps }) {
   });
 
   function _updateTopLevelData(): Subscription {
+    // Redux
+    const loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
+    const localNode = useAppSelector((state) => state.node.localNode);
+    const dispatch = useAppDispatch();
+
     if (callingUpdateTopLevelData) {
       return new Subscription();
     }
@@ -255,21 +374,21 @@ function MyApp({ Component, pageProps }) {
         // TODD: I've intermittently seen errors here where UsersYouHODL is null.
         // That's why I added this || [] thing. We should figure
         // out the root cause.
-        setYouHodlMap(loggedInUser?.UsersYouHODL);
+        dispatch(createYouHodlMap(loggedInUser?.UsersYouHODL))
 
         if (res.DefaultFeeRateNanosPerKB > 0) {
-          setDefaultFeeRateNanosPerKB(res.DefaultFeeRateNanosPerKB);
+          dispatch(setDefaultFeeRateNanosPerKB(res.DefaultFeeRateNanosPerKB))
         }
-        setGloboMods(res.GloboMods);
+        dispatch(setGloboMods(res.GloboMods));
 
         // Check works,,, react changedetection is different with the virtual dom so idk if we need this
         // ref.detectChanges();
-        setLoadingInitialAppState(false);
+        dispatch(setLoadingInitialAppState(false));
       },
       (error) => {
         problemWithNodeConnection = true;
         callingUpdateTopLevelData = false;
-        setLoadingInitialAppState(false);
+        dispatch(setLoadingInitialAppState(false));
         console.error(error);
       }
     );
@@ -280,29 +399,31 @@ function MyApp({ Component, pageProps }) {
   }
 
   function _updateAppState() {
+    // Redux
+    const loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
+    const localNode = useAppSelector((state) => state.node.localNode);
+    const dispatch = useAppDispatch();
+
     GetAppState(localNode, loggedInUser?.PublicKeyBase58Check).subscribe(
       (res: any) => {
-        setminSatoshisBurnedForProfileCreation(
-          res.data.MinSatoshisBurnedForProfileCreation
-        );
-        setdiamondLevelMap(res.data.DiamondLevelMap);
-        setShowBuyWithUSD(res.data.HasWyreIntegration);
-        setShowBuyWithETH(res.data.BuyWithETH);
-        setShowJumio(res.data.HasJumioIntegration);
-        setJumioDeSoNanos(res.data.JumioDeSoNanos);
-        setIsTestNetGlob(res.data.IsTestnet);
-        setIsTestNet(res.data.IsTestnet);
-        setShowPhoneNumberVerification(
+        dispatch(setMinSatoshisBurnedForProfileCreation(res.data.MinSatoshisBurnedForProfileCreation))
+        dispatch(setDiamondLevelMap(res.data.DiamondLevelMap))
+        dispatch(setShowBuyWithUSD(res.data.HasWyreIntegration))
+        dispatch(setShowBuyWithETH(res.data.BuyWithETH))
+        dispatch(setShowJumio(res.data.HasJumioIntegration))
+        dispatch(setJumioDeSoNanos(res.data.JumioDeSoNanos))
+        dispatch(setIsTestnetGlob(res.data.IsTestnet))
+        // FIX NOW
+        // dispatch(setIsTestNet(res.data.IsTestnet))
+        dispatch(setShowPhoneNumberVerification(
           res.data.HasTwilioAPIKey && res.data.HasStarterDeSoSeed
-        );
-        setCreateProfileFeeNanos(res.data.CreateProfileFeeNanos);
-        setIsCompProfileCreation(
-          showPhoneNumberVerification && res.data.CompProfileCreation
-        );
-        setBuyETHAddress(res.data.BuyETHAddress);
-        setNodes(res.data.Nodes);
+        ));
+        // showPhoneNumberVerification && res.data.CompProfileCreation CODE REMOVAL
+        dispatch(setIsCompProfileCreation(false));
+        dispatch(setBuyETHAddress(res.data.BuyETHAddress))
+        dispatch(setNodes(res.data.Nodes))
+        dispatch(setTransactionFeeMap(res.data.TransactionFeeMap))
 
-        setTransactionFeeMap(res.data.TransactionFeeMap);
 
         // Calculate max fee for display in frontend
         // Sort so highest fee is at the top
@@ -331,14 +452,12 @@ function MyApp({ Component, pageProps }) {
           .sort((a, b) => b.fees - a.fees);
 
         //Get the max of all fees
-        setTransactionFeeMax(Math.max(...simpleFeeMap?.map((k) => k?.fees)));
+        dispatch(setTransactionFeeMax(Math.max(...simpleFeeMap?.map((k) => k?.fees))));
 
         //Prepare text detailed info of fees and join with newlines
-        setTransactionFeeInfo(
-          simpleFeeMap
-            ?.map((k) => `${k?.txnType}: ${nanosToUSD(k?.fees, 4)}`)
-            .join("\n")
-        );
+        dispatch(setTransactionFeeInfo(simpleFeeMap
+          ?.map((k) => `${k?.txnType}: ${nanosToUSD(k?.fees, 4)}`)
+          .join("\n")));
       }
     );
   }
@@ -349,13 +468,21 @@ function MyApp({ Component, pageProps }) {
     errorCallback: (comp: any) => void = () => {},
     comp: any = ""
   ) => {
+    // Redux
+    const localNode = useAppSelector((state) => state.node.localNode);
+    const pausePolling = useAppSelector((state) => state.app.pausePolling);
+
+    const dispatch = useAppDispatch();
+
     // Refresh the messageMeta periodically.
-    setMessageMeta(GetStorage(MessageMetaKey));
-    if (!messageMeta) {
-      setMessageMeta({
+    dispatch(setMessageMeta(GetStorage(MessageMetaKey)));
+    let tempMessageMeta = GetStorage(MessageMetaKey);
+
+    if (!tempMessageMeta) {
+      dispatch(setMessageMeta({
         decryptedMessgesMap: {},
         notificationMap: {},
-      });
+      }))
     }
     // If we have a transaction to wait for, we do a GetTxn call for a maximum of 10s (250ms * 40).
     // There is a success and error callback so that the caller gets feedback on the polling.
@@ -402,12 +529,18 @@ function MyApp({ Component, pageProps }) {
   };
 
   function loadApp() {
+    // Redux
+    const localNode = useAppSelector((state) => state.node.localNode);
+    const userList = useAppSelector((state) => state.loggedIn.userList);
+    const updateEverything = useAppSelector((state) => state.other.updateEverything);
+
+    const dispatch = useAppDispatch();
+
     setIdentityServiceUsersVariable(GetStorage(IdentityUsersKey) || {});
     // Filter out invalid public keys
     const publicKeys = Object.keys(identityServiceUsers);
     for (const publicKey of publicKeys) {
       if (!publicKey.match(/^[a-zA-Z0-9]{54,55}$/)) {
-        console.log("DELETING identityServiceUsers");
         delete identityServiceUsers[publicKey];
       }
     }
@@ -415,7 +548,7 @@ function MyApp({ Component, pageProps }) {
 
     GetUsersStateless(localNode, publicKeys, true).subscribe((res) => {
       if (!_.isEqual(userList, res.UserList)) {
-        setUserList(res.UserList || []);
+        dispatch(setUserList(res.UserList || []));
       }
       updateEverything();
     });
@@ -447,12 +580,14 @@ function MyApp({ Component, pageProps }) {
     firstScript.parentNode.insertBefore(datadomeScript, firstScript);
   }
 
-  return (
-    <>
-      <Component {...pageProps} />;
-      {/* {loadingInitialAppState && !requestedStorageAccess ? (
+        {/* {loadingInitialAppState && !requestedStorageAccess ? (
         <Loader></Loader>
       ) : null} */}
+  return (
+    <>
+    <Provider store={store}>
+      <Component {...pageProps} />
+    </Provider>
     </>
   );
 }

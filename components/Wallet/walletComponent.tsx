@@ -9,15 +9,19 @@ import chevronRightIcon from "../public/icons/chevron_right.svg";
 import ethIcon from "../public/eth/ethlogo.svg";
 import { useState, useEffect } from "react";
 import {
-  imxWalletConnected,
   isMobile,
-  loggedInUser,
   nanosToDeSo,
   nanosToUSD,
   _copyText,
 } from "../../utils/global-context";
+import { useAppSelector } from "../../utils/Redux/hooks";
 
 const WalletComponent = () => {
+  // Redux
+  const imxWalletConnected = useAppSelector((state) => state.imx.imxWalletConnected);
+  const loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
+  // Redux end
+  
   const [showYouDontOwnCreatorCoins, setShowYouDontOwnCreatorCoins] =
     useState(false);
   const [mobile, setMobile] = useState(false);
@@ -263,6 +267,7 @@ const WalletComponent = () => {
   };
 
   const getDesoTab = () => {
+  
     if (tabDeso) {
       {
         /* ANIMATE [@tabChangeAnimation] */
@@ -335,6 +340,9 @@ const WalletComponent = () => {
   };
 
   const getUsername = () => {
+    // Redux
+    const loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
+  
     if (loggedInUser?.ProfileEntryResponse?.Username) {
       return (
         <span className="pl-5px">

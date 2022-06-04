@@ -1,5 +1,5 @@
-import styles from "../../styles/NFT/nftCard.module.scss";
-import buyNowIcon from "../public/icons/buy_now_card_icon.svg";
+import styles from "../../../styles/NFT/NFTCard/nftCard.module.scss";
+import buyNowIcon from "../../../public/icons/buy_now_card_icon.svg";
 import { nanosToDeSo } from "../../../utils/global-context";
 import Image from "next/image";
 
@@ -48,9 +48,9 @@ const NFTCardBidInfo = ({
 
   // Dom manipulation
   const getSectionBasedOnChainAndSaleStatus = () => {
-    // Is not eth ( so its deso )
-    if (!postContent.PostExtraData.isEthereumNFT) {
-      if (postContent.IsNFT && !pending) {
+    // Is not eth ( so its deso )    
+    if (!postContent?.PostExtraData?.isEthereumNFT) {
+      if (postContent?.IsNFT && !pending) {        
         // Basically deso nft not pending
         return (
           <div
@@ -219,11 +219,9 @@ const NFTCardBidInfo = ({
         return (
           <div
             className={
-              styles.bid_cover +
-              " " +
-              styles.eth_nft_not_for_sale_container +
-              " " +
-              styles.is_ethereum_nft_not_for_sale
+              [styles.bid_cover,
+              styles.eth_nft_not_for_sale_container,
+              styles.is_ethereum_nft_not_for_sale].join(" ")
             }
           >
             <p className={styles.eth_nft_not_for_sale_text}>OWNER</p>
@@ -243,7 +241,7 @@ const NFTCardBidInfo = ({
                       ]" 
                       queryParamsHandling="merge"
                       */}
-                    <a></a>
+                    <div></div>
                   </div>
                 </div>
                 <div className="d-flex flex-column">
@@ -251,7 +249,7 @@ const NFTCardBidInfo = ({
                       '/' + globalVars.RouteNames.USER_PREFIX,
                       loadProfile ? this.creatorProfile?.Username : postContent.ProfileEntryResponse?.Username
                     ]" */}
-                  <a className={styles.username_nft_card}>
+                  <div className={styles.username_nft_card}>
                     {loadProfile
                       ? creatorProfile?.Username
                       : postContent.ProfileEntryResponse?.Username}
@@ -260,7 +258,7 @@ const NFTCardBidInfo = ({
                     ) : postContent.ProfileEntryResponse?.IsVerified ? (
                       <i className="fas fa-check-circle pl-5px fa-md text-primary"></i>
                     ) : null}
-                  </a>
+                  </div>
                 </div>
               </div>
             ) : (
@@ -280,6 +278,6 @@ const NFTCardBidInfo = ({
   // Dom manipulation end
 
   // Default return
-  return <>{getSectionBasedOnChainAndSaleStatus()}</>;
+  return <div>{getSectionBasedOnChainAndSaleStatus()}</div>;
 };
 export default NFTCardBidInfo;

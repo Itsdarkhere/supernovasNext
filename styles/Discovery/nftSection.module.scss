@@ -1,0 +1,74 @@
+.nfts_card_list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-rows: 1fr;
+    margin: 20px -10px 0px;
+    padding: 0px 10px !important;
+    list-style-type: none;
+    &.nft_creator_list {
+      @media screen and (max-width: 676px) {
+        padding-top: 0;
+      }
+    }
+  .nft_col_wrap {
+    padding: 10px;
+    flex: 1 1 auto;
+    min-width: 300px;
+    margin-bottom: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    @media screen and (max-width: 676px) {
+      width: 100%;
+      margin-bottom: 35px;
+    }
+  }
+  .small_nft_col_wrap {
+    width: calc(100% / 40);
+    min-width: 195px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+.market_card_container {
+    flex: 1 1 auto;
+}
+.card {
+    background-color: #fff;
+    padding: 1rem;
+    border-radius: 30px;
+    box-shadow: 0 0 10px rgba(195, 209, 216, 0.5);
+}
+.card_slide {
+    width: 300px !important;
+    max-width: 300px !important;
+}
+.nftSectionDesktop {
+    width: 100%;
+}
+.nftSectionMobile {
+    display: grid;
+    margin-left: 10px;
+    gap: 15px;
+    grid-auto-flow: column;
+    grid-auto-columns: 300px;
+    grid-auto-rows: 510px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-inline: contain;
+    scroll-snap-type: inline mandatory;
+    display: none;
+}
+.nftSectionMobile > * {
+    scroll-snap-align: start;
+}
+@media screen and (max-width: 992px) {
+    .nftSectionDesktop {
+        display: none;
+    }
+    .nftSectionMobile {
+        display: grid;
+    }
+}

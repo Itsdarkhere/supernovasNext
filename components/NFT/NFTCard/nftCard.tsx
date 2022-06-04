@@ -1,5 +1,5 @@
-import { useState } from "react";
-import styles from "../../styles/NFT/nftCard.module.scss";
+import { useState, useEffect } from "react";
+import styles from "../../../styles/NFT/NFTCard/nftCard.module.scss";
 import NFTCardUnavailable from "./nftCardUnavailable";
 import * as _ from "lodash";
 import {
@@ -9,9 +9,6 @@ import {
 } from "../../../utils/backendapi-context";
 import {
   hasUserBlockedCreator,
-  setImxWalletAddress,
-  localNode,
-  loggedInUser,
 } from "../../../utils/global-context";
 import { GetNFTEntriesForNFTPost } from "../../../utils/backendapi-context";
 import { ethers } from "ethers";
@@ -20,6 +17,8 @@ import NFTCardQuoted from "./nftCardQuoted";
 import NFTCardCaption from "./nftCardCaption";
 import NFTCardBidInfo from "./nftCardBidInfo";
 import NFTCardFooter from "./nftCardFooter";
+import { useAppSelector, useAppDispatch } from "../../../utils/Redux/hooks";
+import { setIMXWalletAddress } from "../../../utils/Redux/Slices/imxSlice";
 // Missing top bar from the angular version
 const NFTCard = ({
   hoverable,
@@ -34,6 +33,11 @@ const NFTCard = ({
   showQuotedContent,
   loadProfile,
 }) => {
+  // Redux
+  const loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
+  const localNode = useAppSelector((state) => state.node.localNode);
+  // Redux end
+
   // Vars
   let nftEntryResponses: NFTEntryResponse[];
   let decryptableNFTEntryResponses: NFTEntryResponse[];
@@ -68,15 +72,9 @@ const NFTCard = ({
   const [ethereumNFTSalePrice, setEthereumNFTSalePrice] = useState(null);
   // State end
 
-  // Lifecycle methods
-  useState(() => {
-    setPost(post);
-  }, []);
-
-  // Lifecycle methods end
-
   // Functions
   const setPost = (postEntry: PostEntryResponse) => {
+    console.log(postEntry);
     setBasePost(postEntry);
     if (isRepost(postEntry)) {
       setPostContent(postEntry.RepostedPostEntryResponse);
@@ -92,8 +90,8 @@ const NFTCard = ({
     }
     // put back
     // this.setEmbedURLForPostContent();
-    if (postContent?.ImageURLs?.length > 0) {
-      changeImageURLs(postContent.ImageURLs[0]);
+    if (postEntry?.ImageURLs?.length > 0) {
+      changeImageURLs(postEntry.ImageURLs[0]);
     }
   };
 
@@ -169,9 +167,12 @@ const NFTCard = ({
     setEthPublicKeyNoDesoProfile(
       this.ethPublicKeyNoDesoProfile.slice(0, 15) + "..."
     );
-    setImxWalletAddress(localStorage.getItem("address"));
+    const dispatch = useAppDispatch();
 
-    if (res["user"] === this.globalVars.imxWalletAddress) {
+    let tempIMXwalletAddress = localStorage.getItem("address");
+    dispatch(setIMXWalletAddress(tempIMXwalletAddress));
+
+    if (res["user"] === tempIMXwalletAddress) {
       setIsEthOwner(true);
     } else {
       setIsEthOwner(false);
@@ -224,25 +225,22 @@ const NFTCard = ({
   };
 
   // Change image url, either to use bitclout stuff or cloudflare img cdn...
-  const changeImageURLs = (url: string): string => {
-    if (url.startsWith("https://i.imgur.com")) {
-      return url.replace(
-        "https://i.imgur.com",
-        "https://images.bitclout.com/i.imgur.com"
-      );
-    } else if (url.startsWith("https://arweave.net/")) {
+  const changeImageURLs = (url: string) => {
+    if (url.startsWith("https://arweave.net/") || url.includes(".arweave.net")) {
       // Build cloudflare imageString
       url =
         "https://supernovas.app/cdn-cgi/image/height=500,fit=scale-down,quality=85/" +
         url;
     }
+    console.log(url);
     setImageURL(url);
   };
 
   const showCardOrUnavailable = () => {
     // put back
+    return true;
     return (
-      !basePost.IsHidden &&
+      !basePost?.IsHidden &&
       !allCopiesBurned() &&
       !hidingPost &&
       !hasUserBlockedCreator(postContent.PosterPublicKeyBase58Check)
@@ -250,12 +248,20 @@ const NFTCard = ({
   };
 
   const allCopiesBurned = () => {
-    if (basePost.NumNFTCopies === 0 && basePost.NumNFTCopiesBurned === 0) {
+    if (basePost?.NumNFTCopies === 0 && basePost?.NumNFTCopiesBurned === 0) {
       return false;
     }
-    return basePost.NumNFTCopiesBurned === basePost.NumNFTCopies;
+    return basePost?.NumNFTCopiesBurned === basePost?.NumNFTCopies;
   };
   // Functions end
+
+  // Lifecycle methods
+  useEffect(() => {
+    if (typeof post?.PostHashHex !== "undefined") {
+      setPost(post);
+    }
+  }, [post]);
+  // Lifecycle methods end
 
   return (
     <div
@@ -265,7 +271,7 @@ const NFTCard = ({
         !hoverable && !reposterProfile && mobile
           ? styles.mobile_icons_visible
           : "",
-        postContent.IsHidden || allCopiesBurned() ? "br-0px" : "",
+        postContent?.IsHidden || allCopiesBurned() ? "br-0px" : "",
         insidePost ? styles.card_diff_width : "",
         marketplaceCard ? styles.marketplaceCard : "",
       ].join(" ")}
@@ -281,7 +287,7 @@ const NFTCard = ({
                 contentShouldLinkToThread ? "cursor-inherit" : "",
               ].join(" ")}
             >
-              <div className="card_body">
+              <div className={styles.card_body}>
                 {/* All the media of the card */}
                 <NFTCardMedia
                   postContent={postContent}
@@ -313,6 +319,7 @@ const NFTCard = ({
                 ) : null}
 
                 {/* Bidding related info, also the bottom most part of the card. (Hover excluded & mobile excluded) */}
+                {postContent ? 
                 <NFTCardBidInfo
                   showPlaceABid={showPlaceABid}
                   postContent={postContent}
@@ -331,6 +338,9 @@ const NFTCard = ({
                   highBid={highBid}
                   lastSalePrice={lastSalePrice}
                 ></NFTCardBidInfo>
+                :
+                null
+                }
 
                 {/* Card footer, contains the engagement metrics */}
                 <NFTCardFooter

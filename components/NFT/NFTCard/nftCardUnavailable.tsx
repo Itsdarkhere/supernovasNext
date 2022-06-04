@@ -10,7 +10,7 @@ const NFTCardUnavailable = () => {
         {/* [routerLink]="['/' + globalVars.RouteNames.POSTS, post.PostHashHex]" 
         (click)="onPostClicked($event)"
         queryParamsHandling="merge"*/}
-        <a className="link--unstyled">This post was removed by the author.</a>
+        <div className="link--unstyled">This post was removed by the author.</div>
       </div>
 
       {/* <!-- Posts are burned --> */}
@@ -18,9 +18,9 @@ const NFTCardUnavailable = () => {
       <div className="p-15px background-color-grey d-flex align-items-center justify-content-center fs-15px">
         {/* [routerLink]="['/' + globalVars.RouteNames.USER_PREFIX, post.ProfileEntryResponse?.Username]" 
           queryParamsHandling="merge"*/}
-        <a className="link--unstyled" style={{ textAlign: "center" }}>
+        <div className="link--unstyled" style={{ textAlign: "center" }}>
           All copies of the NFT have been burned...
-        </a>
+        </div>
       </div>
       {/* *ngIf="globalVars.hasUserBlockedCreator(post.PosterPublicKeyBase58Check)" */}
       <div className="p-15px background-color-grey d-flex align-items-center justify-content-center fs-15px">
@@ -30,11 +30,11 @@ const NFTCardUnavailable = () => {
           ]" 
           queryParamsHandling="merge"
           */}
-        <a className="link--unstyled" style={{ textAlign: "center" }}>
+        <div className="link--unstyled" style={{ textAlign: "center" }}>
           This is a post from
           {/* {{ loadProfile ? this.creatorProfile?.Username : postContent.ProfileEntryResponse?.Username }} who you have
             blocked. Click here to visit their profile to unblock them. */}
-        </a>
+        </div>
       </div>
     </>
   );

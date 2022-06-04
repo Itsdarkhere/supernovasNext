@@ -1,5 +1,5 @@
 import Image from "next/image";
-import styles from "../../styles/NFT/investBox.module.scss";
+import styles from "../../styles/Dao/investBox.module.scss";
 import buttonIcon from "../../public/icons/ib_button_icon.svg";
 import completeIcon from "../../public/icons/ib_completed.svg";
 import selectedIcon from "../../public/icons/ib_selected.svg";

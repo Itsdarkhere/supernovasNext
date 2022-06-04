@@ -1,4 +1,3 @@
-import { ConfettiSvg } from "../utils/global-context";
 import Page from "../components/Wrappers/page";
 import styles from "../styles/Dao/dao.module.scss";
 import Image from "next/image";

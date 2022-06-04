@@ -1,9 +1,12 @@
 import styles from "../../styles/Wallet/referralsComponent.module.scss";
-import { loggedInUser } from "../../utils/global-context";
 import Image from "next/image";
 import copyIcon from "../public/icons/copy_icon.svg";
+import { useAppSelector } from "../../utils/Redux/hooks";
 
 const ReferralsComponent = () => {
+  // Redux
+  const loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
+  // Redux end
   {
     /* *ngIf="!globalVars?.loggedInUser?.ProfileEntryResponse?.Username" */
   }

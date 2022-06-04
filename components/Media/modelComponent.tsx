@@ -1,5 +1,4 @@
 import styles from "../../styles/Media/model.module.scss";
-import "@google/model-viewer";
 import { useState } from "react";
 
 const ModelComponent = ({ postModelArweaveSrc }) => {

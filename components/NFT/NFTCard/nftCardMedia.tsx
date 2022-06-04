@@ -1,8 +1,8 @@
-import styles from "../../styles/NFT/nftCard.module.scss";
+import styles from "../../../styles/NFT/NFTCard/nftCard.module.scss";
 import Image from "next/image";
-import videoIcon from "../public/icons/video-type-white.svg";
-import smallAudioIcon from "../public/icons/audio-play-small.svg";
-import musicIcon from "../public/icons/music-type-white.svg";
+import videoIcon from "../../../public/icons/video-type-white.svg";
+import smallAudioIcon from "../../../public/icons/audio-play-small.svg";
+import musicIcon from "../../../public/icons/music-type-white.svg";
 
 // This component holds all the media of an nftCard
 // Image, video, iframe ...
@@ -13,20 +13,13 @@ const NFTCardMedia = ({
   showAudioTypeIcon,
   imageURL,
 }) => {
-  // Functions
-  const getEmbedWidth = (): string => {
-    // Put back
-    return "";
-    //return EmbedUrlParserService.getEmbedWidth(this.postContent.PostExtraData["EmbedVideoURL"]);
-  };
-  // Functions end
-
   // Dom manipulation
   const showAudioIcon = () => {
     if (showAudioTypeIcon) {
       return (
         <Image
-          width={"50%"}
+          width={"100%"}
+          height={"100%"}
           className={styles.card_audio_icon}
           src={musicIcon}
           alt="icon"
@@ -36,7 +29,8 @@ const NFTCardMedia = ({
       return (
         <div className={styles.audio_icon_hover_state}>
           <Image
-            width={"80%"}
+            width={"100%"}
+            height={"100%"}
             className="mr-5px"
             src={smallAudioIcon}
             alt="audio icon small"
@@ -53,7 +47,6 @@ const NFTCardMedia = ({
       <div
         className={[
           styles.img_cover,
-          "position-relative",
           isQuotedCard ? styles.change_height_img_cover : "",
         ].join(" ")}
       >
@@ -69,11 +62,10 @@ const NFTCardMedia = ({
         ) : null}
 
         {/*  was post.ParentStakeID */}
-        {postContent.ImageURLs &&
-        postContent?.ImageURLs[0] &&
-        !postContent.ParentStakeID ? (
+        {!postContent?.ParentStakeID && imageURL ? (
           <Image
-            width={"100%"}
+            layout="fill"
+            objectFit="cover"
             alt="nft image"
             className={styles.card_img}
             id="nft-card-image"
@@ -87,8 +79,8 @@ const NFTCardMedia = ({
 
         {/*  Video starts here  */}
         {/*  was post.ParentStakeID */}
-        {!postContent.ImageURLs &&
-        postContent.PostExtraData.arweaveVideoSrc &&
+        {!postContent?.ImageURLs &&
+        postContent?.PostExtraData?.arweaveVideoSrc &&
         !postContent.ParentStakeID ? (
           <div className={styles.video_nft_container + " overflow-hidden"}>
             {/* [ngClass]="{ opacity_0: !showVideoTypeIcon }" */}
@@ -117,10 +109,10 @@ const NFTCardMedia = ({
         {/* Video from google */}
         {/* allowfullscreen */}
         {/* put back ,,, src used to have | sanitizeVideoUrl */}
-        {postContent.VideoURLs &&
-        postContent.VideoURLs[0] &&
-        !postContent.ParentStakeID &&
-        !postContent.PostExtraData.arweaveVideoSrc ? (
+        {postContent?.VideoURLs &&
+        postContent?.VideoURLs[0] &&
+        !postContent?.ParentStakeID &&
+        !postContent?.PostExtraData?.arweaveVideoSrc ? (
           <iframe
             src={postContent.VideoURLs[0]}
             allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
@@ -145,11 +137,11 @@ const NFTCardMedia = ({
 
         {/* Text NFT */}
         {!constructedEmbedURL &&
-        !postContent.VideoURLs &&
-        (!postContent.ImageURLs || postContent.ImageURLs == "") &&
-        !postContent.PostExtraData.arweaveVideoSrc ? (
+        !postContent?.VideoURLs &&
+        (!postContent?.ImageURLs || postContent?.ImageURLs == "") &&
+        !postContent?.PostExtraData?.arweaveVideoSrc ? (
           <div className={styles.text_nft_container + " p-20px"}>
-            <div className="disable-scrollbars">{postContent.Body}</div>
+            <div className="disable-scrollbars">{postContent?.Body}</div>
           </div>
         ) : null}
       </div>

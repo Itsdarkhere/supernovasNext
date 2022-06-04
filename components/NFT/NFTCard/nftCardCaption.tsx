@@ -1,18 +1,18 @@
-import styles from "../../styles/NFT/nftCard.module.scss";
+import styles from "../../../styles/NFT/NFTCard/nftCard.module.scss";
 
 // This component is responsible for display the creator name, nft name etc
 // Could be called the middle section of the basic nft card
 const NFTCardCaption = ({ postContent, loadProfile, creatorProfile }) => {
   // Dom manipulation
   const showNameOrDescription = () => {
-    if (postContent.PostExtraData?.name) {
+    if (postContent?.PostExtraData?.name) {
       return (
-        <p className="font-weight-semibold fs-20px-im pt-5px">
+        <p className={styles.fs_20px_im}>
           {postContent.PostExtraData?.name}
         </p>
       );
     } else {
-      return <p className="pt-10px">{postContent.Body}</p>;
+      return <p className="pt-10px">{postContent?.Body}</p>;
     }
   };
   // Dom manipulation end
@@ -29,7 +29,7 @@ const NFTCardCaption = ({ postContent, loadProfile, creatorProfile }) => {
                     ]" 
                     queryParamsHandling="merge"
                     */}
-            <a></a>
+            <div></div>
           </div>
         </div>
         <div className="d-flex flex-column">
@@ -38,17 +38,17 @@ const NFTCardCaption = ({ postContent, loadProfile, creatorProfile }) => {
                     '/' + globalVars.RouteNames.USER_PREFIX,
                     loadProfile ? this.creatorProfile?.Username : postContent.ProfileEntryResponse?.Username
                   ]" */}
-          <a className={styles.username_nft_card}>
+          <div className={styles.username_nft_card}>
             {loadProfile
               ? creatorProfile?.Username
-              : postContent.ProfileEntryResponse?.Username}
+              : postContent?.ProfileEntryResponse?.Username}
             {/*  check works... it should if loadprofile check one of the verified, then choose element or null */}
             {loadProfile ? (
               creatorProfile?.IsVerified
-            ) : postContent.ProfileEntryResponse?.IsVerified ? (
+            ) : postContent?.ProfileEntryResponse?.IsVerified ? (
               <i className="fas fa-check-circle pl-5px fa-md text-primary"></i>
             ) : null}
-          </a>
+          </div>
         </div>
       </div>
     </div>

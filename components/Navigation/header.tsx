@@ -4,12 +4,18 @@ import notificationIcon from "../../public/icons/notification-icon.svg";
 import searchIcon from "../../public/icons/search-icon-mobile.svg";
 import { useState } from "react";
 import { unreadNotifications } from "../../utils/global-context";
-import { loggedInUser } from "../../utils/global-context";
 import { RouteNames } from "../../utils/backendapi-context";
 import Link from "next/link";
+import { useAppSelector } from "../../utils/Redux/hooks";
 const Header = () => {
+  // Redux
+  const loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
+  // Redux end
+
+  // State
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  // State end
 
   const showNotification = () => {
     setIsNotificationOpen(!isNotificationOpen);

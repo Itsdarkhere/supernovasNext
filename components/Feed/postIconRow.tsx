@@ -1,7 +1,6 @@
-import styles from "../../styles/Feed/postIconRow.module.scss"
+import styles from "../../styles/Feed/postIconRow.module.scss";
 import {
   abbreviateRepostsNumber,
-  getUSDForDiamond,
 } from "../../utils/global-context";
 import { useState } from "react";
 
@@ -19,6 +18,9 @@ const PostIconRow = ({ postContent }) => {
   const [diamondDragCancel, setDiamondDragCancel] = useState(false);
   // State end
 
+  if (!postContent?.RepostCount) {
+    return null;
+  }
   return (
     <div className="mt-5px js-feed-post-icon-row__container fs-14px text-grey5 d-flex justify-content-between unselectable">
       {/* (click)="openModal($event)" */}
@@ -41,7 +43,7 @@ const PostIconRow = ({ postContent }) => {
         */}
       <div className="btn-group cursor-pointer d-flex align-items-center feed-post-icon-hv">
         {/* dropdownToggle */}
-        <a
+        <div
           className="link--unstyled"
           id="repostActionsButton"
           data-toggle="dropdown"
@@ -49,7 +51,7 @@ const PostIconRow = ({ postContent }) => {
           aria-expanded="false"
         >
           <i className="icon-repost-2 feed-post-icon-row__icon background-hover-green"></i>
-        </a>
+        </div>
         {/* *ngIf="!hideNumbers" */}
         <span>
           {abbreviateRepostsNumber(
@@ -64,9 +66,9 @@ const PostIconRow = ({ postContent }) => {
           aria-labelledby="repostActionsButton"
         >
           {/* *ngIf="sendingRepostRequest; else repostOptions" */}
-          <a className="dropdown-menu-item d-block p-5px feed-post__dropdown-menu-item">
+          <div className="dropdown-menu-item d-block p-5px feed-post__dropdown-menu-item">
             <div className="fc-muted">Loading...</div>
-          </a>
+          </div>
           {/* <ng-template #repostOptions>
                 <a
                 *ngIf="userHasReposted(); else repostElseBlock"
@@ -165,7 +167,7 @@ const PostIconRow = ({ postContent }) => {
                     postContent.ProfileEntryResponse?.PublicKeyBase58Check === globalVars.loggedInUser?.PublicKeyBase58Check ||
                     sendingDiamonds
                 }" */}
-          <a className="diamond-btn icon-diamond fs-22px" id="diamond-button">
+          <div className="diamond-btn icon-diamond fs-22px" id="diamond-button">
             {/* [ngStyle]="{
                     height:
                     !collapseDiamondInfo || (diamondIdxDraggedTo === diamondCount && diamondDragLeftExplainer)
@@ -203,7 +205,7 @@ const PostIconRow = ({ postContent }) => {
                 <i className="fas fa-info-circle diamond-reaction diamond-help"></i>
               </div>
             </div>
-          </a>
+          </div>
           {/* <!--Draggable element for mobile drag-selection--> */}
           {/* (touchstart)="startDrag()"
                 (touchend)="dragClick($event)"

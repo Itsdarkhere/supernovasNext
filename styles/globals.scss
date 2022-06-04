@@ -3783,7 +3783,7 @@ option {
 }
 
 .text-align-start {
-  text-align: start;
+  text-align: flex-start;
 }
 
 .borderbg {
@@ -5042,9 +5042,6 @@ option {
   max-width: 300px;
   width: 100%;
 }
-.market-card-container {
-  flex: 1 1 auto;
-}
 
 .js-app-component__dynamically-added-router-link-class {
   background: #0000ee;
@@ -5625,6 +5622,9 @@ option {
   .nft_feed_post_bx {
     padding-right: 15px;
   }
+}
+.font-weight-bold {
+  font-weight: bold;
 }
 .nft_sold_modal {
   .head_txt {

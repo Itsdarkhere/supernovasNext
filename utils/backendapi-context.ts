@@ -558,6 +558,7 @@ export class PostExtraData {
   category: string;
   name: string;
   properties: string;
+  isEthereumNFT;
 }
 export class DeSoNode {
   Name: string;
@@ -681,7 +682,8 @@ export function _makeRequestURL(
   routeName: string,
   adminPublicKey?: string
 ): string {
-  let queryURL = location.protocol + "//" + endpoint + routeName;
+  // Put back https was location.protocol
+  let queryURL = "https://" + endpoint + routeName;
   // If the protocol is specified within the endpoint then use that.
   if (endpoint.startsWith("http")) {
     queryURL = endpoint + routeName;

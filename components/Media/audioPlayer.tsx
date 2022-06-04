@@ -1,5 +1,6 @@
 import styles from "../../styles/Media/audioPlayer.module.scss";
-import Amplitude from "amplitudejs/dist/amplitude.js";
+// import Amplitude from "amplitudejs";
+import Amplitude from "@amplitude/node";
 import Image from "next/image";
 import { useEffect } from "react";
 const AudioPlayer = ({ songName, creator, audioSrc }) => {

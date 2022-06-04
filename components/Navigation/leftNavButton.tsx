@@ -1,7 +1,11 @@
 import styles from "../../styles/Navigation/leftNavButton.module.scss";
 import Image from "next/image";
-import { messageResponse } from "../../utils/global-context";
+import { useAppSelector } from "../../utils/Redux/hooks";
 const LeftNavButton = ({ hasNotifications, link, imgSrc, label }) => {
+  // Redux
+  const messageResponse = useAppSelector((state) => state.messages.messageResponse);
+  // Redux end
+
   const showNotification = () => {
     if (
       hasNotifications &&

@@ -1,6 +1,6 @@
 import styles from "../../styles/nft/nftCard.module.scss";
 import NFTCard from "./nftCard";
-import nftBackground from "../public/img/nft-background.svg";
+import nftBackground from "../../../public/img/nft-background.svg";
 
 // This component is used when someone quote reposts a card
 // Mostly it just applies a background

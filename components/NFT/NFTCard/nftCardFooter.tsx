@@ -1,4 +1,4 @@
-import styles from "../../styles/NFT/nftCard.module.scss";
+import styles from "../../../styles/NFT/NFTCard/nftCard.module.scss";
 import PostIconRow from "../../Feed/postIconRow";
 
 // This component shows the engagement metrics on the card
@@ -10,7 +10,7 @@ const NFTCardFooter = ({ showIconRow, postContent }) => {
         {/* Like, Comment, Reclout, Share Buttons */}
       </div>
 
-      <div className={styles.footer_icons_container + "w-80"}>
+      <div className={styles.footer_icons_container + " w-80"}>
         {showIconRow ? (
           <PostIconRow postContent={postContent}></PostIconRow>
         ) : null}
