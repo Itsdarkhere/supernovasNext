@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import type { RootState } from "../store";
+import type { AppState } from "../store";
 
 // Store all marketplace sorting related states here
 
@@ -99,6 +99,6 @@ export const {
 // Not entirely sure on this ,,, This is how the docs describe it
 // Other code such as selectors can use the imported `RootState` type
 // Info: https://react-redux.js.org/tutorials/typescript-quick-start
-export const selectSort = (state: RootState) => state.sort.desoMarketplace;
+export const selectSort = (state: AppState) => state.sort.desoMarketplace;
 
 export default sortSlice.reducer;

@@ -7,11 +7,14 @@ import {
 } from "../utils/global-context";
 import { useEffect, useState } from "react";
 import { handleMessage } from "../utils/identity-context";
-import { useAppSelector } from "../utils/Redux/hooks";
+import { useAppDispatch, useAppSelector } from "../utils/Redux/hooks";
+import { setLocalNode } from "../utils/Redux/Slices/nodeSlice";
 export default function Home() {
   // Redux
+  const dispatch = useAppDispatch();
+  let localNode = useAppSelector((state) => state.node.localNode);
   let requestingStorageAccess = useAppSelector((state) => state.app.requestingStorageAccess);
-  
+
   // State
   const [identityURL, setIdentityURL] = useState("");
   // State end
@@ -54,6 +57,9 @@ export default function Home() {
         {/* USE HERE sanitizedIdentityServiceURL */}
         <Header></Header>
         <button onClick={() => login()}>CLICK</button>
+        <p>{localNode}</p>
+        <button onClick={() => dispatch(setLocalNode("https://supernovas.ap"))}>CLIKERRR</button>
+
         <LeftNav></LeftNav>
       </main>
 

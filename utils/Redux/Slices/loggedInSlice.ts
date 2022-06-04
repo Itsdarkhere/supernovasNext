@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { User } from "../../backendapi-context";
 import { LoggedInUserObservableResult } from "../../observable-results/logged-in-user-observable-result";
 import { Observable, Observer } from "rxjs";
-import type { RootState } from "../store";
+import type { AppState } from "../store";
 
 // Define loggedIn related states here
 

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import "../styles/globals.scss";
-import { Observable, Subscription, take } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 import * as _ from "lodash";
 import {
   GetStorage,
@@ -56,15 +56,14 @@ import { setDefaultFeeRateNanosPerKB, setFeeRateDeSoPerKB, setTransactionFeeInfo
 import { createYouHodlMap, setDiamondLevelMap } from "../utils/Redux/Slices/userSlice";
 import { setIsCompProfileCreation, setIsTestnetGlob, setLocalNode, setNodes } from "../utils/Redux/Slices/nodeSlice";
 import { pushToFollowChangeObservers, setFollowChangeObservable } from "../utils/Redux/Slices/followsSlice";
-import { setNanosPerUSDExchangeRate, setSatoshisPerDeSoExchangeRate, setUSDPerBitcoinExchangeRate } from "../utils/Redux/Slices/exhangeRatesSlice";
+import { setNanosPerUSDExchangeRate, setSatoshisPerDeSoExchangeRate, setUSDPerBitcoinExchangeRate } 
+from "../utils/Redux/Slices/exhangeRatesSlice";
 // Redux end
 
-function MyApp({ Component, pageProps }) {
+// Dispatch wont work without being wrapped inside a <Provider> so...
+function AppWrapper({children}) {
   // Redux
-  let dispatch = useAppDispatch();
-
-  const DYNAMICALLY_ADDED_ROUTER_LINK_CLASS =
-    "js-app-component__dynamically-added-router-link-class";
+  const dispatch = useAppDispatch();
 
   let showUsernameTooltip = false;
   let desoToUSDExchangeRateToDisplay = "fetching...";
@@ -73,6 +72,13 @@ function MyApp({ Component, pageProps }) {
   let callingUpdateTopLevelData = false;
   let problemWithNodeConnection = false;
   let callingUpdateNodeInfo = false;
+
+  // Redux
+  const loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
+  const localNode = useAppSelector((state) => state.node.localNode);
+  const DEFAULT_NANOS_PER_USD_EXCHANGE_RATE = useAppSelector((state) => state.exhange.DEFAULT_NANOS_PER_USD_EXCHANGE_RATE)
+  const userList = useAppSelector((state) => state.loggedIn.userList);
+  const updateEverything = useAppSelector((state) => state.other.updateEverything);
 
 
   const Init = () => {
@@ -97,10 +103,6 @@ function MyApp({ Component, pageProps }) {
     //   }
     // });
     // Rewrite in react END
-  
-    // Redux
-    const dispatch = useAppDispatch();
-    const DEFAULT_NANOS_PER_USD_EXCHANGE_RATE = useAppSelector((state) => state.exhange.DEFAULT_NANOS_PER_USD_EXCHANGE_RATE)
   
     getReferralUSDCents();
     dispatch(setSatoshisPerDeSoExchangeRate(0))
@@ -149,53 +151,18 @@ function MyApp({ Component, pageProps }) {
     });
   }
 
-  const getReferralUSDCents = (): void => {
-    const referralHash = localStorage.getItem("referralCode");
-    if (referralHash) {
-      GetReferralInfoForReferralHash(
-        process.env.NEXT_PUBLIC_verificationEndpointHostname,
-        referralHash
-      ).subscribe((res) => {
-        const referralInfo = res.ReferralInfoResponse.Info;
-        if (
-          res.ReferralInfoResponse.IsActive &&
-          (referralInfo.TotalReferrals < referralInfo.MaxReferrals ||
-            referralInfo.MaxReferrals == 0)
-        ) {
-          // Redux
-          const dispatch = useAppDispatch();
-          dispatch(setReferralUSDCents(referralInfo.RefereeAmountUSDCents));
-        }
-      });
-    }
-  }
-
-  const _globopoll = (passedFunc: any, expirationSecs?: any) => {
-    const startTime = new Date();
-    const interval = setInterval(() => {
-      if (passedFunc()) {
-        clearInterval(interval);
-      }
-      if (
-        expirationSecs &&
-        new Date().getTime() - startTime.getTime() > expirationSecs * 1000
-      ) {
-        return true;
-      }
-    }, 1000);
-  }
-
   const _setUpLoggedInUserObservable = () => {
     dispatch(setLoggedInUserObservable(new Observable((observer) => {
       dispatch(pushToLoggedInUserObservers(observer));
     })))
-  }
-  
-  const _setUpFollowChangeObservable = () => {
+ }
+ 
+ const _setUpFollowChangeObservable = () => {
     dispatch(setFollowChangeObservable(new Observable((observer) => {
       dispatch(pushToFollowChangeObservers(observer))
     })))
-  }
+ }
+
 
   useEffect(() => {
     // Init app
@@ -243,17 +210,14 @@ function MyApp({ Component, pageProps }) {
     // Update the BitClout <-> Bitcoin exchange rate every five minutes. This prevents
     // a stale price from showing in a tab that's been open for a while
     setInterval(() => {
-      _updateDeSoExchangeRate();
+      updateDeSoExchangeRate();
     }, 5 * 60 * 1000);
-
-    // Redux
-    const dispatch = useAppDispatch();
 
     // Check works,,, its missing this.
     dispatch(setUpdateEverything(_updateEverything));
 
     // We need to fetch this data before we start an import. Can remove once import code is gone.
-    _updateDeSoExchangeRate();
+    updateDeSoExchangeRate();
     _updateAppState();
     info().subscribe((res) => {
       // If the browser is not supported, display the browser not supported screen.
@@ -292,38 +256,217 @@ function MyApp({ Component, pageProps }) {
     window.addEventListener("resize", setVh);
   }, []);
 
-  useEffect(function mount() {
-    function onClick(event) {
-      if (event.target instanceof HTMLAnchorElement) {
-        const element = event.target as HTMLAnchorElement;
-        if (element.className === DYNAMICALLY_ADDED_ROUTER_LINK_CLASS) {
-          event.preventDefault();
-
-          if (!element) {
-            return;
-          }
-
-          const route = element.getAttribute("href");
-          if (route) {
-            // FYI, this seems to give a js error if the route isn't in our list
-            // of routes, which should help prevent attackers from tricking users into
-            // clicking misleading links
-            // fix navigate
-            // let navigate = GetNav();
-            // navigate(route, { replace: false });
-          }
+  const getReferralUSDCents = (): void => {
+    const referralHash = localStorage.getItem("referralCode");
+    if (referralHash) {
+      GetReferralInfoForReferralHash(
+        process.env.NEXT_PUBLIC_verificationEndpointHostname,
+        referralHash
+      ).subscribe((res) => {
+        const referralInfo = res.ReferralInfoResponse.Info;
+        if (
+          res.ReferralInfoResponse.IsActive &&
+          (referralInfo.TotalReferrals < referralInfo.MaxReferrals ||
+            referralInfo.MaxReferrals == 0)
+        ) {
+          dispatch(setReferralUSDCents(referralInfo.RefereeAmountUSDCents));
         }
+      });
+    }
+  }
+
+  const _globopoll = (passedFunc: any, expirationSecs?: any) => {
+    const startTime = new Date();
+    const interval = setInterval(() => {
+      if (passedFunc()) {
+        clearInterval(interval);
+      }
+      if (
+        expirationSecs &&
+        new Date().getTime() - startTime.getTime() > expirationSecs * 1000
+      ) {
+        return true;
+      }
+    }, 1000);
+  }
+
+
+  function _updateAppState() {
+    GetAppState(localNode, loggedInUser?.PublicKeyBase58Check).subscribe(
+      (res: any) => {
+        dispatch(setMinSatoshisBurnedForProfileCreation(res.data.MinSatoshisBurnedForProfileCreation))
+        dispatch(setDiamondLevelMap(res.data.DiamondLevelMap))
+        dispatch(setShowBuyWithUSD(res.data.HasWyreIntegration))
+        dispatch(setShowBuyWithETH(res.data.BuyWithETH))
+        dispatch(setShowJumio(res.data.HasJumioIntegration))
+        dispatch(setJumioDeSoNanos(res.data.JumioDeSoNanos))
+        dispatch(setIsTestnetGlob(res.data.IsTestnet))
+        // FIX NOW
+        // dispatch(setIsTestNet(res.data.IsTestnet))
+        dispatch(setShowPhoneNumberVerification(
+          res.data.HasTwilioAPIKey && res.data.HasStarterDeSoSeed
+        ));
+        // showPhoneNumberVerification && res.data.CompProfileCreation CODE REMOVAL
+        dispatch(setIsCompProfileCreation(false));
+        dispatch(setBuyETHAddress(res.data.BuyETHAddress))
+        dispatch(setNodes(res.data.Nodes))
+        dispatch(setTransactionFeeMap(res.data.TransactionFeeMap))
+
+
+        // Calculate max fee for display in frontend
+        // Sort so highest fee is at the top
+        var simpleFeeMap: { txnType: string; fees: number }[] = Object.keys(
+          res.data.TransactionFeeMap
+        )
+          .map((k) => {
+            if (res.data.TransactionFeeMap[k] !== null) {
+              // only return for non empty transactions
+              // sum in case there are multiple fee earners for the txn type
+              var sumOfFees = res.data.TransactionFeeMap[k]
+                .map((f) => f.AmountNanos)
+                .reduce((partial_sum, a) => partial_sum + a, 0);
+              // Capitalize and use spaces in Txn type
+              var txnType = (" " + k)
+                .replace(/_/g, " ")
+                .toLowerCase()
+                .replace(
+                  /[^a-zA-Z0-9]+(.)/g,
+                  (m, chr) => " " + chr.toUpperCase()
+                )
+                .trim();
+              return { txnType: txnType, fees: sumOfFees };
+            }
+          })
+          .sort((a, b) => b.fees - a.fees);
+
+        //Get the max of all fees
+        dispatch(setTransactionFeeMax(Math.max(...simpleFeeMap?.map((k) => k?.fees))));
+
+        //Prepare text detailed info of fees and join with newlines
+        dispatch(setTransactionFeeInfo(simpleFeeMap
+          ?.map((k) => `${k?.txnType}: ${nanosToUSD(k?.fees, 4)}`)
+          .join("\n")));
+      }
+    );
+  }
+
+  const _updateEverything = (
+    waitTxn: string = "",
+    successCallback: (comp: any) => void = () => {},
+    errorCallback: (comp: any) => void = () => {},
+    comp: any = ""
+  ) => {
+    // Redux
+    const pausePolling = useAppSelector((state) => state.app.pausePolling);
+
+    // Refresh the messageMeta periodically.
+    dispatch(setMessageMeta(GetStorage(MessageMetaKey)));
+    let tempMessageMeta = GetStorage(MessageMetaKey);
+
+    if (!tempMessageMeta) {
+      dispatch(setMessageMeta({
+        decryptedMessgesMap: {},
+        notificationMap: {},
+      }))
+    }
+    // If we have a transaction to wait for, we do a GetTxn call for a maximum of 10s (250ms * 40).
+    // There is a success and error callback so that the caller gets feedback on the polling.
+    if (waitTxn !== "") {
+      let attempts = 0;
+      let numTries = 160;
+      let timeoutMillis = 750;
+      // Set an interval to repeat
+      let interval = setInterval(() => {
+        if (attempts >= numTries) {
+          errorCallback(comp);
+          clearInterval(interval);
+        }
+        GetTxn(localNode, waitTxn)
+          .subscribe(
+            (res: any) => {
+              if (!res.TxnFound) {
+                return;
+              }
+
+              updateDeSoExchangeRate();
+              _updateAppState();
+              _updateTopLevelData().add(() => {
+                // We make sure the logged in user is updated before the success callback triggers
+                successCallback(comp);
+                clearInterval(interval);
+              });
+            },
+            (error) => {
+              clearInterval(interval);
+              errorCallback(comp);
+            }
+          )
+          .add(() => attempts++);
+      }, timeoutMillis) as any;
+    } else {
+      if (pausePolling) {
+        return;
+      }
+      updateDeSoExchangeRate();
+      _updateAppState();
+      return _updateTopLevelData();
+    }
+  };
+
+  const loadApp = () => {
+    // Redux
+    setIdentityServiceUsersVariable(GetStorage(IdentityUsersKey) || {});
+    // Filter out invalid public keys
+    const publicKeys = Object.keys(identityServiceUsers);
+    for (const publicKey of publicKeys) {
+      if (!publicKey.match(/^[a-zA-Z0-9]{54,55}$/)) {
+        delete identityServiceUsers[publicKey];
       }
     }
+    SetStorage(IdentityUsersKey, identityServiceUsers);
 
-    window.addEventListener("document:click", onClick);
-  });
+    GetUsersStateless(localNode, publicKeys, true).subscribe((res) => {
+      if (!_.isEqual(userList, res.UserList)) {
+        dispatch(setUserList(res.UserList || []));
+      }
+      updateEverything();
+    });
 
-  function _updateTopLevelData(): Subscription {
+    // Clean up legacy seedinfo storage. only called when a user visits the site again after a successful import
+    DeleteIdentities(localNode).subscribe();
+    RemoveStorage(LegacyUserListKey);
+    RemoveStorage(LegacySeedListKey);
+  }
+
+  function updateDeSoExchangeRate() {
+    _updateDeSoExchangeRate();
+  }
+
+  const installDD = () => {
+    const apiKey = process.env.NEXT_PUBLIC_apiKey;
+    const jsPath = process.env.NEXT_PUBLIC_jsPath;
+    const ajaxListenerPath = process.env.NEXT_PUBLIC_ajaxListenerPath;
+    const endpoint = process.env.NEXT_PUBLIC_endpoint;
+    if (!apiKey || !jsPath || !ajaxListenerPath || !endpoint) {
+      return;
+    }
+
+    // @ts-ignore
+    window.ddjskey = apiKey;
+    // @ts-ignore
+    window.ddoptions = { ajaxListenerPath, endpoint };
+
+    const datadomeScript = document.createElement("script");
+    const firstScript = document.getElementsByTagName("script")[0];
+    datadomeScript.async = true;
+    datadomeScript.src = jsPath;
+    firstScript.parentNode.insertBefore(datadomeScript, firstScript);
+  }
+
+  const _updateTopLevelData = (): Subscription => {
     // Redux
     const loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
     const localNode = useAppSelector((state) => state.node.localNode);
-    const dispatch = useAppDispatch();
 
     if (callingUpdateTopLevelData) {
       return new Subscription();
@@ -394,201 +537,50 @@ function MyApp({ Component, pageProps }) {
     );
   }
 
-  function updateDeSoExchangeRate() {
-    _updateDeSoExchangeRate();
-  }
-
-  function _updateAppState() {
-    // Redux
-    const loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
-    const localNode = useAppSelector((state) => state.node.localNode);
-    const dispatch = useAppDispatch();
-
-    GetAppState(localNode, loggedInUser?.PublicKeyBase58Check).subscribe(
-      (res: any) => {
-        dispatch(setMinSatoshisBurnedForProfileCreation(res.data.MinSatoshisBurnedForProfileCreation))
-        dispatch(setDiamondLevelMap(res.data.DiamondLevelMap))
-        dispatch(setShowBuyWithUSD(res.data.HasWyreIntegration))
-        dispatch(setShowBuyWithETH(res.data.BuyWithETH))
-        dispatch(setShowJumio(res.data.HasJumioIntegration))
-        dispatch(setJumioDeSoNanos(res.data.JumioDeSoNanos))
-        dispatch(setIsTestnetGlob(res.data.IsTestnet))
-        // FIX NOW
-        // dispatch(setIsTestNet(res.data.IsTestnet))
-        dispatch(setShowPhoneNumberVerification(
-          res.data.HasTwilioAPIKey && res.data.HasStarterDeSoSeed
-        ));
-        // showPhoneNumberVerification && res.data.CompProfileCreation CODE REMOVAL
-        dispatch(setIsCompProfileCreation(false));
-        dispatch(setBuyETHAddress(res.data.BuyETHAddress))
-        dispatch(setNodes(res.data.Nodes))
-        dispatch(setTransactionFeeMap(res.data.TransactionFeeMap))
-
-
-        // Calculate max fee for display in frontend
-        // Sort so highest fee is at the top
-        var simpleFeeMap: { txnType: string; fees: number }[] = Object.keys(
-          res.data.TransactionFeeMap
-        )
-          .map((k) => {
-            if (res.data.TransactionFeeMap[k] !== null) {
-              // only return for non empty transactions
-              // sum in case there are multiple fee earners for the txn type
-              var sumOfFees = res.data.TransactionFeeMap[k]
-                .map((f) => f.AmountNanos)
-                .reduce((partial_sum, a) => partial_sum + a, 0);
-              // Capitalize and use spaces in Txn type
-              var txnType = (" " + k)
-                .replace(/_/g, " ")
-                .toLowerCase()
-                .replace(
-                  /[^a-zA-Z0-9]+(.)/g,
-                  (m, chr) => " " + chr.toUpperCase()
-                )
-                .trim();
-              return { txnType: txnType, fees: sumOfFees };
-            }
-          })
-          .sort((a, b) => b.fees - a.fees);
-
-        //Get the max of all fees
-        dispatch(setTransactionFeeMax(Math.max(...simpleFeeMap?.map((k) => k?.fees))));
-
-        //Prepare text detailed info of fees and join with newlines
-        dispatch(setTransactionFeeInfo(simpleFeeMap
-          ?.map((k) => `${k?.txnType}: ${nanosToUSD(k?.fees, 4)}`)
-          .join("\n")));
-      }
-    );
-  }
-
-  const _updateEverything = (
-    waitTxn: string = "",
-    successCallback: (comp: any) => void = () => {},
-    errorCallback: (comp: any) => void = () => {},
-    comp: any = ""
-  ) => {
-    // Redux
-    const localNode = useAppSelector((state) => state.node.localNode);
-    const pausePolling = useAppSelector((state) => state.app.pausePolling);
-
-    const dispatch = useAppDispatch();
-
-    // Refresh the messageMeta periodically.
-    dispatch(setMessageMeta(GetStorage(MessageMetaKey)));
-    let tempMessageMeta = GetStorage(MessageMetaKey);
-
-    if (!tempMessageMeta) {
-      dispatch(setMessageMeta({
-        decryptedMessgesMap: {},
-        notificationMap: {},
-      }))
-    }
-    // If we have a transaction to wait for, we do a GetTxn call for a maximum of 10s (250ms * 40).
-    // There is a success and error callback so that the caller gets feedback on the polling.
-    if (waitTxn !== "") {
-      let attempts = 0;
-      let numTries = 160;
-      let timeoutMillis = 750;
-      // Set an interval to repeat
-      let interval = setInterval(() => {
-        if (attempts >= numTries) {
-          errorCallback(comp);
-          clearInterval(interval);
-        }
-        GetTxn(localNode, waitTxn)
-          .subscribe(
-            (res: any) => {
-              if (!res.TxnFound) {
-                return;
-              }
-
-              updateDeSoExchangeRate();
-              _updateAppState();
-              _updateTopLevelData().add(() => {
-                // We make sure the logged in user is updated before the success callback triggers
-                successCallback(comp);
-                clearInterval(interval);
-              });
-            },
-            (error) => {
-              clearInterval(interval);
-              errorCallback(comp);
-            }
-          )
-          .add(() => attempts++);
-      }, timeoutMillis) as any;
-    } else {
-      if (pausePolling) {
-        return;
-      }
-      updateDeSoExchangeRate();
-      _updateAppState();
-      return _updateTopLevelData();
-    }
-  };
-
-  function loadApp() {
-    // Redux
-    const localNode = useAppSelector((state) => state.node.localNode);
-    const userList = useAppSelector((state) => state.loggedIn.userList);
-    const updateEverything = useAppSelector((state) => state.other.updateEverything);
-
-    const dispatch = useAppDispatch();
-
-    setIdentityServiceUsersVariable(GetStorage(IdentityUsersKey) || {});
-    // Filter out invalid public keys
-    const publicKeys = Object.keys(identityServiceUsers);
-    for (const publicKey of publicKeys) {
-      if (!publicKey.match(/^[a-zA-Z0-9]{54,55}$/)) {
-        delete identityServiceUsers[publicKey];
-      }
-    }
-    SetStorage(IdentityUsersKey, identityServiceUsers);
-
-    GetUsersStateless(localNode, publicKeys, true).subscribe((res) => {
-      if (!_.isEqual(userList, res.UserList)) {
-        dispatch(setUserList(res.UserList || []));
-      }
-      updateEverything();
-    });
-
-    // Clean up legacy seedinfo storage. only called when a user visits the site again after a successful import
-    DeleteIdentities(localNode).subscribe();
-    RemoveStorage(LegacyUserListKey);
-    RemoveStorage(LegacySeedListKey);
-  }
-
-  function installDD() {
-    const apiKey = process.env.NEXT_PUBLIC_apiKey;
-    const jsPath = process.env.NEXT_PUBLIC_jsPath;
-    const ajaxListenerPath = process.env.NEXT_PUBLIC_ajaxListenerPath;
-    const endpoint = process.env.NEXT_PUBLIC_endpoint;
-    if (!apiKey || !jsPath || !ajaxListenerPath || !endpoint) {
-      return;
-    }
-
-    // @ts-ignore
-    window.ddjskey = apiKey;
-    // @ts-ignore
-    window.ddoptions = { ajaxListenerPath, endpoint };
-
-    const datadomeScript = document.createElement("script");
-    const firstScript = document.getElementsByTagName("script")[0];
-    datadomeScript.async = true;
-    datadomeScript.src = jsPath;
-    firstScript.parentNode.insertBefore(datadomeScript, firstScript);
-  }
-
-        {/* {loadingInitialAppState && !requestedStorageAccess ? (
-        <Loader></Loader>
-      ) : null} */}
   return (
     <>
-    <Provider store={store}>
-      <Component {...pageProps} />
-    </Provider>
+      {children}
     </>
+  )
+}
+
+function MyApp({ Component, pageProps }) {
+  const DYNAMICALLY_ADDED_ROUTER_LINK_CLASS =
+    "js-app-component__dynamically-added-router-link-class";
+
+  useEffect(function mount() {
+    function onClick(event) {
+      if (event.target instanceof HTMLAnchorElement) {
+        const element = event.target as HTMLAnchorElement;
+        if (element.className === DYNAMICALLY_ADDED_ROUTER_LINK_CLASS) {
+          event.preventDefault();
+
+          if (!element) {
+            return;
+          }
+
+          const route = element.getAttribute("href");
+          if (route) {
+            // FYI, this seems to give a js error if the route isn't in our list
+            // of routes, which should help prevent attackers from tricking users into
+            // clicking misleading links
+            // fix navigate
+            // let navigate = GetNav();
+            // navigate(route, { replace: false });
+          }
+        }
+      }
+    }
+
+    window.addEventListener("document:click", onClick);
+  });
+
+  return (
+    <Provider store={store}>
+      <AppWrapper>
+          <Component {...pageProps} />
+      </AppWrapper>
+    </Provider>
   );
 }
 

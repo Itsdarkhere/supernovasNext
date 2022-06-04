@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { TransactionFee } from "../../backendapi-context";
-import type { RootState } from "../store";
+import type { AppState } from "../store";
 
 // Define fees related states here
 

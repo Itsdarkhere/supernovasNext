@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import type { RootState } from "../store";
+import type { AppState } from "../store";
 
 // Define other states here,,, if you come up with a better file
 // please add them accordingly there

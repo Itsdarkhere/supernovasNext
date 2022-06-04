@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Action } from "rxjs/internal/scheduler/Action";
-import type { RootState } from "../store";
+import type { AppState } from "../store";
 
 // Define something being open related states here
 

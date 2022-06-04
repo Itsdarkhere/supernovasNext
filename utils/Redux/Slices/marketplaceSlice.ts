@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import type { RootState } from "../store";
+import type { AppState } from "../store";
 import { NFTCollectionResponse } from "../../backendapi-context"
 
 // Store all marketplace NOT sort related states here
@@ -72,6 +72,6 @@ export const {setNFTsData, setNFTsDataToShow, setETHMarketplaceNFTsData, setETHM
 // Not entirely sure on this ,,, This is how the docs describe it
 // Other code such as selectors can use the imported `RootState` type
 // Info: https://react-redux.js.org/tutorials/typescript-quick-start
-export const selectMarketplace = (state: RootState) => state.sort.desoMarketplace;
+export const selectMarketplace = (state: AppState) => state.sort.desoMarketplace;
 
 export default marketplaceSlice.reducer;

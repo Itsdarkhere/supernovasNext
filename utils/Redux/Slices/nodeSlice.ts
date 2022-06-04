@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { DeSoNode } from "../../backendapi-context";
-import type { RootState } from "../store";
+import type { AppState } from "../store";
 
 // Define node related states here
 

@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Observable, Observer } from "rxjs";
 import { FollowChangeObservableResult } from "../../observable-results/follow-change-observable-result";
-import type { RootState } from "../store";
+import type { AppState } from "../store";
 
 // Define follows related states here
 

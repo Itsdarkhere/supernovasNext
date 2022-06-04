@@ -1,10 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import type { RootState } from "../store";
+import type { AppState } from "../store";
 
 // Define 'all' app related states here
 
 // Define type
-interface AppState {
+interface ApplicationState {
     // This is set to false immediately after our first attempt to get a loggedInUser.
     loadingInitialAppState: boolean,
     // We're waiting for the user to grant storage access (full-screen takeover)
@@ -28,7 +28,7 @@ interface AppState {
 }
 
 // Define state
-const initialState: AppState = {
+const initialState: ApplicationState = {
     loadingInitialAppState: true,
     requestingStorageAccess: false,
     requestedStorageAccess: false,

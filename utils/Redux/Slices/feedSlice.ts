@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { PostEntryResponse } from "../../backendapi-context";
-import type { RootState } from "../store";
+import type { AppState } from "../store";
 
 // Define 'all' feed related states here
 
