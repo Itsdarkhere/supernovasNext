@@ -73,8 +73,7 @@ const NFTCard = ({
   // State end
 
   // Functions
-  const setPost = (postEntry: PostEntryResponse) => {
-    console.log(postEntry);
+  const setPost = (postEntry: PostEntryResponse) => {    
     setBasePost(postEntry);
     if (isRepost(postEntry)) {
       setPostContent(postEntry.RepostedPostEntryResponse);
@@ -232,7 +231,6 @@ const NFTCard = ({
         "https://supernovas.app/cdn-cgi/image/height=500,fit=scale-down,quality=85/" +
         url;
     }
-    console.log(url);
     setImageURL(url);
   };
 

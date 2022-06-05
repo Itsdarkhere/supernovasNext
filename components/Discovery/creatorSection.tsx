@@ -1,6 +1,8 @@
+import { propTypes } from "react-bootstrap/esm/Image";
 import styles from "../../styles/Discovery/creatorSection.module.scss";
+import CreatorCard from "../Reusables/creatorCard";
 
-const CreatorSection = ({ loading, userData }) => {
+const CreatorSection = ({ loading, userData, localNode, dataToShowExtra }) => {
   // Functions
   // Calculates how many cards fit per row
   const getCardsPerRow = () => {
@@ -23,7 +25,6 @@ const CreatorSection = ({ loading, userData }) => {
   // Functions end
   return (
     <>
-      {/* *ngIf="!mobile" */}
       <div className={styles.creatorSectionDesktop}>
         {loading ? (
           <div className={styles.nfts_card_list}>
@@ -40,18 +41,17 @@ const CreatorSection = ({ loading, userData }) => {
             <div className={styles.creator_card_list_discovery}>
               {userData?.map((user, i) => (
                 <div key={i} className={styles.nft_col_wrap}>
-                  {/*<app-creator-card
-                    [username]="username"
-                    [sizeSmall]="false"
-                    [extraUserNames]="discoveryExtraUserArray"
-                ></app-creator-card>*/}
+                  <CreatorCard
+                    localNode={localNode}
+                    username={user}
+                    extraUserNames={dataToShowExtra}
+                  ></CreatorCard>
                 </div>
               ))}
             </div>
           </>
         )}
       </div>
-      {/* *ngIf="mobile" */}
       <div className={styles.creatorSectionMobile + " disable-scrollbars"}>
         {loading ? (
           <>
@@ -67,11 +67,11 @@ const CreatorSection = ({ loading, userData }) => {
           <>
             {userData?.map((user, i) => (
               <div key={i} style={{ paddingTop: "10px", paddingLeft: "5px" }}>
-                {/*<app-creator-card
-              [username]="user"
-              [extraUserNames]="discoveryExtraUserArray"
-              [sizeSmall]="false"
-            ></app-creator-card>*/}
+                <CreatorCard
+                    extraUserNames={dataToShowExtra}
+                    localNode={localNode}
+                    username={user}
+                ></CreatorCard>
               </div>
             ))}
           </>

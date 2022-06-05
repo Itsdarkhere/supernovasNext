@@ -112,7 +112,6 @@ const Header = () => {
         </li>
       );
     }
-    console.log(loggedInUser);
     return null;
   };
 

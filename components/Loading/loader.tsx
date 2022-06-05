@@ -15,7 +15,7 @@ const Loader = () => {
         <div className={styles.cell + " " + styles.d_8}>a</div>
         <div className={styles.cell + " " + styles.d_9}>s</div>
 
-        <div className={styles.cell + "" + styles.d_2}>s</div>
+        <div className={styles.cell + " " + styles.d_2}>s</div>
         <div className={styles.cell + " " + styles.d_3}>u</div>
         <div className={styles.cell + " " + styles.d_4}>p</div>
         <div className={styles.cell + " " + styles.d_5}>e</div>
@@ -26,7 +26,7 @@ const Loader = () => {
         <div className={styles.cell + " " + styles.d_10}>a</div>
         <div className={styles.cell + " " + styles.d_11}>s</div>
 
-        <div className={styles.cell + "" + styles.d_3}>s</div>
+        <div className={styles.cell + " " + styles.d_3}>s</div>
         <div className={styles.cell + " " + styles.d_4}>u</div>
         <div className={styles.cell + " " + styles.d_5}>p</div>
         <div className={styles.cell + " " + styles.d_6}>e</div>

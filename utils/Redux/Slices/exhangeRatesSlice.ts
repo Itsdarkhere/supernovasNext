@@ -31,7 +31,7 @@ const initialState: ExhangeRateState = {
     nanosPerETHExchangeRate: undefined,
     satoshisPerDeSoExchangeRate: undefined,
     usdPerBitcoinExchangeRate: undefined,
-    nanosPerUSDExchangeRate: undefined,
+    nanosPerUSDExchangeRate: 1e9,
     ProtocolUSDCentsPerBitcoinExchangeRate: undefined,
     desoToUSDExchangeRateToDisplay: undefined,
     ExchangeUSDCentsPerDeSo: undefined,

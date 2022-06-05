@@ -1,4 +1,4 @@
-import { Observable } from "rxjs";
+import { Observable, Observer } from "rxjs";
 import {
   User,
   PostEntryResponse,
@@ -6,7 +6,7 @@ import {
   TutorialStatus,
 } from "./backendapi-context";
 import { LoggedInUserObservableResult } from "./observable-results/logged-in-user-observable-result";
-import { track68, track54, identify1, peopleset } from "./mixpanel";
+import { track68, identify1, peopleset } from "./mixpanel";
 import {
   GetCollectorOrCreator,
   GetStorage,
@@ -17,13 +17,10 @@ import {
   GetMessages,
   LastLoggedInUserKey,
   setIdentityServiceUsers,
-  LastLocalNodeKey,
-  LastIdentityServiceKey,
   GetExchangeRate,
   ResendVerifyEmail,
   StartOrSkipTutorial,
   GetJumioStatusForPublicKey,
-  GetReferralInfoForReferralHash,
   SortETHMarketplace,
   GetSinglePost,
   GetReferralInfoForUser,
@@ -34,27 +31,34 @@ import Timer = NodeJS.Timer;
 import { Link, ImmutableXClient } from "@imtbl/imx-sdk";
 import { SwalHelper } from "./helpers/swal-helper";
 import {
-  setIdentityServiceURL,
-  setSanitizedIdentityServiceURL,
   launch,
 } from "./identity-context";
+import store from "./Redux/store";
 // Redux
 import { useAppSelector, useAppDispatch } from "./Redux/hooks";
 // Actions
 import { setIsLeftBarMobileOpen } from "./Redux/Slices/openSlice";
-import { setIsCollector, setIsCreator, setIsNullUsername, setIsOnBoardingComplete, setIsVerified, setNeedToPickCreatorOrCollector, setUsername, setYouHodlMap } from "./Redux/Slices/userSlice";
-import { setMessageNotificationCount, setMessageRequestsFollowedOnly, setMessageResponse, setMessagesRequestsFollowersOnly, setMessagesRequestsHoldersOnly, setMessagesRequestsHoldingsOnly, setMessagesSortAlgorithm, setNewMessagesFromPage } from "./Redux/Slices/messagesSlice";
-import { pushToLoggedInUserObservers, setLoggedInUserObservable, setLoggedInUserReferralInfoResponses, setLoggedInUserState, setUserList } from "./Redux/Slices/loggedInSlice";
-import { setDesoToUSDExchangeRateToDisplay, setExchangeUSDCentsPerDeSo, setLatestBitcoinAPIResponse, setNanosPerETHExchangeRate, setNanosPerUSDExchangeRate, setProtocolUSDCentsPerBitcoinExchangeRate, setSatoshisPerDeSoExchangeRate, setUSDCentsPerDeSoReservePrice, setUSDPerBitcoinExchangeRate, setUSDPerETHExchangeRate } from "./Redux/Slices/exhangeRatesSlice";
+import { setIsCollector, setIsCreator, setIsNullUsername, setIsOnBoardingComplete, setIsVerified, 
+  setNeedToPickCreatorOrCollector, setUsername, setYouHodlMap } from "./Redux/Slices/userSlice";
+import { setMessageNotificationCount, setMessageRequestsFollowedOnly, setMessageResponse, 
+  setMessagesRequestsFollowersOnly, setMessagesRequestsHoldersOnly, setMessagesRequestsHoldingsOnly, 
+  setMessagesSortAlgorithm, setNewMessagesFromPage } from "./Redux/Slices/messagesSlice";
+import { setLoggedInUserReferralInfoResponses, setLoggedInUserState, setUserList } from "./Redux/Slices/loggedInSlice";
+import { setDesoToUSDExchangeRateToDisplay, setExchangeUSDCentsPerDeSo, setLatestBitcoinAPIResponse, 
+  setNanosPerETHExchangeRate, setNanosPerUSDExchangeRate, setProtocolUSDCentsPerBitcoinExchangeRate, 
+  setSatoshisPerDeSoExchangeRate, setUSDCentsPerDeSoReservePrice, setUSDPerBitcoinExchangeRate, 
+  setUSDPerETHExchangeRate } from "./Redux/Slices/exhangeRatesSlice";
 import { setFollowFeedPosts } from "./Redux/Slices/feedSlice";
-import { setCanvasCount, setConfetti, setNanosSold, setReferralUSDCents } from "./Redux/Slices/otherSlice";
+import { setCanvasCount, setConfetti, setNanosSold } from "./Redux/Slices/otherSlice";
 import { setLocalNode } from "./Redux/Slices/nodeSlice";
-import { setBuyDeSoFeeBasisPoints, setDefaultFeeRateNanosPerKB, setFeeRateDeSoPerKB } from "./Redux/Slices/feesSlice";
-import { pushToETHMarketplaceNFTsData, setETHMarketplaceNFTsData, setETHMarketplaceNFTsDataToShow, setIsMarketplaceLoading } from "./Redux/Slices/marketplaceSlice";
+import { setBuyDeSoFeeBasisPoints, } from "./Redux/Slices/feesSlice";
+import { pushToETHMarketplaceNFTsData, setETHMarketplaceNFTsData, setETHMarketplaceNFTsDataToShow, 
+  setIsMarketplaceLoading } from "./Redux/Slices/marketplaceSlice";
 import { setMarketplaceSortType } from "./Redux/Slices/sortSlice";
-import { concatToCollectedNFTsToShow, concatToCreatedNFTsToShow, concatToETHNFTsCollected, setETHNFTsCollected, setETHNFTsCreated } from "./Redux/Slices/profileSlice";
+import { concatToCollectedNFTsToShow, concatToCreatedNFTsToShow, concatToETHNFTsCollected, 
+  setETHNFTsCollected, setETHNFTsCreated } from "./Redux/Slices/profileSlice";
 import { setIMXClient } from "./Redux/Slices/imxSlice";
-import { pushToFollowChangeObservers, setFollowChangeObservable } from "./Redux/Slices/followsSlice";
+import { FollowChangeObservableResult } from "./observable-results/follow-change-observable-result";
 // Redux end
 
 export enum ConfettiSvg {
@@ -73,9 +77,26 @@ const svgToProps = {
   [ConfettiSvg.LAMBO]: { size: 18, weight: 1 },
 };
 
-
-
+const NANOS_PER_UNIT = 1e9;
+const WEI_PER_ETH = 1e18;
+const MAX_POST_LENGTH = 560;
+const FOUNDER_REWARD_BASIS_POINTS_WARNING_THRESHOLD = 50 * 100;
+const DEFAULT_NANOS_PER_USD_EXCHANGE_RATE = 1e9;
+const CREATOR_COIN_RESERVE_RATIO = 0.3333333;
+const CREATOR_COIN_TRADE_FEED_BASIS_POINTS = 1;
+// No idea to what extent these stay in state
+let formatUSDMemo = {};
+// No idea to what extent these stay in state
+let nanosToDeSoMemo = {};
 const routeNames = RouteNames;
+
+// No idea to what extent these stay in state
+let loggedInUserObservable: Observable<LoggedInUserObservableResult>;
+let loggedInUserObservers = [] as Observer<LoggedInUserObservableResult>[];
+
+// No idea to what extent these stay in state
+let followChangeObservable: Observable<FollowChangeObservableResult>;
+let followChangeObservers = [] as Observer<FollowChangeObservableResult>[];
 
 
 const emailRegExp =
@@ -91,8 +112,7 @@ export let unreadNotifications: number = 0;
 
 export async function iterateAndSetUserList(toSet: User, loggedIn: any) {
   // Redux
-  let tempUserList = useAppSelector((state) => state.loggedIn.userList);
-  const dispatch = useAppDispatch();
+  let tempUserList = store.getState().loggedIn.userList;
 
   let loggedInUserFound = false;
   tempUserList.forEach((user, index) => {
@@ -104,10 +124,13 @@ export async function iterateAndSetUserList(toSet: User, loggedIn: any) {
   });
   // If the logged-in user wasn't in the list, add it to the list.
   if (!loggedInUserFound && loggedIn) {
-    tempUserList.push(toSet);
+    console.log(toSet);
+    console.log(tempUserList);
+    // tempUserList.push(toSet);
+    tempUserList = tempUserList.concat(...tempUserList, toSet)
   }
   // Update userList in state
-  dispatch(setUserList(tempUserList));
+  store.dispatch(setUserList(tempUserList));
 }
 
 //   ------------------------------------ update globalVars for loggedInUser ------------------------------------
@@ -154,20 +177,20 @@ export function openLeftBarMobile() {
 
 export function checkIsVerified() {
   // Redux 
-  const dispatch = useAppDispatch();
-  const loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
+  const loggedInUser = store.getState().loggedIn.loggedInUser;
+
 
   const isVerifiedRes = JSON.stringify(loggedInUser?.ProfileEntryResponse); 
   if (isVerifiedRes === "null") {
-    dispatch(setIsVerified(false));
+    store.dispatch(setIsVerified(false));
   } else {
     const isVerifiedStrBool = JSON.stringify(
       loggedInUser?.ProfileEntryResponse["IsVerified"]
     );
     if (isVerifiedStrBool === "true") {
-      dispatch(setIsVerified(true));
+      store.dispatch(setIsVerified(true));
     } else {
-      dispatch(setIsVerified(false));
+      store.dispatch(setIsVerified(false));
     }
   }
   // console.log(` ------------------------------------ isVerified status is ${this.isVerified} ------------------- `);
@@ -175,62 +198,59 @@ export function checkIsVerified() {
 
 export function checkNullUsername() {
   // Redux 
-  const dispatch = useAppDispatch();
-  const loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
+  const loggedInUser = store.getState().loggedIn.loggedInUser;
 
   const isNullUsernameRes = JSON.stringify(loggedInUser?.ProfileEntryResponse);
 
   if (isNullUsernameRes === "null") {
     // comment/uncomment line below out for testing
-    dispatch(setIsNullUsername(true));
+    store.dispatch(setIsNullUsername(true));
   } else {
     let tempUsername = JSON.stringify(loggedInUser?.ProfileEntryResponse["Username"]);
     tempUsername = tempUsername.replace(/['"]+/g, "");
-    dispatch(setUsername(tempUsername));
+    store.dispatch(setUsername(tempUsername));
     if (tempUsername) {
-      dispatch(setIsNullUsername(false))
+      store.dispatch(setIsNullUsername(false))
     } else {
       // comment line below out for testing
-      dispatch(setIsNullUsername(true))
+      store.dispatch(setIsNullUsername(true))
     }
   }
 }
 
 export function checkOnboardingCompleted() {
   // Redux 
-  const dispatch = useAppDispatch();
-  const isCreator = useAppSelector((state) => state.user.isCreator);
-  const isCollector = useAppSelector((state) => state.user.isCollector);
-  const isNullUsername = useAppSelector((state) => state.user.isNullUsername);
+  const isCreator = store.getState().user.isCreator;
+  const isCollector = store.getState().user.isCollector;
+  const isNullUsername = store.getState().user.isNullUsername;
   //   if they are a creator, have a profile (username) and are verified then onboarding is complete
   if (isCreator === true && isNullUsername === false) {
-    dispatch(setNeedToPickCreatorOrCollector(false))
-    dispatch(setIsOnBoardingComplete(true))
+    store.dispatch(setNeedToPickCreatorOrCollector(false))
+    store.dispatch(setIsOnBoardingComplete(true))
   }
   // if they are a collector and have a profile (username) then onboarding is complete
   else if (isCollector === true && isNullUsername === false) {
-    dispatch(setNeedToPickCreatorOrCollector(false))
-    dispatch(setIsOnBoardingComplete(true))
+    store.dispatch(setNeedToPickCreatorOrCollector(false))
+    store.dispatch(setIsOnBoardingComplete(true))
   } else {
-    dispatch(setNeedToPickCreatorOrCollector(true))
-    dispatch(setIsOnBoardingComplete(false))
+    store.dispatch(setNeedToPickCreatorOrCollector(true))
+    store.dispatch(setIsOnBoardingComplete(false))
   }
 }
 
 export async function checkOnboardingStatus(): Promise<void> {
   // Redux
-  const localNode = useAppSelector((state) => state.node.localNode);
-  const loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
-  const isOnboardingComplete = useAppSelector((state) => state.user.isOnboardingComplete);
-  const dispatch = useAppDispatch();
+  const localNode = store.getState().node.localNode;
+  const loggedInUser = store.getState().loggedIn.loggedInUser;
+  const isOnboardingComplete = store.getState().user.isOnboardingComplete;
   // Redux end
   const publicKey = loggedInUser?.PublicKeyBase58Check;
 
   if (publicKey) {
     GetCollectorOrCreator(localNode, publicKey).subscribe(
       (res) => {
-        dispatch(setIsCollector(res["Collector"]))
-        dispatch(setIsCreator(res["Creator"]))
+        store.dispatch(setIsCollector(res["Collector"]))
+        store.dispatch(setIsCreator(res["Creator"]))
 
         //   update checkNullUsername
         checkNullUsername();
@@ -244,8 +264,8 @@ export async function checkOnboardingStatus(): Promise<void> {
       },
       (err) => {
         console.log(err);
-        dispatch(setIsCollector(false))
-        dispatch(setIsCreator(false))
+        store.dispatch(setIsCollector(false))
+        store.dispatch(setIsCreator(false))
       }
     );
   }
@@ -254,14 +274,13 @@ export async function checkOnboardingStatus(): Promise<void> {
 
 export function SetupMessages() {
   // Redux
-  const loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
-  const messageResponse = useAppSelector((state) => state.messages.messageResponse);
-  const dispatch = useAppDispatch();
+  const loggedInUser = store.getState().loggedIn.loggedInUser;
+  const messageResponse = store.getState().messages.messageResponse;
   // Redux end
 
   // If there's no loggedInUser, we set the notification count to zero
   if (!loggedInUser) {
-    dispatch(setMessageNotificationCount(0));
+    store.dispatch(setMessageNotificationCount(0));
     return;
   }
 
@@ -283,8 +302,8 @@ export function SetupMessages() {
 
 export function GetUnreadNotifications() {
   // Redux
-  const loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
-  const localNode = useAppSelector((state) => state.node.localNode);
+  const loggedInUser = store.getState().loggedIn.loggedInUser;
+  const localNode = store.getState().node.localNode;
   // Redux end
   if (loggedInUser) {
     GetUnreadNotificationsCount(localNode, loggedInUser.PublicKeyBase58Check)
@@ -309,45 +328,42 @@ export function GetUnreadNotifications() {
   }
 }
 export function SetMessagesFilter(tabName: any) {
-  // Redux
-  const dispatch = useAppDispatch();
-
   // Set the request parameters if it's a known tab.
   // Custom is set in the filter menu component and saved in local storage.
   if (tabName !== "Custom") {
-    dispatch(setMessagesRequestsHoldersOnly(tabName === "My holders"));
-    dispatch(setMessagesRequestsHoldingsOnly(false));
-    dispatch(setMessagesRequestsFollowersOnly(false));
-    dispatch(setMessageRequestsFollowedOnly(false));
-    dispatch(setMessagesSortAlgorithm("time"));
+    store.dispatch(setMessagesRequestsHoldersOnly(tabName === "My holders"));
+    store.dispatch(setMessagesRequestsHoldingsOnly(false));
+    store.dispatch(setMessagesRequestsFollowersOnly(false));
+    store.dispatch(setMessageRequestsFollowedOnly(false));
+    store.dispatch(setMessagesSortAlgorithm("time"));
   } else {
-    dispatch(setMessagesRequestsHoldersOnly(GetStorage(
+    store.dispatch(setMessagesRequestsHoldersOnly(GetStorage(
       "customMessagesRequestsHoldersOnly"
     )));
-    dispatch(setMessagesRequestsHoldingsOnly(GetStorage(
+    store.dispatch(setMessagesRequestsHoldingsOnly(GetStorage(
       "customMessagesRequestsHoldingsOnly"
     )));
-    dispatch(setMessagesRequestsFollowersOnly(GetStorage(
+    store.dispatch(setMessagesRequestsFollowersOnly(GetStorage(
       "customMessagesRequestsFollowersOnly"
     )));
-    dispatch(setMessageRequestsFollowedOnly(GetStorage(
+    store.dispatch(setMessageRequestsFollowedOnly(GetStorage(
       "customMessagesRequestsFollowedOnly"
     )));
-    dispatch(setMessagesSortAlgorithm(GetStorage("customMessagesSortAlgorithm")));
+    store.dispatch(setMessagesSortAlgorithm(GetStorage("customMessagesSortAlgorithm")));
   }
 }
 
 export function LoadInitialMessages() {
   // Redux ,,, wonder if we can move this to the slice ,,, prolly should
-  const loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
-  const localNode = useAppSelector((state) => state.node.localNode);
-  const messagesPerFetch = useAppSelector((state) => state.messages.messagesPerFetch);
-  const messagesRequestsHoldersOnly = useAppSelector((state) => state.messages.messagesRequestsHoldersOnly);
-  const messagesRequestsHoldingsOnly = useAppSelector((state) => state.messages.messagesRequestsHoldingsOnly);
-  const messagesRequestsFollowersOnly = useAppSelector((state) => state.messages.messagesRequestsFollowersOnly);
-  const messagesRequestsFollowedOnly = useAppSelector((state) => state.messages.messagesRequestsFollowedOnly);
-  const messagesSortAlgorithm = useAppSelector((state) => state.messages.messagesSortAlgorithm);
-  const pauseMessageUpdates = useAppSelector((state) => state.messages.pauseMessageUpdates);
+  const loggedInUser = store.getState().loggedIn.loggedInUser;
+  const localNode = store.getState().node.localNode;
+  const messagesPerFetch = store.getState().messages.messagesPerFetch;
+  const messagesRequestsHoldersOnly = store.getState().messages.messagesRequestsHoldersOnly;;
+  const messagesRequestsHoldingsOnly = store.getState().messages.messagesRequestsHoldingsOnly;;
+  const messagesRequestsFollowersOnly = store.getState().messages.messagesRequestsFollowersOnly;;
+  const messagesRequestsFollowedOnly = store.getState().messages.messagesRequestsFollowedOnly;;
+  const messagesSortAlgorithm = store.getState().messages.messagesSortAlgorithm;;
+  const pauseMessageUpdates = store.getState().messages.pauseMessageUpdates;
   // Redux end
   if (!loggedInUser) {
     return;
@@ -389,7 +405,7 @@ export function _notifyLoggedInUserObservers(
   isSameUserAsBefore: boolean
 ) {
   // Redux
-  const loggedInUserObservers = useAppSelector((state) => state.loggedIn.loggedInUserObservers);
+  const loggedInUserObservers = store.getState().loggedIn.loggedInUserObservers;
   // Redux end
   loggedInUserObservers.forEach((observer) => {
     const result = new LoggedInUserObservableResult();
@@ -412,11 +428,11 @@ export function userInTutorial(user: User): boolean {
 
 // NEVER change loggedInUser property directly. Use this method instead.
 export function setLoggedInUser(user: User) {
+  console.log("---SET LOGGED IN----")
   // Redux
-  const loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
-  const localNode = useAppSelector((state) => state.node.localNode);
-  const youHodlMap = useAppSelector((state) => state.user.youHodlMap);
-  const dispatch = useAppDispatch();
+  const loggedInUser = store.getState().loggedIn.loggedInUser;
+  const localNode = store.getState().node.localNode;
+  const youHodlMap = store.getState().user.youHodlMap;
   // Redux end
   const isSameUserAsBefore =
     loggedInUser &&
@@ -424,7 +440,7 @@ export function setLoggedInUser(user: User) {
     loggedInUser.PublicKeyBase58Check === user.PublicKeyBase58Check;
 
   let tempLoggedInUser = user;
-  dispatch(setLoggedInUserState(user));
+  store.dispatch(setLoggedInUserState(user));
 
   if (tempLoggedInUser) {
     // Fetch referralLinks for the userList before completing the load.
@@ -434,7 +450,7 @@ export function setLoggedInUser(user: User) {
       tempLoggedInUser?.PublicKeyBase58Check
     ).subscribe(
       (res: any) => {
-        dispatch(setLoggedInUserReferralInfoResponses(res.ReferralInfoResponses))
+        store.dispatch(setLoggedInUserReferralInfoResponses(res.ReferralInfoResponses))
       },
       (err: any) => {
         console.log(err);
@@ -452,16 +468,16 @@ export function setLoggedInUser(user: User) {
     SetStorage(LastLoggedInUserKey, user?.PublicKeyBase58Check);
 
     // Clear out the message inbox and BitcoinAPI
-    dispatch(setMessageResponse(null));
-    dispatch(setLatestBitcoinAPIResponse(null));
+    store.dispatch(setMessageResponse(null));
+    store.dispatch(setLatestBitcoinAPIResponse(null));
 
     // Fix the youHodl / hodlYou maps.
-    let tempYouHodlMap = youHodlMap;
+    let tempYouHodlMap = JSON.parse(JSON.stringify(youHodlMap));
     for (const entry of tempLoggedInUser?.UsersYouHODL || []) {
       tempYouHodlMap[entry.CreatorPublicKeyBase58Check] = entry;
     }
-    dispatch(setYouHodlMap(tempYouHodlMap));
-    dispatch(setFollowFeedPosts([]));
+    store.dispatch(setYouHodlMap(tempYouHodlMap));
+    store.dispatch(setFollowFeedPosts([]));
   }
 
   _notifyLoggedInUserObservers(user, isSameUserAsBefore);
@@ -470,7 +486,7 @@ export function setLoggedInUser(user: User) {
 
 export function trackLoggedInUser() {
   // Redux
-  const loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
+  const loggedInUser = store.getState().loggedIn.loggedInUser;
   // Redux end
   if (loggedInUser) {
     identify1(loggedInUser?.PublicKeyBase58Check);
@@ -523,6 +539,7 @@ export function getUSDForDiamond(index: number): string {
   // Redux end
   const desoNanos = diamondLevelMap[index];
   const val = nanosToUSDNumber(desoNanos);
+  console.log("HERE --- 7");
   if (val < 1) {
     return formatUSD(Math.max(val, 0.01), 2);
   }
@@ -533,9 +550,6 @@ export function nanosToDeSo(
   nanos: number,
   maximumFractionDigits?: number
 ): string {
-  // Redux
-  const nanosToDeSoMemo = useAppSelector((state) => state.other.nanosToDeSoMemo);
-  // Redux end
   if (nanosToDeSoMemo[nanos] && nanosToDeSoMemo[nanos][maximumFractionDigits]) {
     return nanosToDeSoMemo[nanos][maximumFractionDigits];
   }
@@ -573,9 +587,6 @@ export function nanosToDeSo(
 }
 
 export function formatUSD(num: number, decimal: number): string {
-  // Redux
-  const formatUSDMemo = useAppSelector((state) => state.other.formatUSDMemo);
-  // Redux end
   if (formatUSDMemo[num] && formatUSDMemo[num][decimal]) {
     return formatUSDMemo[num][decimal];
   }
@@ -611,6 +622,7 @@ export function abbreviateNumber(
   }
   shortValue = (value / Math.pow(1000, suffixNum)).toFixed(decimals);
   if (formatUSDbool) {
+    console.log("HERE --- 1");
     shortValue = formatUSD(shortValue, decimals);
   }
   return shortValue + suffixes[suffixNum];
@@ -630,6 +642,7 @@ export function abbreviateRepostsNumber(
   }
   shortValue1 = (value1 / Math.pow(1000, suffixNum1)).toFixed(decimals);
   if (formatUSDbool) {
+    console.log("HERE --- 2");
     shortValue1 = formatUSD(shortValue1, decimals);
   }
 
@@ -644,6 +657,7 @@ export function abbreviateRepostsNumber(
   }
   shortValue2 = (value1 / Math.pow(1000, suffixNum2)).toFixed(decimals);
   if (formatUSDbool) {
+    console.log("HERE --- 3");
     shortValue2 = formatUSD(shortValue2, decimals);
   }
 
@@ -657,17 +671,11 @@ export function abbreviateRepostsNumber(
 }
 
 export function nanosToUSDNumber(nanos: number): number {
-  // Redux
-  const nanosPerUSDExchangeRate = useAppSelector((state) => state.exhange.nanosPerUSDExchangeRate);
-  // Redux end
-  return nanos / nanosPerUSDExchangeRate;
+  return nanos / store.getState().exhange.nanosPerUSDExchangeRate;
 }
 
 export function usdToNanosNumber(usdAmount: number): number {
-  // Redux
-  const nanosPerUSDExchangeRate = useAppSelector((state) => state.exhange.nanosPerUSDExchangeRate);
-  // Redux end
-  return usdAmount * nanosPerUSDExchangeRate;
+  return usdAmount * store.getState().exhange.nanosPerUSDExchangeRate;
 }
 
 export function nanosToUSD(nanos: number, decimal?: number): string {
@@ -699,10 +707,6 @@ export function desoNanosYouWouldGetIfYouSold(
   creatorCoinAmountNano: number,
   coinEntry: any
 ): number {
-  // Redux
-  const CREATOR_COIN_RESERVE_RATIO = useAppSelector((state) => state.fees.CREATOR_COIN_RESERVE_RATIO);
-  const CREATOR_COIN_TRADE_FEED_BASIS_POINTS = useAppSelector((state) => state.fees.CREATOR_COIN_TRADE_FEED_BASIS_POINTS);
-  // Redux end
 
   // These calculations are derived from the Bancor pricing formula, which
   // is proportional to a polynomial price curve (and equivalent to Uniswap
@@ -745,6 +749,7 @@ export function usdYouWouldGetIfYouSoldDisplay(
   const usdValue = nanosToUSDNumber(
     desoNanosYouWouldGetIfYouSold(creatorCoinAmountNano, coinEntry)
   );
+  console.log("HERE --- 4");
   return abbreviate
     ? abbreviateNumber(usdValue, 2, true)
     : formatUSD(usdValue, 2);
@@ -758,6 +763,7 @@ export function creatorCoinNanosToUSDNaive(
   const usdValue = nanosToUSDNumber(
     (creatorCoinNanos / 1e9) * coinPriceDeSoNanos
   );
+  console.log("HERE --- 5");
   return abbreviate
     ? abbreviateNumber(usdValue, 2, true)
     : formatUSD(usdValue, 2);
@@ -774,6 +780,7 @@ export function createProfileFeeInUsd(): string {
   // Redux
   const createProfileFeeNanos = useAppSelector((state) => state.exhange.createProfileFeeNanos);
   // Redux end
+  console.log("THIS --- 1")
   return nanosToUSD(createProfileFeeNanos, 2);
 }
 
@@ -992,22 +999,6 @@ export function celebrate(svgList: ConfettiSvg[] = []) {
   confetti.render();
 }
 
-export function _setUpLoggedInUserObservable() {
-  // Redux 
-  const dispatch = useAppDispatch();
-  dispatch(setLoggedInUserObservable(new Observable((observer) => {
-    dispatch(pushToLoggedInUserObservers(observer));
-  })))
-}
-
-export function _setUpFollowChangeObservable() {
-  // Redux 
-  const dispatch = useAppDispatch();
-  dispatch(setFollowChangeObservable(new Observable((observer) => {
-    dispatch(pushToFollowChangeObservers(observer))
-  })))
-}
-
 // Does some basic checks on a public key.
 export function isMaybePublicKey(pk: string) {
   // Test net public keys start with 'tBC', regular public keys start with 'BC'.
@@ -1072,6 +1063,18 @@ export function launchIdentityFlow(event: string): void {
   );
 }
 
+export function _setUpLoggedInUserObservable() {
+  loggedInUserObservable = new Observable((observer) => {
+    loggedInUserObservers.push(observer);
+  });
+}
+
+export function _setUpFollowChangeObservable() {
+  followChangeObservable = new Observable((observer) => {
+    followChangeObservers.push(observer);
+  });
+}
+
 export function launchLoginFlow() {
   launchIdentityFlow("/login");
   // Bring back mixpanel
@@ -1132,35 +1135,29 @@ export function getTargetComponentSelectorFromRouter(): string {
 }
 
 export function _updateDeSoExchangeRate() {
-  // Redux
-  const localNode = useAppSelector((state) => state.node.localNode);
-  const dispatch = useAppDispatch();  
-  // Redux end
-  GetExchangeRate(localNode).subscribe(
-    (res: any) => {
+  const localNode = store.getState().node.localNode;
+  GetExchangeRate(localNode).subscribe({
+    next: (res) => {
       // BTC
-      dispatch(setSatoshisPerDeSoExchangeRate(res.SatoshisPerDeSoExchangeRate));
-      dispatch(setProtocolUSDCentsPerBitcoinExchangeRate(res.USDCentsPerBitcoinExchangeRate))
-      dispatch(setUSDPerBitcoinExchangeRate(res.USDCentsPerBitcoinExchangeRate / 100))
+      store.dispatch(setSatoshisPerDeSoExchangeRate(res.data.SatoshisPerDeSoExchangeRate));
+      store.dispatch(setProtocolUSDCentsPerBitcoinExchangeRate(res.data.USDCentsPerBitcoinExchangeRate))
+      store.dispatch(setUSDPerBitcoinExchangeRate(res.data.USDCentsPerBitcoinExchangeRate / 100))
 
       // ETH
-      dispatch(setUSDPerETHExchangeRate(res.USDCentsPerETHExchangeRate / 100))
-      dispatch(setNanosPerETHExchangeRate(res.NanosPerETHExchangeRate));
+      store.dispatch(setUSDPerETHExchangeRate(res.data.USDCentsPerETHExchangeRate / 100))
+      store.dispatch(setNanosPerETHExchangeRate(res.data.NanosPerETHExchangeRate));
 
       // DESO
-      dispatch(setNanosSold(res.NanosSold))
-      dispatch(setExchangeUSDCentsPerDeSo(res.USDCentsPerDeSoExchangeRate))
-      dispatch(setUSDCentsPerDeSoReservePrice(res.USDCentsPerDeSoReserveExchangeRate))
-      dispatch(setBuyDeSoFeeBasisPoints(res.BuyDeSoFeeBasisPoints))
+      store.dispatch(setNanosSold(res.data.NanosSold))
+      store.dispatch(setExchangeUSDCentsPerDeSo(res.data.USDCentsPerDeSoExchangeRate))
+      store.dispatch(setUSDCentsPerDeSoReservePrice(res.data.USDCentsPerDeSoReserveExchangeRate))
+      store.dispatch(setBuyDeSoFeeBasisPoints(res.data.BuyDeSoFeeBasisPoints))
 
-      const nanosPerUnit = useAppSelector((state) => state.fees.NANOS_PER_UNIT);
-      dispatch(setNanosPerUSDExchangeRate(nanosPerUnit / (res.USDCentsPerDeSoExchangeRate / 100)))
-      dispatch(setDesoToUSDExchangeRateToDisplay(nanosToUSD(nanosPerUnit, 2)));
+      store.dispatch(setNanosPerUSDExchangeRate(NANOS_PER_UNIT / (res.data.USDCentsPerDeSoExchangeRate / 100)))
+      store.dispatch(setDesoToUSDExchangeRateToDisplay(nanosToUSD(NANOS_PER_UNIT, 2)));
     },
-    (error) => {
-      console.error(error);
-    }
-  );
+    error: (err) => console.log(err),
+  });
 }
 
 let resentVerifyEmail = false;
@@ -1317,6 +1314,7 @@ export function getFreeDESOMessage(): string {
   const referralUSDCents = useAppSelector((state) => state.other.referralUSDCents)
   const jumioDeSoNanos = useAppSelector((state) => state.other.jumioDeSoNanos);
   // Redux end
+  console.log("HERE --- 6");
   return referralUSDCents
     ? formatUSD(referralUSDCents / 100, 0)
     : nanosToUSD(jumioDeSoNanos, 0);

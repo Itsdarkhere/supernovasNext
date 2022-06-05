@@ -6,17 +6,13 @@ import {
   launchLoginFlow,
 } from "../utils/global-context";
 import { useEffect, useState } from "react";
-import { handleMessage } from "../utils/identity-context";
 import { useAppDispatch, useAppSelector } from "../utils/Redux/hooks";
 import { setLocalNode } from "../utils/Redux/Slices/nodeSlice";
 export default function Home() {
   // Redux
   const dispatch = useAppDispatch();
   let localNode = useAppSelector((state) => state.node.localNode);
-  let requestingStorageAccess = useAppSelector((state) => state.app.requestingStorageAccess);
 
-  // State
-  const [identityURL, setIdentityURL] = useState("");
   // State end
 
   // Functions
@@ -27,12 +23,7 @@ export default function Home() {
 
   // Lifecycle methods
   useEffect(() => {
-    // This used to be inside the identityService / context
-    window.addEventListener("message", (event) => {
-      event.stopImmediatePropagation();
-      handleMessage(event);
-    });
-    setIdentityURL("https://identity.deso.org/embed?v=2");
+    
   }, []);
   // Lifycycle methods end
 
@@ -45,20 +36,10 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <iframe
-          id="identity"
-          frameBorder="0"
-          style={
-            requestingStorageAccess ? { display: "block" } : { display: "none" }
-          }
-          src={identityURL}
-          className="global__iframe"
-        ></iframe>
         {/* USE HERE sanitizedIdentityServiceURL */}
         <Header></Header>
         <button onClick={() => login()}>CLICK</button>
         <p>{localNode}</p>
-        <button onClick={() => dispatch(setLocalNode("https://supernovas.ap"))}>CLIKERRR</button>
 
         <LeftNav></LeftNav>
       </main>

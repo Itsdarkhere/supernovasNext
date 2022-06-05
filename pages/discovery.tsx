@@ -33,9 +33,12 @@ const Discovery = () => {
   const [promotedNFT, setPromotedNFT] = useState(null);
   // State end
 
+  // Redux
+  const localNode = useAppSelector((state) => state.node.localNode);
+  const loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
+
   // Functions
   const getFeatured = () => {
-    const localNode = useAppSelector((state) => state.node.localNode);
     // dont get if we have the data
     if (dataToShowOne.length !== 0) {
       return;
@@ -49,7 +52,6 @@ const Discovery = () => {
       next: (res) => {
         let featured = [];
         featured = res.data["NFTCollections"].sort(() => Math.random() - 0.5);
-        console.log(res.data["NFTCollections"]);
 
         // This is used in the 'main' nft
         setPromotedNFT(featured[0]["PostEntryResponse"]);
@@ -59,7 +61,7 @@ const Discovery = () => {
         }));
         setTimeout(() => {
           setSectionLoadingOne(false);
-        }, 350);
+        }, 0);
       },
       error: (err) => {
         console.log(err);
@@ -82,8 +84,6 @@ const Discovery = () => {
   };
 
   const getRecentSales = () => {
-    const localNode = useAppSelector((state) => state.node.localNode);
-    const loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
     // dont get if we have the data
     if (dataToShowThree.length !== 0) {
       return;
@@ -92,18 +92,16 @@ const Discovery = () => {
     GetRecentSales(localNode, loggedInUser?.PublicKeyBase58Check)
       .subscribe({
         next: (res) => {
-            setDataToShowThree(res["PostEntryResponse"].slice(0, getCardsPerRow()))
+            setDataToShowThree(res.data["PostEntryResponse"].slice(0, getCardsPerRow()))
             setTimeout(() => {
                 setSectionLoadingThree(false)
-            }, 350);
+            }, 0);
         },
         error: (err) => console.log(err),
       });
   }
 
   const getSecondaryListings = () =>  {
-    const localNode = useAppSelector((state) => state.node.localNode);
-    const loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
     // dont get if we have the data
     if (dataToShowFour.length !== 0) {
       return;
@@ -112,18 +110,16 @@ const Discovery = () => {
     GetSecondaryListings(localNode, loggedInUser?.PublicKeyBase58Check)
       .subscribe({
         next: (res) => {
-            setDataToShowFour(res["PostEntryResponse"].slice(0, getCardsPerRow()))
+            setDataToShowFour(res.data["PostEntryResponse"].slice(0, getCardsPerRow()))
             setTimeout(() => {
                 setSectionLoadingFour(false)
-            }, 350);
+            }, 0);
         },
         error: (err) => console.log(err),
       });
   }
 
   const getFreshDrops = () => {
-    const localNode = useAppSelector((state) => state.node.localNode);
-    const loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
     // dont get if we have the data
     if (dataToShowTwo.length !== 0) {
       return;
@@ -137,18 +133,16 @@ const Discovery = () => {
       )
       .subscribe({
         next: (res) => {
-            setDataToShowTwo(res["PostEntryResponse"].slice(0, getCardsPerRow()))
+            setDataToShowTwo(res.data["PostEntryResponse"].slice(0, getCardsPerRow()))
             setTimeout(() => {
             setSectionLoadingTwo(false);
-            }, 300);
+            }, 0);
         },
         error: (err) => console.log(err),
       });
   }
 
   const loadVerifiedUsers = () =>  {
-    const localNode = useAppSelector((state) => state.node.localNode);
-    const loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
     // Dont load if we have the content
     if (dataToShowFive.length !== 0) {
       return;
@@ -157,10 +151,11 @@ const Discovery = () => {
     AdminGetVerifiedUsers(localNode, "BC1YLiiQ36NSLSK2bpLqi4PsP85mzBaKRTLxBAoTdNELohuRdrSMX9w")
       .subscribe({
         next: (res) => {
-            let arrayHolder = res.VerifiedUsers.sort(() => Math.random() - 0.5);
+            let arrayHolder = res.data.VerifiedUsers.sort(() => Math.random() - 0.5);
 
             setDataToShowFive(arrayHolder.slice(0, getCardsPerRow()))
-
+            console.log(arrayHolder)
+            console.log(dataToShowFive);
             // Some of the users might have deleted their profiles
             // So if fetch in creatorCard fails, we can try again with an additional profile
             setDataToShowExtra(arrayHolder.slice(8, 10))
@@ -245,6 +240,7 @@ const Discovery = () => {
   // Lifecycle methods
   useState(() => {
     getFeatured();
+    loadVerifiedUsers();
   }, []);
   // Lifecycle methods end
 
@@ -258,7 +254,7 @@ const Discovery = () => {
           whatAllToShow={undefined}
           routeViewAll={undefined}
         ></SectionTitle>
-        <NFTSection loading={false} nftData={dataToShowOne}></NFTSection>
+        <NFTSection loading={sectionLoadingOne} fetching="one" function={null} nftData={dataToShowOne}></NFTSection>
         <SectionTitle
           title={"Explore categories"}
           viewAll={false}
@@ -272,21 +268,21 @@ const Discovery = () => {
           whatAllToShow={undefined}
           routeViewAll={undefined}
         ></SectionTitle>
-        <NFTSection loading={sectionLoadingTwo} nftData={dataToShowTwo}></NFTSection>
+        <NFTSection loading={sectionLoadingTwo} fetching="two" function={getFreshDrops} nftData={dataToShowTwo}></NFTSection>
         <SectionTitle
           title={"Recent Sales"}
           viewAll={true}
           whatAllToShow={undefined}
           routeViewAll={undefined}
         ></SectionTitle>
-        <NFTSection loading={sectionLoadingThree} nftData={dataToShowThree}></NFTSection>
+        <NFTSection loading={sectionLoadingThree} fetching="three" function={getRecentSales}  nftData={dataToShowThree}></NFTSection>
         <SectionTitle
           title={"Secondary Listings"}
           viewAll={true}
           whatAllToShow={undefined}
           routeViewAll={undefined}
         ></SectionTitle>
-        <NFTSection loading={sectionLoadingFour} nftData={dataToShowFour}></NFTSection>
+        <NFTSection loading={sectionLoadingFour} fetching="four" function={getSecondaryListings}  nftData={dataToShowFour}></NFTSection>
         <SectionTitle
           title={"Verified Creators Snapshot"}
           viewAll={false}
@@ -294,8 +290,10 @@ const Discovery = () => {
           routeViewAll={undefined}
         ></SectionTitle>
         <CreatorSection
-          loading={false}
-          userData={undefined}
+            localNode={localNode}
+            loading={sectionLoadingFive}
+            userData={dataToShowFive}
+            dataToShowExtra={dataToShowExtra}
         ></CreatorSection>
         <BottomButtons></BottomButtons>
       </div>

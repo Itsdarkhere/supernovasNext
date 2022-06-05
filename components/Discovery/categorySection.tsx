@@ -18,7 +18,7 @@ const CategorySection = ({ viewAll }) => {
     slides: { perView: "auto", spacing: 20 },
   });
   return (
-    <div className="position-relative">
+    <div className={styles.slider_container}>
       <div ref={sliderRef} className="keen-slider">
         <div
           onClick={() => viewAll("art")}

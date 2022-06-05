@@ -1,6 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "../styles/globals.scss";
-import { Observable, Subscription } from "rxjs";
+import { Subscription } from "rxjs";
 import * as _ from "lodash";
 import {
   GetStorage,
@@ -29,6 +29,7 @@ import {
   storageGranted,
   setIdentityServiceURL,
   setSanitizedIdentityServiceURL,
+  handleMessage,
 } from "../utils/identity-context";
 import {
   setLoggedInUser,
@@ -38,26 +39,27 @@ import {
   _updateDeSoExchangeRate,
   nanosToUSD,
   iterateAndSetUserList,
+  _setUpLoggedInUserObservable,
+  _setUpFollowChangeObservable,
 } from "../utils/global-context";
 // Redux
 import { Provider } from "react-redux";
 import store from "../utils/Redux/store";
 import { useAppSelector, useAppDispatch } from "../utils/Redux/hooks";
 import { setBuyETHAddress, setJumioDeSoNanos, setMinSatoshisBurnedForProfileCreation, 
-  setReferralUSDCents, 
-  setUpdateEverything } from "../utils/Redux/Slices/otherSlice";
-import { setGloboMods, setLoadingInitialAppState, setRequestedStorageAccess, 
+  setReferralUSDCents } from "../utils/Redux/Slices/otherSlice";
+import { setGloboMods, setRequestedStorageAccess, 
   setRequestingStorageAccess, setShowBuyWithETH, setShowBuyWithUSD, setShowJumio, 
   setShowPhoneNumberVerification } from "../utils/Redux/Slices/appSlice";
-import { pushToLoggedInUserObservers, setLoggedInUserObservable, setUserList } from "../utils/Redux/Slices/loggedInSlice";
+import { setUserList } from "../utils/Redux/Slices/loggedInSlice";
 import { setMessageMeta } from "../utils/Redux/Slices/messagesSlice";
 import { setDefaultFeeRateNanosPerKB, setFeeRateDeSoPerKB, setTransactionFeeInfo, setTransactionFeeMap, 
   setTransactionFeeMax } from "../utils/Redux/Slices/feesSlice";
 import { createYouHodlMap, setDiamondLevelMap } from "../utils/Redux/Slices/userSlice";
 import { setIsCompProfileCreation, setIsTestnetGlob, setLocalNode, setNodes } from "../utils/Redux/Slices/nodeSlice";
-import { pushToFollowChangeObservers, setFollowChangeObservable } from "../utils/Redux/Slices/followsSlice";
 import { setNanosPerUSDExchangeRate, setSatoshisPerDeSoExchangeRate, setUSDPerBitcoinExchangeRate } 
 from "../utils/Redux/Slices/exhangeRatesSlice";
+import Loader from "../components/Loading/loader";
 // Redux end
 
 // Dispatch wont work without being wrapped inside a <Provider> so...
@@ -72,6 +74,8 @@ function AppWrapper({children}) {
   let callingUpdateTopLevelData = false;
   let problemWithNodeConnection = false;
   let callingUpdateNodeInfo = false;
+  const [identityURL, setIdentityURL] = useState("");
+  const [loadingInitialAppState, setLoadingInitialAppState] = useState(true);
 
   // Redux
   const loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
@@ -79,6 +83,8 @@ function AppWrapper({children}) {
   const DEFAULT_NANOS_PER_USD_EXCHANGE_RATE = useAppSelector((state) => state.exhange.DEFAULT_NANOS_PER_USD_EXCHANGE_RATE)
   const userList = useAppSelector((state) => state.loggedIn.userList);
   const updateEverything = useAppSelector((state) => state.other.updateEverything);
+  const pausePolling = useAppSelector((state) => state.app.pausePolling);
+  let requestingStorageAccess = useAppSelector((state) => state.app.requestingStorageAccess);
 
 
   const Init = () => {
@@ -103,7 +109,7 @@ function AppWrapper({children}) {
     //   }
     // });
     // Rewrite in react END
-  
+    console.log("getReferralUSDCents");
     getReferralUSDCents();
     dispatch(setSatoshisPerDeSoExchangeRate(0))
     dispatch(setNanosPerUSDExchangeRate(DEFAULT_NANOS_PER_USD_EXCHANGE_RATE))
@@ -151,20 +157,15 @@ function AppWrapper({children}) {
     });
   }
 
-  const _setUpLoggedInUserObservable = () => {
-    dispatch(setLoggedInUserObservable(new Observable((observer) => {
-      dispatch(pushToLoggedInUserObservers(observer));
-    })))
- }
- 
- const _setUpFollowChangeObservable = () => {
-    dispatch(setFollowChangeObservable(new Observable((observer) => {
-      dispatch(pushToFollowChangeObservers(observer))
-    })))
- }
-
 
   useEffect(() => {
+    // This used to be inside the identityService / context
+    window.addEventListener("message", (event) => {
+      event.stopImmediatePropagation();
+      handleMessage(event);
+    });
+    setIdentityURL("https://identity.deso.org/embed?v=2");
+  
     // Init app
     Init();
 
@@ -214,22 +215,27 @@ function AppWrapper({children}) {
     }, 5 * 60 * 1000);
 
     // Check works,,, its missing this.
-    dispatch(setUpdateEverything(_updateEverything));
+    // dispatch(setUpdateEverything(_updateEverything.bind(this)));
 
     // We need to fetch this data before we start an import. Can remove once import code is gone.
     updateDeSoExchangeRate();
     _updateAppState();
+    console.log("info sub")
+    console.log(info());
     info().subscribe((res) => {
       // If the browser is not supported, display the browser not supported screen.
+      console.log("info inside")
       if (!res.browserSupported) {
         dispatch(setRequestingStorageAccess(true));
         dispatch(setRequestedStorageAccess(true));
         return;
       }
       const isLoggedIn = GetStorage(LastLoggedInUserKey);
+      console.log("preload app")
       if (res.hasStorageAccess || !isLoggedIn) {
         loadApp();
       } else {
+       console.log("preload app 2")
         dispatch(setRequestingStorageAccess(true));
         storageGranted.subscribe(() => {
           dispatch(setRequestingStorageAccess(false));
@@ -238,6 +244,7 @@ function AppWrapper({children}) {
         });
       }
     });
+    console.log("sub  after")
 
     installDD();
 
@@ -346,6 +353,7 @@ function AppWrapper({children}) {
         dispatch(setTransactionFeeInfo(simpleFeeMap
           ?.map((k) => `${k?.txnType}: ${nanosToUSD(k?.fees, 4)}`)
           .join("\n")));
+
       }
     );
   }
@@ -356,9 +364,7 @@ function AppWrapper({children}) {
     errorCallback: (comp: any) => void = () => {},
     comp: any = ""
   ) => {
-    // Redux
-    const pausePolling = useAppSelector((state) => state.app.pausePolling);
-
+    console.log("UPDATE EVERYTHING");
     // Refresh the messageMeta periodically.
     dispatch(setMessageMeta(GetStorage(MessageMetaKey)));
     let tempMessageMeta = GetStorage(MessageMetaKey);
@@ -414,6 +420,7 @@ function AppWrapper({children}) {
   };
 
   const loadApp = () => {
+    console.log("loadApp")
     // Redux
     setIdentityServiceUsersVariable(GetStorage(IdentityUsersKey) || {});
     // Filter out invalid public keys
@@ -429,7 +436,8 @@ function AppWrapper({children}) {
       if (!_.isEqual(userList, res.UserList)) {
         dispatch(setUserList(res.UserList || []));
       }
-      updateEverything();
+      console.log("_updateEverything 1")
+      _updateEverything();
     });
 
     // Clean up legacy seedinfo storage. only called when a user visits the site again after a successful import
@@ -464,9 +472,6 @@ function AppWrapper({children}) {
   }
 
   const _updateTopLevelData = (): Subscription => {
-    // Redux
-    const loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
-    const localNode = useAppSelector((state) => state.node.localNode);
 
     if (callingUpdateTopLevelData) {
       return new Subscription();
@@ -498,8 +503,7 @@ function AppWrapper({children}) {
         // Check works ,,, this might take too long to iterate for it to work...
         iterateAndSetUserList(loggedInUserr, loggedInUserPublicKey);
         // Only call setLoggedInUser if logged in user has changed.
-        console.log(loggedInUser);
-        console.log(loggedInUserr);
+        console.log("---SET LOGGED IN----")
         if (!_.isEqual(loggedInUser, loggedInUserr) && loggedInUserPublicKey) {
           console.log("set logged in");
           setLoggedInUser(loggedInUserr);
@@ -526,12 +530,12 @@ function AppWrapper({children}) {
 
         // Check works,,, react changedetection is different with the virtual dom so idk if we need this
         // ref.detectChanges();
-        dispatch(setLoadingInitialAppState(false));
+        setLoadingInitialAppState(false)
       },
       (error) => {
         problemWithNodeConnection = true;
         callingUpdateTopLevelData = false;
-        dispatch(setLoadingInitialAppState(false));
+        setLoadingInitialAppState(false)
         console.error(error);
       }
     );
@@ -539,7 +543,16 @@ function AppWrapper({children}) {
 
   return (
     <>
-      {children}
+      {loadingInitialAppState ? <Loader></Loader> : children}
+      <iframe
+        id="identity"
+        frameBorder="0"
+        style={
+          requestingStorageAccess ? { display: "block" } : { display: "none" }
+        }
+        src={identityURL}
+        className="global__iframe"
+      ></iframe>
     </>
   )
 }

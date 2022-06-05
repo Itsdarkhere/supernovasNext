@@ -1,0 +1,91 @@
+.creator_card_container {
+    background: #ffffff;
+    border-radius: 11.385624885559082px;
+    overflow: hidden;
+    box-shadow: 0px 2.6566460132598877px 8.349459648132324px rgba(0, 0, 0, 0.25);
+    flex: 1 1 auto;
+    min-width: 280px;
+}
+.creator_card_avatar {
+    width: 110px;
+    height: 110px;
+    border: 6px solid #ffffff;
+    border-radius: 50%;
+    box-shadow: 3.13399600982666px 3.13399600982666px 15.669978141784668px rgba(0, 0, 0, 0.25);
+    background-size: cover;
+    background-position: center;
+    display: block;
+    background-position: center;
+    background-size: cover;
+    position: absolute;
+    top: 50%;  
+    left: 50%; 
+    transform: translate(-50%, -50%);
+    z-index: 3;
+}
+.creator_card_top_container {
+    padding-bottom: 80%;
+    width: 100%;
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    .shader {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        background-color: rgba(0, 0, 0, 0.25);
+        z-index: 2;
+    }
+    img {
+        display: block;
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+    }
+}
+.creator_card_bottom_container {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 150px;
+    .cc_label {
+        font-weight: bold;
+        font-size: 12px;
+        margin-bottom: -5px;
+        color: #666666;
+    }
+    .cc_username {
+        font-weight: 500;
+        cursor: pointer;
+        font-size: 18px;
+        margin-bottom: 5px;
+    }
+}
+.cc_bio_box {
+    height: 40px;
+    width: 265;
+    max-width: 100%;
+    overflow: hidden;
+    position: relative;
+    div {
+        position: absolute;
+        bottom: 0;
+        height: 50%;
+        width: 100%;
+        background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 0%, rgb(255, 255, 255) 100%);
+    }
+    .cc_p {
+        text-align: center;
+        font-size: 12px;
+        color: #666666;
+    }
+}
+.mb_minus_5px {
+    margin-bottom: -5px;
+}

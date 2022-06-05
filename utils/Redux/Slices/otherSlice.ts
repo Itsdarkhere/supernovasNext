@@ -10,8 +10,6 @@ interface OtherState {
     NFTRoyaltyToCoinBasisPoints: any,
     NFTRoyaltyToCreatorBasisPoints: any,
     NanosSold: number,
-    nanosToDeSoMemo: any,
-    formatUSDMemo: any,
     confetti: any,
     canvasCount: number,
     minSatoshisBurnedForProfileCreation: number,
@@ -26,8 +24,6 @@ const initialState: OtherState = {
     NFTRoyaltyToCoinBasisPoints: null,
     NFTRoyaltyToCreatorBasisPoints: null,
     NanosSold: null,
-    nanosToDeSoMemo: undefined,
-    formatUSDMemo: undefined,
     confetti: undefined,
     canvasCount: 0,
     minSatoshisBurnedForProfileCreation: null,
@@ -45,12 +41,6 @@ export const otherSlice = createSlice({
         },
         setConfetti: (state, action: PayloadAction<any>) => {
             state.confetti = action.payload;
-        },
-        setNanosToDeSoMemo: (state, action: PayloadAction<any>) => {
-            state.nanosToDeSoMemo = action.payload;
-        },
-        setFormatUSDMemo: (state, action: PayloadAction<any>) => {
-            state.formatUSDMemo = action.payload;
         },
         setCanvasCount: (state, action: PayloadAction<number>) => {
             state.canvasCount = action.payload;
@@ -74,7 +64,7 @@ export const otherSlice = createSlice({
 })
 
 // DEFINE ACTIONS 
-export const { setNanosSold, setConfetti, setNanosToDeSoMemo, setFormatUSDMemo, 
+export const { setNanosSold, setConfetti, 
     setCanvasCount, setReferralUSDCents, setUpdateEverything, setMinSatoshisBurnedForProfileCreation,
     setJumioDeSoNanos, setBuyETHAddress } = otherSlice.actions;
 // Not entirely sure on this ,,, This is how the docs describe it

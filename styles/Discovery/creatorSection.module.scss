@@ -17,12 +17,11 @@
     scroll-snap-align: start;
 }
 .creator_card_list_discovery {
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
-    flex-wrap: wrap;
-    margin: 20px 0px 0px;
-    padding: 0px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-rows: 1fr;
+    margin: 20px -10px 0px;
+    padding: 0px 10px !important;
     list-style-type: none;
     width: 100%;
     @media screen and (max-width: 676px) {
@@ -34,17 +33,17 @@
       }
     }
     .nft_col_wrap {
-      padding: 0px 10px 10px 10px;
-      width: calc(100% / 4);
-      margin-bottom: 15px;
-      min-width: 300px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      @media screen and (max-width: 676px) {
-        width: 100%;
+        padding: 10px;
+        flex: 1 1 auto;
+        min-width: 280px;
         margin-bottom: 35px;
-      }
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        @media screen and (max-width: 676px) {
+            width: 100%;
+            margin-bottom: 35px;
+        }
     }
 }
 .nfts_card_list {

@@ -28,6 +28,9 @@
     justify-content: flex-end;
     align-items: center;
     transition: all 0.1s linear;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
     @media screen and (min-width: 767px) {
         justify-content: center;
         &:hover {

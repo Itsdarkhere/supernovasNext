@@ -1,32 +1,66 @@
+import { useEffect, useRef, useState } from "react";
 import styles from "../../styles/Discovery/nftSection.module.scss";
 import { NFTEntryResponse } from "../../utils/backendapi-context";
 import NFTCard from "../NFT/NFTCard/nftCard";
 
 const NFTSection = (props) => {
-  // Functions
-  // Calculates how many cards fit per row
-  const getCardsPerRow = () => {
-    let windowWidth = 1000;
-    if (typeof window !== "undefined") {
-      windowWidth = window.innerWidth;
+    let dataFetched = false;
+    const containerRef = useRef(null);
+    const options = {
+        root: null,
+        rootMargin: "0px",
+        threshold: 0.1,
     }
-    if (windowWidth <= 992 || windowWidth >= 1400) {
-      return 8;
-    } else if (windowWidth > 1060) {
-      return 6;
-    } else {
-      return 4;
-    }
-  };
 
-  const counter = () => {
-    return new Array(getCardsPerRow());
-  };
-  // Functions end
+    // Functions
+    // Calculates how many cards fit per row
+    const getCardsPerRow = () => {
+        let windowWidth = 1000;
+        if (typeof window !== "undefined") {
+        windowWidth = window.innerWidth;
+        }
+        if (windowWidth <= 992 || windowWidth >= 1400) {
+        return 8;
+        } else if (windowWidth > 1060) {
+        return 6;
+        } else {
+        return 4;
+        }
+    };
+
+    const counter = () => {
+        return new Array(getCardsPerRow());
+    };
+
+    const fetchData = (entries) => {
+        const [ entry ] = entries;
+        if (dataFetched) {
+            return;
+        } else if (entry.isIntersecting) {
+            dataFetched = true;
+            console.log(props.fetching);
+            props.function();
+        }
+    }
+
+    // Functions end
+
+    // Lifecycle methods
+    useEffect(() => {
+        if (props.function !== null) {
+            const observer = new IntersectionObserver(fetchData, options)
+            if (containerRef.current) observer.observe(containerRef.current);
+
+            return () => {
+                if (containerRef.current) observer.unobserve(containerRef.current);
+            }
+        }
+    }, [])
+    // Lifecycle methods end
 
   return (
     <>
-      <div className={styles.nftSectionDesktop}>
+      <div className={styles.nftSectionDesktop} ref={containerRef}>
         {props.loading ? (
           <div className={styles.nfts_card_list}>
             {counter().map((i) => (

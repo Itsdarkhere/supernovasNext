@@ -5,8 +5,6 @@ import type { AppState } from "../store";
 
 // Define type
 interface ApplicationState {
-    // This is set to false immediately after our first attempt to get a loggedInUser.
-    loadingInitialAppState: boolean,
     // We're waiting for the user to grant storage access (full-screen takeover)
     requestingStorageAccess: boolean,
     // Check if we have requested storage access, if so dont show supernovas loader anymore
@@ -29,7 +27,6 @@ interface ApplicationState {
 
 // Define state
 const initialState: ApplicationState = {
-    loadingInitialAppState: true,
     requestingStorageAccess: false,
     requestedStorageAccess: false,
     userIsDragging: false,
@@ -68,17 +65,13 @@ export const appSlice = createSlice({
         setGloboMods: (state, action: PayloadAction<any>) => {
             state.globoMods = action.payload;
         },
-        setLoadingInitialAppState: (state, action: PayloadAction<boolean>) => {
-            state.loadingInitialAppState = action.payload;
-        },
 
     }
 })
 
 // DEFINE ACTIONS 
 export const { setRequestingStorageAccess, setRequestedStorageAccess, setShowBuyWithUSD,
-    setShowBuyWithETH, setShowJumio, setShowPhoneNumberVerification, setGloboMods,
-    setLoadingInitialAppState} = appSlice.actions;
+    setShowBuyWithETH, setShowJumio, setShowPhoneNumberVerification, setGloboMods} = appSlice.actions;
 // Not entirely sure on this ,,, This is how the docs describe it
 // Other code such as selectors can use the imported `RootState` type
 // Info: https://react-redux.js.org/tutorials/typescript-quick-start

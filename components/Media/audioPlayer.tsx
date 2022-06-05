@@ -1,33 +1,32 @@
 import styles from "../../styles/Media/audioPlayer.module.scss";
 // import Amplitude from "amplitudejs";
-import Amplitude from "@amplitude/node";
 import Image from "next/image";
 import { useEffect } from "react";
 const AudioPlayer = ({ songName, creator, audioSrc }) => {
   // Lifecycle methods
   useEffect(() => {
     let timeout: any;
-    Amplitude.init({
-      songs: [
-        {
-          name: songName,
-          artist: creator,
-          url: audioSrc,
-        },
-      ],
-      volume: 35,
-      debug: true,
-    });
-    Amplitude.setDebug(true);
+    // Amplitude.init({
+    //   songs: [
+    //     {
+    //       name: songName,
+    //       artist: creator,
+    //       url: audioSrc,
+    //     },
+    //   ],
+    //   volume: 35,
+    //   debug: true,
+    // });
+    // Amplitude.setDebug(true);
 
     timeout = setTimeout(() => {
-      setVolumeColors();
+    //   setVolumeColors();
     }, 100);
 
     // This runs on unMount
     return () => {
       // Cleanup
-      Amplitude.stop();
+    //   Amplitude.stop();
       clearTimeout(timeout);
     };
   }, []);
@@ -36,7 +35,7 @@ const AudioPlayer = ({ songName, creator, audioSrc }) => {
   // Functions
   const setVolume = ($event: Event) => {
     const playerVolume = $event.target as HTMLInputElement;
-    Amplitude.setVolume(playerVolume.value);
+    // Amplitude.setVolume(playerVolume.value);
     console.log(playerVolume.value);
   };
 
