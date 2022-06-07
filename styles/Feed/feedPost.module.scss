@@ -1,0 +1,127 @@
+.nft_sale_btn {
+    &.btn {
+      cursor: pointer;
+    }
+  }
+  .post_engagement_border {
+    border-top: 1px solid #e1e1e1;
+    border-bottom: 1px solid #e1e1e1;
+  }
+  .pl-72px {
+    padding-left: 72px;
+  }
+  .post-thread-engagement-detail {
+    color: #8b8b8b;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 27.6px;
+    padding-left: 5px;
+    padding-right: 5px;
+    border: 5px solid #fefefe;
+  }
+  .nft-detail-username {
+    color: #494949;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    line-height: 30px;
+  }
+  .mobile-post-interaction-detail {
+    color: #8b8b8b;
+    b {
+      color: #8b8b8b;
+    }
+  }
+  .nft_prof_text {
+    overflow: scroll;
+    /* text-overflow: ellipsis; */
+    display: -webkit-box;
+    -webkit-line-clamp: 10;
+    -webkit-box-orient: vertical;
+  }
+  .nft_current_bid_both {
+    padding-right: 20px;
+    padding-left: 30px;
+    padding-top: 0;
+    margin: 0 auto;
+    @media screen and (max-width: 767px) {
+      padding-right: 20px;
+      padding-left: 0;
+    }
+    .val {
+      font-size: clamp(28px, 6vw, 42px);
+      font-weight: 600;
+      @media screen and (max-width: 767px) {
+        font-size: 24px;
+      }
+    }
+    .color-EE {
+      color: #eeeeee;
+    }
+    .val_st {
+      font-size: clamp(17px, 5vw, 22px);
+      color: var(--textalt);
+      @media screen and (max-width: 767px) {
+        font-size: 14px;
+      }
+    }
+  }
+  
+  .buy_now_text_container {
+    text-align: center;
+  }
+  
+  .buy_now_btn {
+    background: black;
+    color: white;
+    flex: 1;
+  }
+  .place_bid_btn_both {
+    background: white;
+    color: black;
+    flex: 1;
+    margin-left: 10px;
+  }
+  
+  .buy_now_img {
+    height: 18px;
+  }
+  
+  .put-nft-for-sale-container {
+    display: flex;
+    justify-content: center;
+    margin: 0;
+  }
+  
+  .interaction-details-container {
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .interaction-detail-item:hover {
+    background-color: #efefef;
+    border-radius: 7.5px;
+    border: 5px solid #efefef;
+    color: #444444;
+  }
+  
+  .feed_posts_shadow {
+    background: #ffffff;
+    border: 1.86px solid #f8f8f8;
+    border-radius: 30px;
+    box-shadow: 0px 0.93px 15px rgb(0 0 0 / 5%);
+    &:hover {
+      background-color: #fcfcfc;
+    }
+  }
+  .feed_post_shadow_mobile {
+    @media screen and (max-width: 767px) {
+      border-radius: 0;
+      border: none;
+    }
+  }
+  .container {
+    width: 80%;
+    @media screen and (max-width: 767px) {
+      width: 100%;
+    }
+  }

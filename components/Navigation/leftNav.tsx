@@ -10,6 +10,7 @@ import messagesIcon from "../../public/icons/lb_messages_icon.svg";
 import walletIcon from "../../public/icons/lb_wallet_icon.svg";
 import onBoardingIcon from "../../public/icons/profile-icon.svg";
 import daoIcon from "../../public/icons/feed_sn_icon.png";
+import Link from "next/link";
 
 const LeftNav = () => {
   return (
@@ -20,19 +21,19 @@ const LeftNav = () => {
       >
         <LeftNavButton
           hasNotifications="false"
-          link="'/' + this.globalVars.RouteNames.DISCOVERY"
+          link="/discovery"
           imgSrc={discoveryIcon}
           label="Discovery"
         ></LeftNavButton>
         <LeftNavButton
           hasNotifications="false"
-          link="'/' + this.globalVars.RouteNames.BROWSE"
+          link="/browser"
           imgSrc={feedIcon}
           label="Feed"
         ></LeftNavButton>
         <LeftNavButton
           hasNotifications="false"
-          link="'/' + this.globalVars.RouteNames.TRENDS"
+          link="/marketplace"
           imgSrc={marketplaceIcon}
           label="Marketplace"
         ></LeftNavButton>
@@ -46,7 +47,7 @@ const LeftNav = () => {
         {/* *ngIf="globalVars.loggedInUser && this.globalVars.isOnboardingComplete" */}
         <LeftNavButton
           hasNotifications="false"
-          link="'/' + this.globalVars.RouteNames.ACTIVITY"
+          link="/activity"
           imgSrc={activityIcon}
           label="Activity"
         ></LeftNavButton>
@@ -74,7 +75,7 @@ const LeftNav = () => {
         {/* *ngIf="globalVars.loggedInUser" */}
         <LeftNavButton
           hasNotifications="false"
-          link="'/' + this.globalVars.RouteNames.WALLET"
+          link="/wallet"
           imgSrc={walletIcon}
           label="Wallet"
         ></LeftNavButton>
@@ -87,11 +88,13 @@ const LeftNav = () => {
         ></LeftNavButton>
         {/* [routerLink]="'/' + this.globalVars.RouteNames.DAO_PAGE"
                 [routerLinkActive]="['active']" */}
-        <button className={styles.icon + " position-relative"}>
-          <Image src={daoIcon} layout="fill" alt="left bar icon" />
-          <label className={styles.lb_button_label}>Dao</label>
-          <label className={styles.lb_button_label_new}>LIVE</label>
-        </button>
+        <Link href="/dao">
+          <button className={styles.icon + " position-relative"}>
+            <Image src={daoIcon} layout="fill" alt="left bar icon" />
+            <label className={styles.lb_button_label}>Dao</label>
+            <label className={styles.lb_button_label_new}>LIVE</label>
+          </button>
+        </Link>
         {/*  *ngIf="globalVars.showAdminTools()" [routerLink]="'/' + globalVars.RouteNames.ADMIN" */}
         <button className={styles.lb_admin}>A</button>
       </div>

@@ -1,6 +1,6 @@
 import styles from "../../styles/Wallet/referralsComponent.module.scss";
 import Image from "next/image";
-import copyIcon from "../public/icons/copy_icon.svg";
+import copyIcon from "../../public/icons/copy_icon.svg";
 import { useAppSelector } from "../../utils/Redux/hooks";
 
 const ReferralsComponent = () => {

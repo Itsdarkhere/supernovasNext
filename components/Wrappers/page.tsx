@@ -26,19 +26,20 @@ const Page = ({ children, isNFTProfile, noCap }) => {
 
   return (
     <div
-      className={
-        styles.position_relative +
-        " " +
-        styles.page_main_wrapper +
-        `${mobile ? " global__mobile" : " global__desktop"}` +
-        `${isNFTProfile ? " nft_profile" : ""}`
-      }
+      className={[
+        styles.position_relative,
+        styles.page_main_wrapper,
+        mobile ? "global__mobile" : "global__desktop",
+        isNFTProfile ? styles.nft_profile : "",
+      ].join(" ")}
     >
       <Header></Header>
       <div
-        className={
-          styles.m_inner_wrapper + " " + styles.end + `${noCap ? " noCap" : ""}`
-        }
+        className={[
+          styles.m_inner_wrapper,
+          styles.end,
+          noCap ? styles.noCap : null,
+        ].join(" ")}
       >
         {getNav()}
         {/* *ngIf="mobile" */}

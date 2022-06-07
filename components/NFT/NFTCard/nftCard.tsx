@@ -6,9 +6,16 @@ import {
   NFTEntryResponse,
   PostEntryResponse,
   DecryptUnlockableTexts,
+  AdminUpdateGlobalFeed,
+  AdminPinPost,
+  parsePostError,
+  stringifyError,
+  BlockPublicKey,
+  SubmitPost,
 } from "../../../utils/backendapi-context";
 import {
-  hasUserBlockedCreator,
+  getTargetComponentSelector,
+  hasUserBlockedCreator, _alertError,
 } from "../../../utils/global-context";
 import { GetNFTEntriesForNFTPost } from "../../../utils/backendapi-context";
 import { ethers } from "ethers";
@@ -19,6 +26,9 @@ import NFTCardBidInfo from "./nftCardBidInfo";
 import NFTCardFooter from "./nftCardFooter";
 import { useAppSelector, useAppDispatch } from "../../../utils/Redux/hooks";
 import { setIMXWalletAddress } from "../../../utils/Redux/Slices/imxSlice";
+import Avatar from "../../Reusables/avatar";
+import FeedPostDropdown from "../../Feed/feedPostDropdown";
+import { SwalHelper } from "../../../utils/helpers/swal-helper";
 // Missing top bar from the angular version
 const NFTCard = ({
   hoverable,
@@ -32,10 +42,15 @@ const NFTCard = ({
   showIconRow,
   showQuotedContent,
   loadProfile,
+  nftPost,
+  showThreadConnectionLine,
+  userBlocked,
+  postDeleted,
 }) => {
   // Redux
   const loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
   const localNode = useAppSelector((state) => state.node.localNode);
+  const feeRateDeSoPerKB = useAppSelector((state) => state.fees.feeRateDeSoPerKB);
   // Redux end
 
   // Vars
@@ -59,6 +74,8 @@ const NFTCard = ({
   const [isBuyNow, setIsBuyNow] = useState(false);
   const [buyNowPriceNanos, setBuyNowPriceNanos] = useState(null);
   const [isForSale, setIsForSale] = useState(false);
+  const [pinningPost, setPinningPost] = useState(false);
+  const [addingPostToGlobalFeed, setAddingPostToGlobalFeed] = useState(false);
   // Price info
   const [highBid, setHighBid] = useState(null);
   const [lowBid, setLowBid] = useState(null);
@@ -207,6 +224,142 @@ const NFTCard = ({
     // determine if you own it, if not then say which eth wallet owns it
   }
 
+  const _addPostToGlobalFeed = (event: any) => {
+    // Prevent the post from navigating.
+    event.stopPropagation();
+    setAddingPostToGlobalFeed(true);
+    const postHashHex = post.PostHashHex;
+    const inGlobalFeed = post.InGlobalFeed;
+    AdminUpdateGlobalFeed(
+        localNode,
+        loggedInUser.PublicKeyBase58Check,
+        postHashHex,
+        inGlobalFeed /*RemoveFromGlobalFeed*/
+      )
+      .subscribe(
+        (res) => {
+          post.InGlobalFeed = !post.InGlobalFeed;
+          // this.ref.detectChanges();
+        },
+        (err) => {
+          _alertError(JSON.stringify(err.error));
+        }
+      )
+      .add(() => {
+        setAddingPostToGlobalFeed(false);
+        // this.ref.detectChanges();
+      });
+  }
+
+  const _pinPostToGlobalFeed = (event: any) => {
+    // Prevent the post from navigating.
+    event.stopPropagation();
+    setPinningPost(true);
+    const postHashHex = post.PostHashHex;
+    const isPostPinned = post.IsPinned;
+    AdminPinPost(
+        localNode,
+        loggedInUser.PublicKeyBase58Check,
+        postHashHex,
+        isPostPinned
+      )
+      .subscribe(
+        (res) => {
+          post.IsPinned = isPostPinned;
+          // this.ref.detectChanges();
+        },
+        (err) => {
+          _alertError(JSON.stringify(err.error));
+        }
+      )
+      .add(() => {
+        setPinningPost(false);
+        // this.ref.detectChanges();
+      });
+  }
+
+  const hidePost = () => {
+    SwalHelper.fire({
+      target: getTargetComponentSelector(),
+      title: "Hide post?",
+      html: `This can’t be undone. The post will be removed from your profile, from search results, and from the feeds of anyone who follows you.`,
+      showCancelButton: true,
+      customClass: {
+        confirmButton: "btn btn-light",
+        cancelButton: "btn btn-light no",
+      },
+      reverseButtons: true,
+    }).then((response: any) => {
+      if (response.isConfirmed) {
+        // Hide the post in the UI immediately, even before the delete goes thru, to give
+        // the user some indication that his delete is happening. This is a little janky.
+        // For example, on the feed, the border around the post is applied by an outer element,
+        // so the border will remain (and the UI will look a bit off) until the delete goes thru,
+        // we emit the delete event, and the parent removes the outer element/border from the UI.
+        //
+        // Note: This is a rare instance where I needed to call detectChanges(). Angular wasn't
+        // picking up the changes until I called this explicitly. IDK why.
+        setHidingPost(true);
+        // this.ref.detectChanges();
+        SubmitPost(
+            localNode,
+            loggedInUser.PublicKeyBase58Check,
+            post.PostHashHex /*PostHashHexToModify*/,
+            "" /*ParentPostHashHex*/,
+            "" /*Title*/,
+            { Body: post.Body, ImageURLs: post.ImageURLs } /*BodyObj*/,
+            post.RepostedPostEntryResponse?.PostHashHex || "",
+            {},
+            "" /*Sub*/,
+            true /*IsHidden*/,
+            feeRateDeSoPerKB * 1e9 /*feeRateNanosPerKB*/
+          )
+          .subscribe(
+            (response) => {
+              postDeleted(response.PostEntryResponse);
+            },
+            (err) => {
+              const parsedError = parsePostError(err);
+              _alertError(parsedError);
+            }
+          );
+      }
+    });
+  }
+
+  const blockUser = () => {
+    SwalHelper.fire({
+      target: getTargetComponentSelector(),
+      title: "Block user?",
+      html: `This will hide all comments from this user on your posts as well as hide them from your view on your feed and other threads.`,
+      showCancelButton: true,
+      customClass: {
+        confirmButton: "btn btn-light",
+        cancelButton: "btn btn-light no",
+      },
+      reverseButtons: true,
+    }).then((response: any) => {
+      if (response.isConfirmed) {
+        BlockPublicKey(
+            localNode,
+            loggedInUser.PublicKeyBase58Check,
+            post.PosterPublicKeyBase58Check
+          )
+          .subscribe(
+            () => {
+              loggedInUser.BlockedPubKeys[post.PosterPublicKeyBase58Check] = {};
+              userBlocked(post.PosterPublicKeyBase58Check);
+            },
+            (err) => {
+              console.error(err);
+              const parsedError = stringifyError(err);
+              _alertError(parsedError);
+            }
+          );
+      }
+    });
+  }
+
   const isRepost = (post: any): boolean => {
     return (
       post.Body === "" &&
@@ -262,6 +415,47 @@ const NFTCard = ({
   // Lifecycle methods end
 
   return (
+    <>
+    {!postContent.IsHidden && nftPost ?
+    <div className="card-header nft-post-top">
+    <div className="profile-img">
+      {/* [routerLink]="['/' + globalVars.RouteNames.USER_PREFIX, postContent.ProfileEntryResponse.Username]"
+        queryParamsHandling="merge" */}
+      <Avatar
+            avatar={postContent?.ProfileEntryResponse.PublicKeyBase58Check} classN={undefined}    ></Avatar>
+      {showThreadConnectionLine ?
+      <div className="feed-post__parent-thread-connector"></div>
+      :
+      null
+      }
+    </div>
+    {/* [routerLink]="['/' + globalVars.RouteNames.USER_PREFIX, postContent.ProfileEntryResponse.Username]"
+      queryParamsHandling="merge" */}
+    <h6
+      className="cursor-pointer"
+    >
+      { postContent?.ProfileEntryResponse.Username }
+      {postContent?.ProfileEntryResponse.IsVerified ?
+      <i className="fas fa-check-circle fa-md text-primary"></i>
+      :
+      null
+      }
+    </h6>
+    <div className="value-buy-cover"></div>
+    {/*     className="ml-auto" */}
+    <FeedPostDropdown
+            post={post}
+            postContent={postContent}
+            nftEntryResponses={nftEntryResponses}
+            postHidden={() => hidePost()}
+            userBlocked={() => blockUser()}
+            toggleGlobalFeed={(e) => _addPostToGlobalFeed(e)}
+            togglePostPin={(e) => _pinPostToGlobalFeed(e)} ownsEthNFT={false}    
+    ></FeedPostDropdown>
+  </div>
+  :
+  null
+    }
     <div
       className={[
         styles.single_card,
@@ -353,6 +547,7 @@ const NFTCard = ({
         )}
       </div>
     </div>
+    </>
   );
 };
 export default NFTCard;

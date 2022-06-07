@@ -1,12 +1,12 @@
 import styles from "../../styles/Wallet/walletComponent.module.scss";
 import Image from "next/image";
-import keyIcon from "../public/icons/key_icon.svg";
-import copyIcon from "../public/icons/copy_icon.svg";
-import desoBlackIcon from "../public/icons/wallet_deso_icon_black.svg";
-import creatorCoinIcon from "../public/icons/wallet_cc_icon_black.svg";
-import desoIcon from "../public/deso/desologo.svg";
-import chevronRightIcon from "../public/icons/chevron_right.svg";
-import ethIcon from "../public/eth/ethlogo.svg";
+import keyIcon from "../../public/icons/key_icon.svg";
+import copyIcon from "../../public/icons/copy_icon.svg";
+import desoBlackIcon from "../../public/icons/wallet_deso_icon_black.svg";
+import creatorCoinIcon from "../../public/icons/wallet_cc_icon_black.svg";
+import desoIcon from "../../public/deso/desologo.svg";
+import chevronRightIcon from "../../public/icons/chevron_right.svg";
+import ethIcon from "../../public/eth/ethlogo.svg";
 import { useState, useEffect } from "react";
 import {
   isMobile,
@@ -18,7 +18,9 @@ import { useAppSelector } from "../../utils/Redux/hooks";
 
 const WalletComponent = () => {
   // Redux
-  const imxWalletConnected = useAppSelector((state) => state.imx.imxWalletConnected);
+  const imxWalletConnected = useAppSelector(
+    (state) => state.imx.imxWalletConnected
+  );
   const loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
   // Redux end
   

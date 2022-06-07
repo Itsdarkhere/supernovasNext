@@ -1,62 +1,63 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "../../styles/Discovery/nftSection.module.scss";
 import { NFTEntryResponse } from "../../utils/backendapi-context";
+import LoadingCard from "../NFT/NFTCard/loadingCard";
 import NFTCard from "../NFT/NFTCard/nftCard";
 
 const NFTSection = (props) => {
-    let dataFetched = false;
-    const containerRef = useRef(null);
-    const options = {
-        root: null,
-        rootMargin: "0px",
-        threshold: 0.1,
+  let dataFetched = false;
+  const containerRef = useRef(null);
+  const options = {
+    root: null,
+    rootMargin: "0px",
+    threshold: 0.1,
+  };
+
+  // Functions
+  // Calculates how many cards fit per row
+  const getCardsPerRow = () => {
+    let windowWidth = 1000;
+    if (typeof window !== "undefined") {
+      windowWidth = window.innerWidth;
     }
-
-    // Functions
-    // Calculates how many cards fit per row
-    const getCardsPerRow = () => {
-        let windowWidth = 1000;
-        if (typeof window !== "undefined") {
-        windowWidth = window.innerWidth;
-        }
-        if (windowWidth <= 992 || windowWidth >= 1400) {
-        return 8;
-        } else if (windowWidth > 1060) {
-        return 6;
-        } else {
-        return 4;
-        }
-    };
-
-    const counter = () => {
-        return new Array(getCardsPerRow());
-    };
-
-    const fetchData = (entries) => {
-        const [ entry ] = entries;
-        if (dataFetched) {
-            return;
-        } else if (entry.isIntersecting) {
-            dataFetched = true;
-            console.log(props.fetching);
-            props.function();
-        }
+    if (windowWidth <= 992 || windowWidth >= 1400) {
+      return 8;
+    } else if (windowWidth > 1060) {
+      return 6;
+    } else {
+      return 4;
     }
+  };
 
-    // Functions end
+  const counter = () => {
+    return new Array(getCardsPerRow());
+  };
 
-    // Lifecycle methods
-    useEffect(() => {
-        if (props.function !== null) {
-            const observer = new IntersectionObserver(fetchData, options)
-            if (containerRef.current) observer.observe(containerRef.current);
+  const fetchData = (entries) => {
+    const [entry] = entries;
+    if (dataFetched) {
+      return;
+    } else if (entry.isIntersecting) {
+      dataFetched = true;
+      console.log(props.fetching);
+      props.function();
+    }
+  };
 
-            return () => {
-                if (containerRef.current) observer.unobserve(containerRef.current);
-            }
-        }
-    }, [])
-    // Lifecycle methods end
+  // Functions end
+
+  // Lifecycle methods
+  useEffect(() => {
+    if (props.function !== null) {
+      const observer = new IntersectionObserver(fetchData, options);
+      if (containerRef.current) observer.observe(containerRef.current);
+
+      return () => {
+        if (containerRef.current) observer.unobserve(containerRef.current);
+      };
+    }
+  }, []);
+  // Lifecycle methods end
 
   return (
     <>
@@ -66,7 +67,7 @@ const NFTSection = (props) => {
             {counter().map((i) => (
               <div key={i} className={styles.nft_col_wrap}>
                 <div className={styles.market_card_container}>
-                  {/* <loading-shimmer [tabType]="'MARKETPLACE'"></loading-shimmer> */}
+                  <LoadingCard></LoadingCard>
                 </div>
               </div>
             ))}
@@ -101,7 +102,7 @@ const NFTSection = (props) => {
             {counter().map((i) => (
               <div key={i} style={{ paddingTop: "10px", paddingLeft: "5px" }}>
                 <div className={styles.card}>
-                  {/* <loading-shimmer [tabType]="'MARKETPLACE'"></loading-shimmer> */}
+                  <LoadingCard></LoadingCard>
                 </div>
               </div>
             ))}

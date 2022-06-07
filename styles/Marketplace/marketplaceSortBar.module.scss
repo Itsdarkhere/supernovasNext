@@ -1,0 +1,671 @@
+@import "../themes.scss";
+
+.global__nav__sticky__marketplace {
+    position: sticky;
+    position: -webkit-sticky;
+    top: 98px;
+    left: calc((100vw - 1205px) / 2);
+    margin-top: 10px;
+}
+.global__nav__inner__marketplace {
+    width: 210px;
+    padding: 10px 17px 70px 17px;
+    background-color: #f9f9f9;
+    border-radius: 15px;
+    //height: 940px;
+    max-height: calc(100vh - 170px);
+    overflow-y: scroll;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+.mlb_status_grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-gap: 10px;
+    button {
+      cursor: pointer;
+      width: 83px;
+      height: 68px;
+      background-color: #ffffff;
+      color: #525252;
+      border: 1.1800000667572021px solid #aaaaaa;
+      border-radius: 7.866666793823242px;
+      font-size: 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      &:hover {
+        background-color: var(--secondary);
+      }
+    }
+    button.selected {
+      border: 3px solid #222222;
+      color: #1b1b1b;
+    }
+}
+  .mlb_flyout_status_grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-gap: 10px;
+    button {
+      cursor: pointer;
+      width: 1fr;
+      //aspect-ratio: 1.5 / 1.3;
+      background-color: #ffffff;
+      color: #525252;
+      border: 1.1800000667572021px solid #aaaaaa;
+      border-radius: 7.866666793823242px;
+      font-size: clamp(14px, 4vw, 22px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      &:hover {
+        background-color: var(--secondary);
+      }
+    }
+    button.selected {
+      border: 3px solid #222222;
+      color: #1b1b1b;
+    }
+  }
+  .marketplace_filter_button {
+    background-color: transparent;
+    width: 100%;
+    height: 42px;
+    background: #ffffff;
+    color: #5e5e5e;
+    border: 1.5px solid #aaaaaa;
+    border-radius: 10px;
+    box-shadow: 0.9287535548210144px 1.8575071096420288px 4.643767833709717px rgba(0, 0, 0, 0.06);
+    text-align: start;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    transition-duration: 50ms;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 10px;
+    position: relative;
+    &:hover {
+      background-color: var(--secondary);
+    }
+    &.market_button_checked {
+      font-weight: 500;
+      color: #2c2c2c;
+      border: 3px solid #222222;
+    }
+}
+.marketplace_checkbox_label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 0;
+    font-size: 14px;
+}
+.marketplace_checkbox_label:before {
+    content: "";
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 1.9134812355041504px;
+    box-shadow: 0px 0.6378270387649536px 3.1891350746154785px rgba(203, 210, 218, 0.8);
+    position: absolute;
+    top: calc(50% - 6px);
+    left: 0;
+    background-color: #ffffff;
+    border: 1px solid $text;
+}
+
+.marketplace_button_checkbox {
+    width: 12px;
+    height: 12px;
+    margin-right: 10px;
+    display: none;
+}
+  
+  
+.marketplace_button_checkbox:checked + .marketplace_checkbox_label:before {
+    content: "\2713";
+    background: #000000;
+    color: #ffffff;
+    text-align: center;
+    line-height: 12px;
+}
+  
+.w-80-im {
+    width: 80% !important;
+}
+.marketplace_select {
+    border: 1.1800000667572021px solid #aaaaaa;
+    border-radius: 7.866666793823242px;
+    height: 42px;
+    color: #525252;
+}
+  
+  .mrk_lb_selector {
+    height: 50px;
+    background: #f5f5f5;
+    border-radius: 14.8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 0 5px 0;
+    button {
+      padding: 0px 15px 0px 15px;
+      text-align: center;
+      height: 36px;
+      border-radius: 5px;
+      border: none;
+      background-color: #f5f5f5;
+      color: #717171;
+      transition-duration: 50ms;
+      &:hover {
+        background-color: var(--secondary);
+      }
+    }
+    button.selected {
+      background: #ffffff;
+      box-shadow: 0.9864575266838074px 0.9864575266838074px 9.864575386047363px rgba(0, 0, 0, 0.1);
+      border: 0.8946940898895264px solid #ffffff;
+      font-weight: 500;
+      color: #2d2d2d;
+    }
+  }
+  .flyout__nav__inner__marketplace {
+    padding: 10px 10px 90px 10px;
+    background-color: #f9f9f9;
+    border-radius: 15px;
+    //height: 940px;
+    height: 90vh;
+    overflow-y: scroll;
+    width: 100%;
+    position: relative;
+    pointer-events: all;
+  }
+  .verifiedAccordion {
+    height: 5px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+  .verifiedAccordion.expanded {
+    height: 350px;
+    transition: all 0.3s ease;
+  }
+  
+  .mlb_price_inputs_container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    input {
+      width: 86px;
+      height: 43px;
+      background-color: #ffffff;
+      border: 1.1800000668px solid #aaaaaa;
+      border-radius: 10px;
+      background-image: url("../../public/icons/price_range_dollar.svg");
+      background-repeat: no-repeat;
+      background-position-x: calc(100% - 5px);
+      background-position-y: center;
+      padding-right: 20px;
+      transition-duration: 50ms;
+      -webkit-appearance: none;
+        margin: 0;
+      &:hover {
+        background-color: var(--secondary);
+      }
+    }
+    input.incorrect {
+      border: 2.5px solid red !important;
+    }
+  }
+  
+  .marketplace-flyout-apply-button:disabled {
+    background-color: #454545;
+    color: #e8e8e8;
+  }
+  .mlb_apply_button_container {
+    width: 100%;
+    background-color: #ffffff;
+    height: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    bottom: 0px;
+    left: 0;
+  }
+  .mlb_flyout_content_format_button.selected {
+    font-weight: 500;
+    color: #1b1b1b;
+    border: 3px solid #222222;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    padding-left: 10px;
+  }
+  .mlb_content_format_button.selected {
+    font-weight: 500;
+    color: #1b1b1b;
+    border: 3px solid #222222;
+  }
+  .mlb_content_format_button {
+    width: 100%;
+    height: 42px;
+    text-align: start;
+    background: #ffffff;
+    color: #5e5e5e;
+    border: 2.5px solid #aaaaaa;
+    border-radius: 10px;
+    box-shadow: 0.9px 1.8px 4.6px rgba(0, 0, 0, 0.06);
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    padding-left: 10px;
+    font-size: 14px;
+  }
+  
+  .mlb-flyout-apply-button-container {
+    min-width: 100%;
+    background-color: #ffffff;
+    height: auto;
+    padding-bottom: 20px;
+    padding-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    bottom: 0px;
+    left: 0;
+  }
+  .mlb_price_set_box {
+    height: 42px;
+    background: #ffffff;
+    border: 3px solid #222222;
+    color: #222222;
+    border-radius: 10px;
+    padding-right: 30px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-left: 10px;
+    position: relative;
+    span {
+      width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    button {
+      position: absolute;
+      right: 5px;
+      width: 20px;
+      height: 20px;
+      padding: 0;
+      background-image: url("/public/icons/close_round_black.svg");
+      background-size: 20px 20px;
+      background-position: center;
+      background-color: transparent;
+      border: none;
+    }
+  }
+  .marketplace_label {
+    color: #525252;
+    font-size: 13.00255012512207px;
+    font-weight: 700;
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+  .marketplace-flyout-label {
+    color: #525252;
+    font-size: 13.00255012512207px;
+    font-weight: 700;
+    font-size: clamp(14px, 4vw, 22px);
+    width: 100%;
+    margin-top: 20px;
+    padding-left: 10px;
+  }
+  .center_absolute {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .left_center_absolute {
+    position: absolute;
+    top: 50%;
+    left: 10%;
+    transform: translate(-50%, -50%);
+  }
+  // Fallback for mobile devices that dont support aspect ratio, mostly safari (aspect-ratio: 1 / 1) {
+  .mlb_flyout_status_grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-gap: 10px;
+    button {
+      cursor: pointer;
+      //width: 83px;
+      //height: 68px;
+      position: relative;
+      width: 1fr;
+      padding-bottom: 75%;
+      background-color: #ffffff;
+      color: #525252;
+      border: 1.1800000667572021px solid #aaaaaa;
+      border-radius: 7.866666793823242px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      &:hover {
+        background-color: var(--secondary);
+      }
+    }
+    button.selected {
+      border: 3px solid #222222;
+      color: #1b1b1b;
+    }
+    img {
+      height: 20px;
+    }
+  }
+  .mlb_flyout_price_inputs_container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    input {
+      //width: 86px;
+      //height: 43px;
+      position: relative;
+      width: 48%;
+      height: 14vw;
+      max-height: 60px;
+      min-height: 45px;
+      background-color: #ffffff;
+      font-size: clamp(14px, 4vw, 20px);
+      border: 1.1800000668px solid #aaaaaa;
+      border-radius: 10px;
+      background-image: url("../../public/icons/price_range_dollar.svg");
+      background-repeat: no-repeat;
+      background-position-x: calc(100% - 5px);
+      background-position-y: center;
+      padding-right: 20px;
+      transition-duration: 50ms;
+      &:hover {
+        background-color: var(--secondary);
+      }
+    }
+    input.incorrect {
+      border: 2.5px solid red !important;
+    }
+  }
+  .flyout_set_price_button {
+    height: 14vw;
+    max-height: 60px;
+    min-height: 45px;
+    font-size: clamp(14px, 4vw, 20px);
+    color: #2c2c2c;
+    width: 100%;
+    margin-top: 5px;
+    font-weight: 500;
+    padding-bottom: 5px;
+  }
+  .mlb_flyout_price_set_box {
+    height: 14vw;
+    max-height: 65px;
+    min-height: 42px;
+    background: #ffffff;
+    border: 3px solid #222222;
+    color: #222222;
+    border-radius: 10px;
+    padding-right: 30px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-left: 10px;
+    position: relative;
+    span {
+      width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: clamp(14px, 4vw, 20px);
+    }
+    button {
+      position: absolute;
+      right: 5px;
+      width: 20px;
+      height: 20px;
+      padding: 0;
+      background-image: url("/public/icons/close_round_black.svg");
+      background-size: 20px 20px;
+      background-position: center;
+      background-color: transparent;
+      border: none;
+    }
+  }
+  .marketplace_flyout_filter_button {
+    background-color: transparent;
+    width: 100%;
+    //height: 42px;
+    position: relative;
+    height: 14vw;
+    max-height: 60px;
+    min-height: 45px;
+    background: #ffffff;
+    color: #5e5e5e;
+    border: 1.5px solid #aaaaaa;
+    border-radius: 10px;
+    box-shadow: 0.9287535548210144px 1.8575071096420288px 4.643767833709717px rgba(0, 0, 0, 0.06);
+    text-align: start;
+    transition-duration: 50ms;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    &:hover {
+      background-color: var(--secondary);
+    }
+    &.market-button-checked {
+      font-weight: 500;
+      color: #2c2c2c;
+      border: 3px solid #222222;
+    }
+  }
+  .mrk_flyout_lb_selector {
+    width: 100%;
+    padding: 5px 0 5px 0;
+    height: 50px;
+    background: #f5f5f5;
+    border-radius: 14.796862602233887px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: clamp(12px, 3.5vw, 18px);
+    button {
+      padding: 0px 15px 0px 15px;
+      width: 50%;
+      text-align: center;
+      //height: 36px;
+      position: relative;
+      padding-bottom: 13%;
+      border-radius: 5px;
+      border: none;
+      background-color: #f5f5f5;
+      color: #717171;
+      transition-duration: 50ms;
+      &:hover {
+        background-color: var(--secondary);
+      }
+    }
+    button.selected {
+      background: #ffffff;
+      box-shadow: 0.9864575266838074px 0.9864575266838074px 9.864575386047363px rgba(0, 0, 0, 0.1);
+      border: 0.8946940898895264px solid #ffffff;
+      font-weight: 500;
+      color: #2d2d2d;
+    }
+  }
+  .verifiedFlyoutAccordion {
+    width: 100%;
+    max-height: 5px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+  .verifiedFlyoutAccordion.expanded {
+    max-height: 600px;
+    transition: all 0.3s ease;
+  }
+  .mrk_select_flyout {
+    background: #ffffff;
+    width: 100%;
+    //height: 42px;
+    position: relative;
+    height: 14vw;
+    max-height: 65px;
+    min-height: 45px;
+    color: #525252;
+    border: 1.3px solid #aaaaaa;
+    border-radius: 9px;
+    background: url("/public/icons/chevron-down.svg") no-repeat right rgb(255, 255, 255);
+    background-size: 12px;
+    font-size: clamp(14px, 4vw, 20px);
+    -webkit-appearance: none;
+    padding-left: 10px;
+    background-position-x: calc(100% - 10px);
+    padding: 5px;
+    width: 100%;
+    font-weight: 500;
+    .target {
+      position: absolute;
+      left: 0px;
+      bottom: 0px;
+    }
+  }
+  .mlb_flyout_content_format_button {
+    width: 100%;
+    //height: 42px;
+    position: relative;
+    padding-bottom: 13%;
+    text-align: start;
+    background: #ffffff;
+    font-size: clamp(14px, 4vw, 20px);
+    color: #5e5e5e;
+    border: 2.5px solid #aaaaaa;
+    border-radius: 10px;
+    box-shadow: 0.9287535548210144px 1.8575071096420288px 4.643767833709717px rgba(0, 0, 0, 0.06);
+  }
+  .box::before {
+    float: left;
+    padding-top: 100%;
+    content: "";
+  }
+  .box::after {
+    display: block;
+    content: "";
+    clear: both;
+  }
+  .marketplace_flyout_checkbox_label {
+    font-size: clamp(14px, 4vw, 20px);
+    padding-left: 20px;
+  }
+  .marketplace-flyout-apply-button {
+    background: #080808;
+    width: 80%;
+    max-width: 400px;
+    height: 12vw;
+    max-height: 70px;
+    min-height: 50px;
+    border: 1px solid #303030;
+    border-radius: 30px;
+    box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.25);
+    color: #ffffff;
+    transition-duration: transform 0.2s;
+    font-size: clamp(12px, 4vw, 18px);
+    &:active {
+      transition-duration: transform 0.2s;
+      transform: scale(0.95);
+    }
+}
+.nav_close_marketplace {
+    width: 100%;
+    height: 50px;
+    margin-top: 70px;
+    z-index: 999;
+    border-radius: 50%;
+    position: relative;
+    img {
+      position: absolute;
+      right: 0;
+      top: 25px;
+      width: 45px;
+      height: 45px;
+    }
+}
+.marketplace_button_checkbox:checked + .marketplace-flyout-checkbox-label:before {
+    content: "\2713";
+    background: #000000;
+    color: #ffffff;
+    text-align: center;
+    line-height: 12px;
+}
+.marketplace_flyout_checkbox_label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 0;
+}
+.marketplace_flyout_checkbox_label:before {
+    content: "";
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 1.9134812355041504px;
+    box-shadow: 0px 0.6378270387649536px 3.1891350746154785px rgba(203, 210, 218, 0.8);
+    position: absolute;
+    top: calc(50% - 6px);
+    left: 0px;
+    background-color: #ffffff;
+    border: 1px solid $text;
+}
+.marketplace_apply_button {
+  font-size: 12px;
+  font-weight: bold;
+  background: #080808;
+  width: 176px;
+  height: 45px;
+  border: 1px solid #303030;
+  border-radius: 30px;
+  box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.25);
+  color: #ffffff;
+  transition-duration: transform 0.2s;
+  &:active {
+    transition-duration: transform 0.2s;
+    transform: scale(0.95);
+  }
+  @media (max-width: 992px) {
+    width: 100%;
+    height: 45px;
+    margin-left: 0;
+  }
+}
+.marketplace_apply_button:disabled {
+  background-color: #454545;
+  color: #e8e8e8;
+}

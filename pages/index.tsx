@@ -2,12 +2,13 @@ import Head from "../node_modules/next/head";
 import styles from "../styles/Home.module.scss";
 import Header from "../components/Navigation/header";
 import LeftNav from "../components/Navigation/leftNav";
-import {
-  launchLoginFlow,
-} from "../utils/global-context";
+import { launchLoginFlow } from "../utils/global-context";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../utils/Redux/hooks";
 import { setLocalNode } from "../utils/Redux/Slices/nodeSlice";
+import Page from "../components/Wrappers/page";
+import CreatePost from "../components/Feed/createPost";
+import Feed from "../components/Feed/feed";
 export default function Home() {
   // Redux
   const dispatch = useAppDispatch();
@@ -22,9 +23,7 @@ export default function Home() {
   // Functions end
 
   // Lifecycle methods
-  useEffect(() => {
-    
-  }, []);
+  useEffect(() => {}, []);
   // Lifycycle methods end
 
   return (
@@ -36,12 +35,13 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        {/* USE HERE sanitizedIdentityServiceURL */}
-        <Header></Header>
-        <button onClick={() => login()}>CLICK</button>
-        <p>{localNode}</p>
-
-        <LeftNav></LeftNav>
+        <Page isNFTProfile={false} noCap={false}>
+          <div className="global__content__flex">
+            <div className="global__center__width feed-cover">
+              <Feed isMobile={false}></Feed>
+            </div>
+          </div>
+        </Page>
       </main>
 
       <footer className={styles.footer}></footer>

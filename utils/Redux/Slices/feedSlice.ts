@@ -6,30 +6,37 @@ import type { AppState } from "../store";
 
 // Define type
 interface FeedState {
-    postsToShow: PostEntryResponse[],
-    followFeedPosts: PostEntryResponse[],
-    hotFeedPosts: PostEntryResponse[],
+  postsToShow: PostEntryResponse[];
+  followFeedPosts: PostEntryResponse[];
+  hotFeedPosts: PostEntryResponse[];
 }
 
 // Define state
 const initialState: FeedState = {
-    postsToShow: [],
-    followFeedPosts: [],
-    hotFeedPosts: [],
-}
+  postsToShow: [],
+  followFeedPosts: [],
+  hotFeedPosts: [],
+};
 
 export const feedSlice = createSlice({
-    name: "feed",
-    initialState,
-    reducers: {
-        setFollowFeedPosts: (state, action: PayloadAction<PostEntryResponse[]>) => {
-            state.followFeedPosts = action.payload;
-        }
-    }
-})
+  name: "feed",
+  initialState,
+  reducers: {
+    setFollowFeedPosts: (state, action: PayloadAction<PostEntryResponse[]>) => {
+      state.followFeedPosts = action.payload;
+    },
+    setHotFeedPosts: (state, action: PayloadAction<PostEntryResponse[]>) => {
+      state.hotFeedPosts = action.payload;
+    },
+    setPostsToShow: (state, action: PayloadAction<PostEntryResponse[]>) => {
+      state.postsToShow = action.payload;
+    },
+  },
+});
 
-// DEFINE ACTIONS 
-export const { setFollowFeedPosts } = feedSlice.actions;
+// DEFINE ACTIONS
+export const { setFollowFeedPosts, setHotFeedPosts, setPostsToShow } =
+  feedSlice.actions;
 // Not entirely sure on this ,,, This is how the docs describe it
 // Other code such as selectors can use the imported `RootState` type
 // Info: https://react-redux.js.org/tutorials/typescript-quick-start

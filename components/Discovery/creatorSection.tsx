@@ -1,5 +1,6 @@
 import { propTypes } from "react-bootstrap/esm/Image";
 import styles from "../../styles/Discovery/creatorSection.module.scss";
+import LoadingCard from "../NFT/NFTCard/loadingCard";
 import CreatorCard from "../Reusables/creatorCard";
 
 const CreatorSection = ({ loading, userData, localNode, dataToShowExtra }) => {
@@ -31,7 +32,7 @@ const CreatorSection = ({ loading, userData, localNode, dataToShowExtra }) => {
             {counter().map((i) => (
               <div key={i} className={styles.nft_col_wrap}>
                 <div className={styles.market_card_container}>
-                  {/* <loading-shimmer [tabType]="'MARKETPLACE'"></loading-shimmer> */}
+                  <LoadingCard></LoadingCard>
                 </div>
               </div>
             ))}
@@ -58,7 +59,7 @@ const CreatorSection = ({ loading, userData, localNode, dataToShowExtra }) => {
             {counter().map((i) => (
               <div key={i} style={{ paddingTop: "10px", paddingLeft: "5px" }}>
                 <div className="card">
-                  {/* <loading-shimmer [tabType]="'MARKETPLACE'"></loading-shimmer> */}
+                  <LoadingCard></LoadingCard>
                 </div>
               </div>
             ))}
@@ -68,9 +69,9 @@ const CreatorSection = ({ loading, userData, localNode, dataToShowExtra }) => {
             {userData?.map((user, i) => (
               <div key={i} style={{ paddingTop: "10px", paddingLeft: "5px" }}>
                 <CreatorCard
-                    extraUserNames={dataToShowExtra}
-                    localNode={localNode}
-                    username={user}
+                  extraUserNames={dataToShowExtra}
+                  localNode={localNode}
+                  username={user}
                 ></CreatorCard>
               </div>
             ))}

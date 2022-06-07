@@ -1622,29 +1622,7 @@ input.bs-timepicker-field {
     padding: 10px 15px 0;
   }
 }
-.marketplace-apply-button {
-  background: #080808;
-  width: 176px;
-  height: 45px;
-  border: 1px solid #303030;
-  border-radius: 30px;
-  box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.25);
-  color: #ffffff;
-  transition-duration: transform 0.2s;
-  &:active {
-    transition-duration: transform 0.2s;
-    transform: scale(0.95);
-  }
-  @media (max-width: 992px) {
-    width: 100%;
-    height: 45px;
-    margin-left: 0;
-  }
-}
-.marketplace-apply-button:disabled {
-  background-color: #454545;
-  color: #e8e8e8;
-}
+
 
 .marketplace-nav-width {
   min-width: 177px;
@@ -1652,86 +1630,6 @@ input.bs-timepicker-field {
   max-width: 250px;
 }
 
-.marketplace-button-checkbox {
-  width: 12px;
-  height: 12px;
-  margin-right: 10px;
-}
-
-.marketplace-checkbox-label {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  padding-left: 20px;
-  margin-bottom: 0;
-}
-/*
-  display: flex;
-  justify-content: center;
-  align-items: center;
-*/
-.marketplace-flyout-checkbox-label {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  padding-left: 20px;
-  margin-bottom: 0;
-}
-.marketplace-checkbox-label:before {
-  content: "";
-  display: inline-block;
-  width: 12px;
-  height: 12px;
-  border-radius: 1.9134812355041504px;
-  box-shadow: 0px 0.6378270387649536px 3.1891350746154785px rgba(203, 210, 218, 0.8);
-  position: absolute;
-  top: calc(50% - 6px);
-  left: 0;
-  background-color: #ffffff;
-  border: 1px solid $text;
-}
-.marketplace-flyout-checkbox-label:before {
-  content: "";
-  display: inline-block;
-  width: 12px;
-  height: 12px;
-  border-radius: 1.9134812355041504px;
-  box-shadow: 0px 0.6378270387649536px 3.1891350746154785px rgba(203, 210, 218, 0.8);
-  position: absolute;
-  top: calc(50% - 6px);
-  left: 0px;
-  background-color: #ffffff;
-  border: 1px solid $text;
-}
-
-.marketplace-button-checkbox:checked + .marketplace-checkbox-label:before {
-  content: "\2713";
-  background: #000000;
-  color: #ffffff;
-  text-align: center;
-  line-height: 12px;
-}
-.marketplace-button-checkbox:checked + .marketplace-flyout-checkbox-label:before {
-  content: "\2713";
-  background: #000000;
-  color: #ffffff;
-  text-align: center;
-  line-height: 12px;
-}
-
-.mrk_select {
-  background: #ffffff;
-  color: #525252;
-  border: 1.346666693687439px solid #aaaaaa;
-  border-radius: 8.977777481079102px;
-  background: url("../public/icons/chevron-down.svg") no-repeat right rgb(255, 255, 255);
-  background-size: 12px;
-  -webkit-appearance: none;
-  padding-left: 10px;
-  background-position-x: calc(100% - 10px);
-}
 .mrk_select_flyout {
   aspect-ratio: 1 / 0.15;
   background: #ffffff;
@@ -1744,25 +1642,10 @@ input.bs-timepicker-field {
   padding-left: 10px;
   background-position-x: calc(100% - 10px);
 }
-.mrk_top_select_height {
-  width: 202px;
-  height: 54px;
-}
-.mrk_select_height {
-  width: 100%;
-  height: 42px;
-}
 
 .marketplace-mobile-margin {
   padding-left: 10px !important;
   padding-right: 10px !important;
-}
-
-.global__nav__sticky__marketplace {
-  position: sticky;
-  position: -webkit-sticky;
-  top: 98px;
-  left: calc((100vw - 1205px) / 2);
 }
 
 .display-none {
@@ -1779,15 +1662,6 @@ input.bs-timepicker-field {
   }
 }
 
-.global__nav__inner__marketplace {
-  width: 210px;
-  padding: 10px 17px 70px 17px;
-  background-color: #f9f9f9;
-  border-radius: 15px;
-  //height: 940px;
-  max-height: calc(100vh - 170px);
-  overflow-y: scroll;
-}
 .global__nav__inner__marketplace-eth {
   width: 210px;
   padding: 10px 17px 80px 17px;
@@ -1939,43 +1813,7 @@ input.bs-timepicker-field {
     transition-duration: 0.2s;
   }
 }
-// used in all nft widescreen feeds
-.mrk_top_selector-two {
-  height: 52px;
-  width: max-content;
-  background: #f5f5f5;
-  border-radius: 7.531645774841309px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  button {
-    width: 55px;
-    height: 42px;
-    border-radius: 5px;
-    border: none;
-    background-color: #f5f5f5;
-  }
-  button.selected {
-    background: #ffffff;
-    box-shadow: 0.9864575266838074px 0.9864575266838074px 9.864575386047363px rgba(0, 0, 0, 0.1);
-    border: 0.8946940898895264px solid #ffffff;
-  }
-}
 
-.nav_close_marketplace {
-  width: 100%;
-  height: 50px;
-  margin-top: 70px;
-  z-index: 999;
-  border-radius: 50%;
-  img {
-    position: absolute;
-    right: 0;
-    top: 25px;
-    width: 45px;
-    height: 45px;
-  }
-}
 .left-bar-mobile__flyout-div {
   z-index: 100; // Needs to be higher than the bottom bar and staked posts.
   position: fixed;
@@ -1992,22 +1830,6 @@ input.bs-timepicker-field {
   pointer-events: all;
 }
 
-.left-bar-mobile__flyout-div-marketplace {
-  background-color: #f9f9f9;
-  padding-top: 5px;
-  z-index: 100; // Needs to be higher than the bottom bar and staked posts.
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  //max-height: calc(100vh - 100px);
-  width: 100%;
-  height: 100vh;
-  transform-origin: bottom;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  pointer-events: all;
-}
 
 .right-bar-select-box {
   border: none;
@@ -2289,7 +2111,7 @@ input.bs-timepicker-field {
 }
 
 .feed-create-post__avatar_default {
-  background-image: url("/assets/img/default_profile_pic.png");
+  background-image: url("../public/img/default_profile_pic.png");
 }
 
 .feed-create-comment__textarea {
@@ -3338,6 +3160,9 @@ em {
 .d-flex {
   display: flex;
 }
+.d-none {
+  display: none;
+}
 .flex-column {
   flex-direction: column;
 }
@@ -4192,45 +4017,6 @@ option {
   }
 }
 
-.nfts-card-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    grid-template-rows: 1fr;
-    margin: 20px -10px 0px;
-    padding: 0px 10px !important;
-    list-style-type: none;
-    &.nft_creator_list {
-      @media screen and (max-width: 676px) {
-        padding-top: 0;
-      }
-    }
-  .nft-col-wrap {
-    padding: 10px;
-    flex: 1 1 auto;
-    min-width: 300px;
-    margin-bottom: 35px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    @media screen and (max-width: 676px) {
-      width: 100%;
-      margin-bottom: 35px;
-    }
-  }
-  .small-nft-col-wrap {
-    width: calc(100% / 40);
-    min-width: 195px;
-    margin-bottom: 15px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-}
-.smallCards {
-  grid-template-columns: repeat(auto-fill, minmax(195px, 1fr)) !important;
-  place-items: center;
-}
-
 .nfts-card-list-collection {
   display: flex;
   align-items: flex-start;
@@ -4430,15 +4216,7 @@ option {
     background-image: linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15));
   }
 }
-.mrk_top {
-  border-bottom: 2px solid $border;
-  height: 85px;
-  width: 100%;
-  -webkit-align-items: flex-end;
-  @media screen and (max-width: 650px) {
-    height: 190px;
-  }
-}
+
 
 .justify-content-space-between {
   justify-content: space-between !important;
@@ -5139,9 +4917,7 @@ option {
   display: flex;
   margin: 0 auto;
 }
-.m_inner_wrapper.noCap {
-  width: 100% !important;
-}
+
 
 .post-thread-wrapper {
   max-width: 702px;

@@ -30,33 +30,71 @@ import Swal from "sweetalert2";
 import Timer = NodeJS.Timer;
 import { Link, ImmutableXClient } from "@imtbl/imx-sdk";
 import { SwalHelper } from "./helpers/swal-helper";
-import {
-  launch,
-} from "./identity-context";
+import { launch } from "./identity-context";
 import store from "./Redux/store";
 // Redux
 import { useAppSelector, useAppDispatch } from "./Redux/hooks";
 // Actions
 import { setIsLeftBarMobileOpen } from "./Redux/Slices/openSlice";
-import { setIsCollector, setIsCreator, setIsNullUsername, setIsOnBoardingComplete, setIsVerified, 
-  setNeedToPickCreatorOrCollector, setUsername, setYouHodlMap } from "./Redux/Slices/userSlice";
-import { setMessageNotificationCount, setMessageRequestsFollowedOnly, setMessageResponse, 
-  setMessagesRequestsFollowersOnly, setMessagesRequestsHoldersOnly, setMessagesRequestsHoldingsOnly, 
-  setMessagesSortAlgorithm, setNewMessagesFromPage } from "./Redux/Slices/messagesSlice";
-import { setLoggedInUserReferralInfoResponses, setLoggedInUserState, setUserList } from "./Redux/Slices/loggedInSlice";
-import { setDesoToUSDExchangeRateToDisplay, setExchangeUSDCentsPerDeSo, setLatestBitcoinAPIResponse, 
-  setNanosPerETHExchangeRate, setNanosPerUSDExchangeRate, setProtocolUSDCentsPerBitcoinExchangeRate, 
-  setSatoshisPerDeSoExchangeRate, setUSDCentsPerDeSoReservePrice, setUSDPerBitcoinExchangeRate, 
-  setUSDPerETHExchangeRate } from "./Redux/Slices/exhangeRatesSlice";
+import {
+  setIsCollector,
+  setIsCreator,
+  setIsNullUsername,
+  setIsOnBoardingComplete,
+  setIsVerified,
+  setNeedToPickCreatorOrCollector,
+  setUsername,
+  setYouHodlMap,
+} from "./Redux/Slices/userSlice";
+import {
+  setMessageNotificationCount,
+  setMessageRequestsFollowedOnly,
+  setMessageResponse,
+  setMessagesRequestsFollowersOnly,
+  setMessagesRequestsHoldersOnly,
+  setMessagesRequestsHoldingsOnly,
+  setMessagesSortAlgorithm,
+  setNewMessagesFromPage,
+} from "./Redux/Slices/messagesSlice";
+import {
+  setLoggedInUserReferralInfoResponses,
+  setLoggedInUserState,
+  setUserList,
+} from "./Redux/Slices/loggedInSlice";
+import {
+  setDesoToUSDExchangeRateToDisplay,
+  setExchangeUSDCentsPerDeSo,
+  setLatestBitcoinAPIResponse,
+  setNanosPerETHExchangeRate,
+  setNanosPerUSDExchangeRate,
+  setProtocolUSDCentsPerBitcoinExchangeRate,
+  setSatoshisPerDeSoExchangeRate,
+  setUSDCentsPerDeSoReservePrice,
+  setUSDPerBitcoinExchangeRate,
+  setUSDPerETHExchangeRate,
+} from "./Redux/Slices/exhangeRatesSlice";
 import { setFollowFeedPosts } from "./Redux/Slices/feedSlice";
-import { setCanvasCount, setConfetti, setNanosSold } from "./Redux/Slices/otherSlice";
+import {
+  setCanvasCount,
+  setConfetti,
+  setNanosSold,
+} from "./Redux/Slices/otherSlice";
 import { setLocalNode } from "./Redux/Slices/nodeSlice";
-import { setBuyDeSoFeeBasisPoints, } from "./Redux/Slices/feesSlice";
-import { pushToETHMarketplaceNFTsData, setETHMarketplaceNFTsData, setETHMarketplaceNFTsDataToShow, 
-  setIsMarketplaceLoading } from "./Redux/Slices/marketplaceSlice";
+import { setBuyDeSoFeeBasisPoints } from "./Redux/Slices/feesSlice";
+import {
+  pushToETHMarketplaceNFTsData,
+  setETHMarketplaceNFTsData,
+  setETHMarketplaceNFTsDataToShow,
+  setIsMarketplaceLoading,
+} from "./Redux/Slices/marketplaceSlice";
 import { setMarketplaceSortType } from "./Redux/Slices/sortSlice";
-import { concatToCollectedNFTsToShow, concatToCreatedNFTsToShow, concatToETHNFTsCollected, 
-  setETHNFTsCollected, setETHNFTsCreated } from "./Redux/Slices/profileSlice";
+import {
+  concatToCollectedNFTsToShow,
+  concatToCreatedNFTsToShow,
+  concatToETHNFTsCollected,
+  setETHNFTsCollected,
+  setETHNFTsCreated,
+} from "./Redux/Slices/profileSlice";
 import { setIMXClient } from "./Redux/Slices/imxSlice";
 import { FollowChangeObservableResult } from "./observable-results/follow-change-observable-result";
 // Redux end
@@ -77,13 +115,13 @@ const svgToProps = {
   [ConfettiSvg.LAMBO]: { size: 18, weight: 1 },
 };
 
-const NANOS_PER_UNIT = 1e9;
-const WEI_PER_ETH = 1e18;
-const MAX_POST_LENGTH = 560;
-const FOUNDER_REWARD_BASIS_POINTS_WARNING_THRESHOLD = 50 * 100;
-const DEFAULT_NANOS_PER_USD_EXCHANGE_RATE = 1e9;
-const CREATOR_COIN_RESERVE_RATIO = 0.3333333;
-const CREATOR_COIN_TRADE_FEED_BASIS_POINTS = 1;
+export const NANOS_PER_UNIT = 1e9;
+export const WEI_PER_ETH = 1e18;
+export const MAX_POST_LENGTH = 560;
+export const FOUNDER_REWARD_BASIS_POINTS_WARNING_THRESHOLD = 50 * 100;
+export const DEFAULT_NANOS_PER_USD_EXCHANGE_RATE = 1e9;
+export const CREATOR_COIN_RESERVE_RATIO = 0.3333333;
+export const CREATOR_COIN_TRADE_FEED_BASIS_POINTS = 1;
 // No idea to what extent these stay in state
 let formatUSDMemo = {};
 // No idea to what extent these stay in state
@@ -98,17 +136,14 @@ let loggedInUserObservers = [] as Observer<LoggedInUserObservableResult>[];
 let followChangeObservable: Observable<FollowChangeObservableResult>;
 let followChangeObservers = [] as Observer<FollowChangeObservableResult>[];
 
-
 const emailRegExp =
   /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
 
 const emailRegExTest =
   /(?:(?:\r\n)?[ \t])*(?:(?:(?:[^()<>@,;:\\".\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\["()<>@,;:\\".\[\]]))|"(?:[^\"\r\\]|\\.|(?:(?:\r\n)?[ \t]))*"(?:(?:\r\n)?[ \t])*)(?:\.(?:(?:\r\n)?[ \t])*(?:[^()<>@,;:\\".\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\["()<>@,;:\\".\[\]]))|"(?:[^\"\r\\]|\\.|(?:(?:\r\n)?[ \t]))*"(?:(?:\r\n)?[ \t])*))*@(?:(?:\r\n)?[ \t])*(?:[^()<>@,;:\\".\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\["()<>@,;:\\".\[\]]))|\[([^\[\]\r\\]|\\.)*\](?:(?:\r\n)?[ \t])*)(?:\.(?:(?:\r\n)?[ \t])*(?:[^()<>@,;:\\".\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\["()<>@,;:\\".\[\]]))|\[([^\[\]\r\\]|\\.)*\](?:(?:\r\n)?[ \t])*))*|(?:[^()<>@,;:\\".\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\["()<>@,;:\\".\[\]]))|"(?:[^\"\r\\]|\\.|(?:(?:\r\n)?[ \t]))*"(?:(?:\r\n)?[ \t])*)*\<(?:(?:\r\n)?[ \t])*(?:@(?:[^()<>@,;:\\".\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\["()<>@,;:\\".\[\]]))|\[([^\[\]\r\\]|\\.)*\](?:(?:\r\n)?[ \t])*)(?:\.(?:(?:\r\n)?[ \t])*(?:[^()<>@,;:\\".\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\["()<>@,;:\\".\[\]]))|\[([^\[\]\r\\]|\\.)*\](?:(?:\r\n)?[ \t])*))*(?:,@(?:(?:\r\n)?[ \t])*(?:[^()<>@,;:\\".\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\["()<>@,;:\\".\[\]]))|\[([^\[\]\r\\]|\\.)*\](?:(?:\r\n)?[ \t])*)(?:\.(?:(?:\r\n)?[ \t])*(?:[^()<>@,;:\\".\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\["()<>@,;:\\".\[\]]))|\[([^\[\]\r\\]|\\.)*\](?:(?:\r\n)?[ \t])*))*)*:(?:(?:\r\n)?[ \t])*)?(?:[^()<>@,;:\\".\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\["()<>@,;:\\".\[\]]))|"(?:[^\"\r\\]|\\.|(?:(?:\r\n)?[ \t]))*"(?:(?:\r\n)?[ \t])*)(?:\.(?:(?:\r\n)?[ \t])*(?:[^()<>@,;:\\".\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\["()<>@,;:\\".\[\]]))|"(?:[^\"\r\\]|\\.|(?:(?:\r\n)?[ \t]))*"(?:(?:\r\n)?[ \t])*))*@(?:(?:\r\n)?[ \t])*(?:[^()<>@,;:\\".\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\["()<>@,;:\\".\[\]]))|\[([^\[\]\r\\]|\\.)*\](?:(?:\r\n)?[ \t])*)(?:\.(?:(?:\r\n)?[ \t])*(?:[^()<>@,;:\\".\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\["()<>@,;:\\".\[\]]))|\[([^\[\]\r\\]|\\.)*\](?:(?:\r\n)?[ \t])*))*\>(?:(?:\r\n)?[ \t])*)|(?:[^()<>@,;:\\".\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\["()<>@,;:\\".\[\]]))|"(?:[^\"\r\\]|\\.|(?:(?:\r\n)?[ \t]))*"(?:(?:\r\n)?[ \t])*)*:(?:(?:\r\n)?[ \t])*(?:(?:(?:[^()<>@,;:\\".\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\["()<>@,;:\\".\[\]]))|"(?:[^\"\r\\]|\\.|(?:(?:\r\n)?[ \t]))*"(?:(?:\r\n)?[ \t])*)(?:\.(?:(?:\r\n)?[ \t])*(?:[^()<>@,;:\\".\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\["()<>@,;:\\".\[\]]))|"(?:[^\"\r\\]|\\.|(?:(?:\r\n)?[ \t]))*"(?:(?:\r\n)?[ \t])*))*@(?:(?:\r\n)?[ \t])*(?:[^()<>@,;:\\".\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\["()<>@,;:\\".\[\]]))|\[([^\[\]\r\\]|\\.)*\](?:(?:\r\n)?[ \t])*)(?:\.(?:(?:\r\n)?[ \t])*(?:[^()<>@,;:\\".\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\["()<>@,;:\\".\[\]]))|\[([^\[\]\r\\]|\\.)*\](?:(?:\r\n)?[ \t])*))*|(?:[^()<>@,;:\\".\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\["()<>@,;:\\".\[\]]))|"(?:[^\"\r\\]|\\.|(?:(?:\r\n)?[ \t]))*"(?:(?:\r\n)?[ \t])*)*\<(?:(?:\r\n)?[ \t])*(?:@(?:[^()<>@,;:\\".\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\["()<>@,;:\\".\[\]]))|\[([^\[\]\r\\]|\\.)*\](?:(?:\r\n)?[ \t])*)(?:\.(?:(?:\r\n)?[ \t])*(?:[^()<>@,;:\\".\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\["()<>@,;:\\".\[\]]))|\[([^\[\]\r\\]|\\.)*\](?:(?:\r\n)?[ \t])*))*(?:,@(?:(?:\r\n)?[ \t])*(?:[^()<>@,;:\\".\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\["()<>@,;:\\".\[\]]))|\[([^\[\]\r\\]|\\.)*\](?:(?:\r\n)?[ \t])*)(?:\.(?:(?:\r\n)?[ \t])*(?:[^()<>@,;:\\".\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\["()<>@,;:\\".\[\]]))|\[([^\[\]\r\\]|\\.)*\](?:(?:\r\n)?[ \t])*))*)*:(?:(?:\r\n)?[ \t])*)?(?:[^()<>@,;:\\".\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\["()<>@,;:\\".\[\]]))|"(?:[^\"\r\\]|\\.|(?:(?:\r\n)?[ \t]))*"(?:(?:\r\n)?[ \t])*)(?:\.(?:(?:\r\n)?[ \t])*(?:[^()<>@,;:\\".\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\["()<>@,;:\\".\[\]]))|"(?:[^\"\r\\]|\\.|(?:(?:\r\n)?[ \t]))*"(?:(?:\r\n)?[ \t])*))*@(?:(?:\r\n)?[ \t])*(?:[^()<>@,;:\\".\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\["()<>@,;:\\".\[\]]))|\[([^\[\]\r\\]|\\.)*\](?:(?:\r\n)?[ \t])*)(?:\.(?:(?:\r\n)?[ \t])*(?:[^()<>@,;:\\".\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\["()<>@,;:\\".\[\]]))|\[([^\[\]\r\\]|\\.)*\](?:(?:\r\n)?[ \t])*))*\>(?:(?:\r\n)?[ \t])*)(?:,\s*(?:(?:[^()<>@,;:\\".\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\["()<>@,;:\\".\[\]]))|"(?:[^\"\r\\]|\\.|(?:(?:\r\n)?[ \t]))*"(?:(?:\r\n)?[ \t])*)(?:\.(?:(?:\r\n)?[ \t])*(?:[^()<>@,;:\\".\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\["()<>@,;:\\".\[\]]))|"(?:[^\"\r\\]|\\.|(?:(?:\r\n)?[ \t]))*"(?:(?:\r\n)?[ \t])*))*@(?:(?:\r\n)?[ \t])*(?:[^()<>@,;:\\".\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\["()<>@,;:\\".\[\]]))|\[([^\[\]\r\\]|\\.)*\](?:(?:\r\n)?[ \t])*)(?:\.(?:(?:\r\n)?[ \t])*(?:[^()<>@,;:\\".\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\["()<>@,;:\\".\[\]]))|\[([^\[\]\r\\]|\\.)*\](?:(?:\r\n)?[ \t])*))*|(?:[^()<>@,;:\\".\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\["()<>@,;:\\".\[\]]))|"(?:[^\"\r\\]|\\.|(?:(?:\r\n)?[ \t]))*"(?:(?:\r\n)?[ \t])*)*\<(?:(?:\r\n)?[ \t])*(?:@(?:[^()<>@,;:\\".\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\["()<>@,;:\\".\[\]]))|\[([^\[\]\r\\]|\\.)*\](?:(?:\r\n)?[ \t])*)(?:\.(?:(?:\r\n)?[ \t])*(?:[^()<>@,;:\\".\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\["()<>@,;:\\".\[\]]))|\[([^\[\]\r\\]|\\.)*\](?:(?:\r\n)?[ \t])*))*(?:,@(?:(?:\r\n)?[ \t])*(?:[^()<>@,;:\\".\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\["()<>@,;:\\".\[\]]))|\[([^\[\]\r\\]|\\.)*\](?:(?:\r\n)?[ \t])*)(?:\.(?:(?:\r\n)?[ \t])*(?:[^()<>@,;:\\".\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\["()<>@,;:\\".\[\]]))|\[([^\[\]\r\\]|\\.)*\](?:(?:\r\n)?[ \t])*))*)*:(?:(?:\r\n)?[ \t])*)?(?:[^()<>@,;:\\".\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\["()<>@,;:\\".\[\]]))|"(?:[^\"\r\\]|\\.|(?:(?:\r\n)?[ \t]))*"(?:(?:\r\n)?[ \t])*)(?:\.(?:(?:\r\n)?[ \t])*(?:[^()<>@,;:\\".\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\["()<>@,;:\\".\[\]]))|"(?:[^\"\r\\]|\\.|(?:(?:\r\n)?[ \t]))*"(?:(?:\r\n)?[ \t])*))*@(?:(?:\r\n)?[ \t])*(?:[^()<>@,;:\\".\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\["()<>@,;:\\".\[\]]))|\[([^\[\]\r\\]|\\.)*\](?:(?:\r\n)?[ \t])*)(?:\.(?:(?:\r\n)?[ \t])*(?:[^()<>@,;:\\".\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\["()<>@,;:\\".\[\]]))|\[([^\[\]\r\\]|\\.)*\](?:(?:\r\n)?[ \t])*))*\>(?:(?:\r\n)?[ \t])*))*)?;\s*)/;
 
-
 // How many unread notifications the user has
 export let unreadNotifications: number = 0;
-
 
 export async function iterateAndSetUserList(toSet: User, loggedIn: any) {
   // Redux
@@ -127,7 +162,7 @@ export async function iterateAndSetUserList(toSet: User, loggedIn: any) {
     console.log(toSet);
     console.log(tempUserList);
     // tempUserList.push(toSet);
-    tempUserList = tempUserList.concat(...tempUserList, toSet)
+    tempUserList = tempUserList.concat(...tempUserList, toSet);
   }
   // Update userList in state
   store.dispatch(setUserList(tempUserList));
@@ -176,11 +211,10 @@ export function openLeftBarMobile() {
 }
 
 export function checkIsVerified() {
-  // Redux 
+  // Redux
   const loggedInUser = store.getState().loggedIn.loggedInUser;
 
-
-  const isVerifiedRes = JSON.stringify(loggedInUser?.ProfileEntryResponse); 
+  const isVerifiedRes = JSON.stringify(loggedInUser?.ProfileEntryResponse);
   if (isVerifiedRes === "null") {
     store.dispatch(setIsVerified(false));
   } else {
@@ -197,7 +231,7 @@ export function checkIsVerified() {
 }
 
 export function checkNullUsername() {
-  // Redux 
+  // Redux
   const loggedInUser = store.getState().loggedIn.loggedInUser;
 
   const isNullUsernameRes = JSON.stringify(loggedInUser?.ProfileEntryResponse);
@@ -206,35 +240,37 @@ export function checkNullUsername() {
     // comment/uncomment line below out for testing
     store.dispatch(setIsNullUsername(true));
   } else {
-    let tempUsername = JSON.stringify(loggedInUser?.ProfileEntryResponse["Username"]);
+    let tempUsername = JSON.stringify(
+      loggedInUser?.ProfileEntryResponse["Username"]
+    );
     tempUsername = tempUsername.replace(/['"]+/g, "");
     store.dispatch(setUsername(tempUsername));
     if (tempUsername) {
-      store.dispatch(setIsNullUsername(false))
+      store.dispatch(setIsNullUsername(false));
     } else {
       // comment line below out for testing
-      store.dispatch(setIsNullUsername(true))
+      store.dispatch(setIsNullUsername(true));
     }
   }
 }
 
 export function checkOnboardingCompleted() {
-  // Redux 
+  // Redux
   const isCreator = store.getState().user.isCreator;
   const isCollector = store.getState().user.isCollector;
   const isNullUsername = store.getState().user.isNullUsername;
   //   if they are a creator, have a profile (username) and are verified then onboarding is complete
   if (isCreator === true && isNullUsername === false) {
-    store.dispatch(setNeedToPickCreatorOrCollector(false))
-    store.dispatch(setIsOnBoardingComplete(true))
+    store.dispatch(setNeedToPickCreatorOrCollector(false));
+    store.dispatch(setIsOnBoardingComplete(true));
   }
   // if they are a collector and have a profile (username) then onboarding is complete
   else if (isCollector === true && isNullUsername === false) {
-    store.dispatch(setNeedToPickCreatorOrCollector(false))
-    store.dispatch(setIsOnBoardingComplete(true))
+    store.dispatch(setNeedToPickCreatorOrCollector(false));
+    store.dispatch(setIsOnBoardingComplete(true));
   } else {
-    store.dispatch(setNeedToPickCreatorOrCollector(true))
-    store.dispatch(setIsOnBoardingComplete(false))
+    store.dispatch(setNeedToPickCreatorOrCollector(true));
+    store.dispatch(setIsOnBoardingComplete(false));
   }
 }
 
@@ -249,8 +285,8 @@ export async function checkOnboardingStatus(): Promise<void> {
   if (publicKey) {
     GetCollectorOrCreator(localNode, publicKey).subscribe(
       (res) => {
-        store.dispatch(setIsCollector(res["Collector"]))
-        store.dispatch(setIsCreator(res["Creator"]))
+        store.dispatch(setIsCollector(res["Collector"]));
+        store.dispatch(setIsCreator(res["Creator"]));
 
         //   update checkNullUsername
         checkNullUsername();
@@ -264,8 +300,8 @@ export async function checkOnboardingStatus(): Promise<void> {
       },
       (err) => {
         console.log(err);
-        store.dispatch(setIsCollector(false))
-        store.dispatch(setIsCreator(false))
+        store.dispatch(setIsCollector(false));
+        store.dispatch(setIsCreator(false));
       }
     );
   }
@@ -337,19 +373,29 @@ export function SetMessagesFilter(tabName: any) {
     store.dispatch(setMessageRequestsFollowedOnly(false));
     store.dispatch(setMessagesSortAlgorithm("time"));
   } else {
-    store.dispatch(setMessagesRequestsHoldersOnly(GetStorage(
-      "customMessagesRequestsHoldersOnly"
-    )));
-    store.dispatch(setMessagesRequestsHoldingsOnly(GetStorage(
-      "customMessagesRequestsHoldingsOnly"
-    )));
-    store.dispatch(setMessagesRequestsFollowersOnly(GetStorage(
-      "customMessagesRequestsFollowersOnly"
-    )));
-    store.dispatch(setMessageRequestsFollowedOnly(GetStorage(
-      "customMessagesRequestsFollowedOnly"
-    )));
-    store.dispatch(setMessagesSortAlgorithm(GetStorage("customMessagesSortAlgorithm")));
+    store.dispatch(
+      setMessagesRequestsHoldersOnly(
+        GetStorage("customMessagesRequestsHoldersOnly")
+      )
+    );
+    store.dispatch(
+      setMessagesRequestsHoldingsOnly(
+        GetStorage("customMessagesRequestsHoldingsOnly")
+      )
+    );
+    store.dispatch(
+      setMessagesRequestsFollowersOnly(
+        GetStorage("customMessagesRequestsFollowersOnly")
+      )
+    );
+    store.dispatch(
+      setMessageRequestsFollowedOnly(
+        GetStorage("customMessagesRequestsFollowedOnly")
+      )
+    );
+    store.dispatch(
+      setMessagesSortAlgorithm(GetStorage("customMessagesSortAlgorithm"))
+    );
   }
 }
 
@@ -358,11 +404,15 @@ export function LoadInitialMessages() {
   const loggedInUser = store.getState().loggedIn.loggedInUser;
   const localNode = store.getState().node.localNode;
   const messagesPerFetch = store.getState().messages.messagesPerFetch;
-  const messagesRequestsHoldersOnly = store.getState().messages.messagesRequestsHoldersOnly;;
-  const messagesRequestsHoldingsOnly = store.getState().messages.messagesRequestsHoldingsOnly;;
-  const messagesRequestsFollowersOnly = store.getState().messages.messagesRequestsFollowersOnly;;
-  const messagesRequestsFollowedOnly = store.getState().messages.messagesRequestsFollowedOnly;;
-  const messagesSortAlgorithm = store.getState().messages.messagesSortAlgorithm;;
+  const messagesRequestsHoldersOnly =
+    store.getState().messages.messagesRequestsHoldersOnly;
+  const messagesRequestsHoldingsOnly =
+    store.getState().messages.messagesRequestsHoldingsOnly;
+  const messagesRequestsFollowersOnly =
+    store.getState().messages.messagesRequestsFollowersOnly;
+  const messagesRequestsFollowedOnly =
+    store.getState().messages.messagesRequestsFollowedOnly;
+  const messagesSortAlgorithm = store.getState().messages.messagesSortAlgorithm;
   const pauseMessageUpdates = store.getState().messages.pauseMessageUpdates;
   // Redux end
   if (!loggedInUser) {
@@ -391,7 +441,9 @@ export function LoadInitialMessages() {
         dispatch(setMessageResponse(res));
 
         // Update the number of new messages so we know when to stop scrolling
-        dispatch(setNewMessagesFromPage(res.OrderedContactsWithMessages.length));
+        dispatch(
+          setNewMessagesFromPage(res.OrderedContactsWithMessages.length)
+        );
       }
     },
     (err) => {
@@ -428,7 +480,7 @@ export function userInTutorial(user: User): boolean {
 
 // NEVER change loggedInUser property directly. Use this method instead.
 export function setLoggedInUser(user: User) {
-  console.log("---SET LOGGED IN----")
+  console.log("---SET LOGGED IN----");
   // Redux
   const loggedInUser = store.getState().loggedIn.loggedInUser;
   const localNode = store.getState().node.localNode;
@@ -450,7 +502,9 @@ export function setLoggedInUser(user: User) {
       tempLoggedInUser?.PublicKeyBase58Check
     ).subscribe(
       (res: any) => {
-        store.dispatch(setLoggedInUserReferralInfoResponses(res.ReferralInfoResponses))
+        store.dispatch(
+          setLoggedInUserReferralInfoResponses(res.ReferralInfoResponses)
+        );
       },
       (err: any) => {
         console.log(err);
@@ -504,7 +558,7 @@ export function getLinkForReferralHash(referralHash: string) {
 
 export function hasUserBlockedCreator(publicKeyBase58Check): boolean {
   // Redux
-  const loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
+  const loggedInUser = store.getState().loggedIn.loggedInUser;
   // Redux end
   return (
     loggedInUser?.BlockedPubKeys &&
@@ -514,28 +568,28 @@ export function hasUserBlockedCreator(publicKeyBase58Check): boolean {
 
 export function showAdminTools(): boolean {
   // Redux
-  const loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
+  const loggedInUser = store.getState().loggedIn.loggedInUser;
   // Redux end
   return loggedInUser?.IsAdmin || loggedInUser?.IsSuperAdmin;
 }
 
 export function showSuperAdminTools(): boolean {
   // Redux
-  const loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
+  const loggedInUser = store.getState().loggedIn.loggedInUser;
   // Redux end
   return loggedInUser?.IsSuperAdmin;
 }
 
 export function networkName(): string {
   // Redux
-  const isTestnet = useAppSelector((state) => state.node.isTestnet)
+  const isTestnet = store.getState().node.isTestnet;
   // Redux end
   return isTestnet ? "testnet" : "mainnet";
 }
 
 export function getUSDForDiamond(index: number): string {
   // Redux
-  const diamondLevelMap = useAppSelector((state) => state.user.diamondLevelMap);
+  const diamondLevelMap = store.getState().user.diamondLevelMap;
   // Redux end
   const desoNanos = diamondLevelMap[index];
   const val = nanosToUSDNumber(desoNanos);
@@ -610,7 +664,7 @@ export function formatUSD(num: number, decimal: number): string {
  * */
 export function abbreviateNumber(
   value: number,
-  decimals: number,
+  decimals?: number,
   formatUSDbool: boolean = false
 ): string {
   let shortValue;
@@ -707,7 +761,6 @@ export function desoNanosYouWouldGetIfYouSold(
   creatorCoinAmountNano: number,
   coinEntry: any
 ): number {
-
   // These calculations are derived from the Bancor pricing formula, which
   // is proportional to a polynomial price curve (and equivalent to Uniswap
   // under certain assumptions). For more information, see the comment on
@@ -771,16 +824,20 @@ export function creatorCoinNanosToUSDNaive(
 
 export function createProfileFeeInDeSo(): number {
   // Redux
-  const createProfileFeeNanos = useAppSelector((state) => state.exhange.createProfileFeeNanos);
+  const createProfileFeeNanos = useAppSelector(
+    (state) => state.exhange.createProfileFeeNanos
+  );
   // Redux end
   return createProfileFeeNanos / 1e9;
 }
 
 export function createProfileFeeInUsd(): string {
   // Redux
-  const createProfileFeeNanos = useAppSelector((state) => state.exhange.createProfileFeeNanos);
+  const createProfileFeeNanos = useAppSelector(
+    (state) => state.exhange.createProfileFeeNanos
+  );
   // Redux end
-  console.log("THIS --- 1")
+  console.log("THIS --- 1");
   return nanosToUSD(createProfileFeeNanos, 2);
 }
 
@@ -995,7 +1052,7 @@ export function celebrate(svgList: ConfettiSvg[] = []) {
     }
     confettiSettings.max = 200;
   }
-  dispatch(setConfetti(new ConfettiGenerator(confettiSettings)))
+  dispatch(setConfetti(new ConfettiGenerator(confettiSettings)));
   confetti.render();
 }
 
@@ -1035,7 +1092,9 @@ export function incrementCommentCount(
 export function launchGetFreeDESOFlow() {
   // Redux
   const loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
-  const updateEverything = useAppSelector((state) => state.other.updateEverything);
+  const updateEverything = useAppSelector(
+    (state) => state.other.updateEverything
+  );
   // Redux
   launch("/get-free-deso", {
     public_key: loggedInUser?.PublicKeyBase58Check,
@@ -1051,7 +1110,9 @@ export function launchIdentityFlow(event: string): void {
     hideJumio: true,
   }).subscribe(
     (res) => {
-      const updateEverything = useAppSelector((state) => state.other.updateEverything);
+      const updateEverything = useAppSelector(
+        (state) => state.other.updateEverything
+      );
       setIdentityServiceUsers(res.users, res.publicKeyAdded);
       updateEverything().add(() => {
         flowRedirect(res.signedUp, res.publicKeyAdded);
@@ -1139,22 +1200,48 @@ export function _updateDeSoExchangeRate() {
   GetExchangeRate(localNode).subscribe({
     next: (res) => {
       // BTC
-      store.dispatch(setSatoshisPerDeSoExchangeRate(res.data.SatoshisPerDeSoExchangeRate));
-      store.dispatch(setProtocolUSDCentsPerBitcoinExchangeRate(res.data.USDCentsPerBitcoinExchangeRate))
-      store.dispatch(setUSDPerBitcoinExchangeRate(res.data.USDCentsPerBitcoinExchangeRate / 100))
+      store.dispatch(
+        setSatoshisPerDeSoExchangeRate(res.data.SatoshisPerDeSoExchangeRate)
+      );
+      store.dispatch(
+        setProtocolUSDCentsPerBitcoinExchangeRate(
+          res.data.USDCentsPerBitcoinExchangeRate
+        )
+      );
+      store.dispatch(
+        setUSDPerBitcoinExchangeRate(
+          res.data.USDCentsPerBitcoinExchangeRate / 100
+        )
+      );
 
       // ETH
-      store.dispatch(setUSDPerETHExchangeRate(res.data.USDCentsPerETHExchangeRate / 100))
-      store.dispatch(setNanosPerETHExchangeRate(res.data.NanosPerETHExchangeRate));
+      store.dispatch(
+        setUSDPerETHExchangeRate(res.data.USDCentsPerETHExchangeRate / 100)
+      );
+      store.dispatch(
+        setNanosPerETHExchangeRate(res.data.NanosPerETHExchangeRate)
+      );
 
       // DESO
-      store.dispatch(setNanosSold(res.data.NanosSold))
-      store.dispatch(setExchangeUSDCentsPerDeSo(res.data.USDCentsPerDeSoExchangeRate))
-      store.dispatch(setUSDCentsPerDeSoReservePrice(res.data.USDCentsPerDeSoReserveExchangeRate))
-      store.dispatch(setBuyDeSoFeeBasisPoints(res.data.BuyDeSoFeeBasisPoints))
+      store.dispatch(setNanosSold(res.data.NanosSold));
+      store.dispatch(
+        setExchangeUSDCentsPerDeSo(res.data.USDCentsPerDeSoExchangeRate)
+      );
+      store.dispatch(
+        setUSDCentsPerDeSoReservePrice(
+          res.data.USDCentsPerDeSoReserveExchangeRate
+        )
+      );
+      store.dispatch(setBuyDeSoFeeBasisPoints(res.data.BuyDeSoFeeBasisPoints));
 
-      store.dispatch(setNanosPerUSDExchangeRate(NANOS_PER_UNIT / (res.data.USDCentsPerDeSoExchangeRate / 100)))
-      store.dispatch(setDesoToUSDExchangeRateToDisplay(nanosToUSD(NANOS_PER_UNIT, 2)));
+      store.dispatch(
+        setNanosPerUSDExchangeRate(
+          NANOS_PER_UNIT / (res.data.USDCentsPerDeSoExchangeRate / 100)
+        )
+      );
+      store.dispatch(
+        setDesoToUSDExchangeRateToDisplay(nanosToUSD(NANOS_PER_UNIT, 2))
+      );
     },
     error: (err) => console.log(err),
   });
@@ -1272,7 +1359,9 @@ export function pollLoggedInUserForJumio(publicKey: string): void {
           if (res.JumioVerified) {
             let user: User;
             // Redux ,,, perhaps we could just write this as a reducer, ill ponder on it
-            let tempUserList = useAppSelector((state) => state.loggedIn.userList);
+            let tempUserList = useAppSelector(
+              (state) => state.loggedIn.userList
+            );
             tempUserList.forEach((userInList, idx) => {
               if (userInList.PublicKeyBase58Check === publicKey) {
                 tempUserList[idx].JumioVerified = res.JumioVerified;
@@ -1311,7 +1400,9 @@ export function pollLoggedInUserForJumio(publicKey: string): void {
 
 export function getFreeDESOMessage(): string {
   // Redux
-  const referralUSDCents = useAppSelector((state) => state.other.referralUSDCents)
+  const referralUSDCents = useAppSelector(
+    (state) => state.other.referralUSDCents
+  );
   const jumioDeSoNanos = useAppSelector((state) => state.other.jumioDeSoNanos);
   // Redux end
   console.log("HERE --- 6");
@@ -1326,11 +1417,10 @@ let counter = 0;
 export function getPostsRecursive(metadataPostHashArr) {
   getPost(true, metadataPostHashArr[counter]).subscribe(
     (res) => {
-      
       counter++;
       const dispatch = useAppDispatch();
       dispatch(pushToETHMarketplaceNFTsData(res["PostFound"]));
-      
+
       if (counter < metadataPostHashArr.length) {
         getPostsRecursive(metadataPostHashArr);
       } else {
@@ -1352,7 +1442,9 @@ export function getPostsRecursive(metadataPostHashArr) {
 //   for sale ETH nfts - highest price first
 export async function sortEthMarketplaceHighestPriceFirst() {
   // Redux
-  const ethMarketplaceNFTCategory = useAppSelector((state) => state.sort.ethMarketplaceNFTCategory);
+  const ethMarketplaceNFTCategory = useAppSelector(
+    (state) => state.sort.ethMarketplaceNFTCategory
+  );
   const dispatch = useAppDispatch();
   // Redux end
   dispatch(setIsMarketplaceLoading(true));
@@ -1403,7 +1495,9 @@ export async function sortEthMarketplaceLowestPriceFirst() {
   const dispatch = useAppDispatch();
   dispatch(setIsMarketplaceLoading(true));
   dispatch(setETHMarketplaceNFTsData([]));
-  const ethMarketplaceNFTCategory = useAppSelector((state) => state.sort.ethMarketplaceNFTCategory);
+  const ethMarketplaceNFTCategory = useAppSelector(
+    (state) => state.sort.ethMarketplaceNFTCategory
+  );
 
   const options = { method: "GET", headers: { Accept: "*/*" } };
 
@@ -1451,9 +1545,15 @@ export async function getAllEthNFTs() {
   // Redux
   const loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
   const localNode = useAppSelector((state) => state.node.localNode);
-  const marketplaceSortType = useAppSelector((state) => state.sort.marketplaceSortType);
-  const ethMarketplaceNFTCategory = useAppSelector((state) => state.sort.ethMarketplaceNFTCategory);
-  const ethMarketplaceVerifiedCreators = useAppSelector((state) => state.sort.ethMarketplaceVerifiedCreators);
+  const marketplaceSortType = useAppSelector(
+    (state) => state.sort.marketplaceSortType
+  );
+  const ethMarketplaceNFTCategory = useAppSelector(
+    (state) => state.sort.ethMarketplaceNFTCategory
+  );
+  const ethMarketplaceVerifiedCreators = useAppSelector(
+    (state) => state.sort.ethMarketplaceVerifiedCreators
+  );
   const dispatch = useAppDispatch();
   dispatch(setIsMarketplaceLoading(true));
   dispatch(setETHMarketplaceNFTsData([]));
@@ -1463,7 +1563,7 @@ export async function getAllEthNFTs() {
     marketplaceSortType === "highest price first" ||
     marketplaceSortType === "lowest price first"
   ) {
-    dispatch(setMarketplaceSortType("most recent first"))
+    dispatch(setMarketplaceSortType("most recent first"));
   }
 
   let NFTsAllArr = [];
@@ -1512,7 +1612,7 @@ export async function getAllEthNFTs() {
     (res) => {
       console.log(res);
       updateDataToShow();
-      dispatch(setETHMarketplaceNFTsData(res["PostEntryResponse"]))
+      dispatch(setETHMarketplaceNFTsData(res["PostEntryResponse"]));
       dispatch(setIsMarketplaceLoading(false));
     },
     (err) => {
@@ -1525,10 +1625,18 @@ export async function getAllEthNFTs() {
 // This is terrible ,,, rewrite
 export async function getEthNFTsByFilter() {
   // Redux
-  const ethMarketplaceStatus = useAppSelector((state) => state.sort.ethMarketplaceStatus);
-  const marketplaceSortType = useAppSelector((state) => state.sort.marketplaceSortType);
-  const ethMarketplaceNFTCategory = useAppSelector((state) => state.sort.ethMarketplaceNFTCategory);
-  const ethMarketplaceVerifiedCreators = useAppSelector((state) => state.sort.ethMarketplaceVerifiedCreators);
+  const ethMarketplaceStatus = useAppSelector(
+    (state) => state.sort.ethMarketplaceStatus
+  );
+  const marketplaceSortType = useAppSelector(
+    (state) => state.sort.marketplaceSortType
+  );
+  const ethMarketplaceNFTCategory = useAppSelector(
+    (state) => state.sort.ethMarketplaceNFTCategory
+  );
+  const ethMarketplaceVerifiedCreators = useAppSelector(
+    (state) => state.sort.ethMarketplaceVerifiedCreators
+  );
   const localNode = useAppSelector((state) => state.node.localNode);
   const loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
   const dispatch = useAppDispatch();
@@ -1653,8 +1761,12 @@ export async function getEthNFTsByFilter() {
 export function updateDataToShow() {
   // Redux
   const dispatch = useAppDispatch();
-  const ethMarketplaceNFTsData = useAppSelector((state) => state.marketplace.ethMarketplaceNFTsData);
-  dispatch(setETHMarketplaceNFTsDataToShow(ethMarketplaceNFTsData.slice(0, 30)));
+  const ethMarketplaceNFTsData = useAppSelector(
+    (state) => state.marketplace.ethMarketplaceNFTsData
+  );
+  dispatch(
+    setETHMarketplaceNFTsDataToShow(ethMarketplaceNFTsData.slice(0, 30))
+  );
 }
 
 export function getPost(fetchParents: boolean = true, nftPostHashHex: string) {
@@ -1689,7 +1801,7 @@ export function getCollectedPostsRecursive(metadataPostHashArr) {
     (res) => {
       getCollectedNFTsCounter++;
       const dispatch = useAppDispatch();
-      dispatch(concatToETHNFTsCollected(res["PostFound"]))
+      dispatch(concatToETHNFTsCollected(res["PostFound"]));
       if (getCollectedNFTsCounter < metadataPostHashArr.length) {
         getCollectedPostsRecursive(metadataPostHashArr);
       } else {
@@ -1713,11 +1825,12 @@ export async function getCollectedNFTs() {
   // Redux
   const loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
   const localNode = useAppSelector((state) => state.node.localNode);
-  const imxWalletAddress = useAppSelector((state) => state.imx.imxWalletAddress);
+  const imxWalletAddress = useAppSelector(
+    (state) => state.imx.imxWalletAddress
+  );
   const dispatch = useAppDispatch();
 
   dispatch(setETHNFTsCollected([]));
-
 
   const publicApiUrl: string = process.env.NEXT_PUBLIC_MAINNET_ENV_URL ?? "";
   const tempIMXClient = await ImmutableXClient.build({ publicApiUrl });
@@ -1770,7 +1883,7 @@ export async function getCollectedNFTs() {
           NFTEntryResponses: [],
         });
       });
-      dispatch(concatToCollectedNFTsToShow(temp))
+      dispatch(concatToCollectedNFTsToShow(temp));
       // Put back
       // collectedNFTsToShow.sort(
       //   (a, b) =>
@@ -1789,7 +1902,9 @@ export async function getCreatedNFTs() {
   // Redux
   const loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
   const localNode = useAppSelector((state) => state.node.localNode);
-  const imxWalletAddress = useAppSelector((state) => state.imx.imxWalletAddress);
+  const imxWalletAddress = useAppSelector(
+    (state) => state.imx.imxWalletAddress
+  );
   const dispatch = useAppDispatch();
 
   dispatch(setETHNFTsCreated([]));
@@ -1832,9 +1947,9 @@ export async function getCreatedNFTs() {
   ).subscribe(
     (res) => {
       console.log(res);
-     let ethNFTsCreated = res["PostEntryResponse"];
-      dispatch(setETHNFTsCreated(res["PostEntryResponse"]))
-      dispatch(concatToCreatedNFTsToShow(ethNFTsCreated))
+      let ethNFTsCreated = res["PostEntryResponse"];
+      dispatch(setETHNFTsCreated(res["PostEntryResponse"]));
+      dispatch(concatToCreatedNFTsToShow(ethNFTsCreated));
       // Put back
       // createdNFTsToShow.sort((a, b) => b.TimestampNanos - a.TimestampNanos);
     },

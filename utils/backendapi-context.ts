@@ -558,7 +558,8 @@ export class PostExtraData {
   category: string;
   name: string;
   properties: string;
-  isEthereumNFT;
+  isEthereumNFT: boolean;
+  EmbedVideoURL: string;
 }
 export class DeSoNode {
   Name: string;
@@ -2153,7 +2154,7 @@ export function GetSingleProfilePictureURL(
   );
 }
 export function GetDefaultProfilePictureURL(endpoint: string): string {
-  return _makeRequestURL(endpoint, "/assets/img/default_profile_pic.png");
+  return _makeRequestURL(endpoint, "../../public/img/default_profile_pic.png");
 }
 
 export function GetPostsForPublicKey(
