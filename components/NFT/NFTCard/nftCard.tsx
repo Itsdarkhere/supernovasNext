@@ -15,7 +15,8 @@ import {
 } from "../../../utils/backendapi-context";
 import {
   getTargetComponentSelector,
-  hasUserBlockedCreator, _alertError,
+  hasUserBlockedCreator,
+  _alertError,
 } from "../../../utils/global-context";
 import { GetNFTEntriesForNFTPost } from "../../../utils/backendapi-context";
 import { ethers } from "ethers";
@@ -50,7 +51,10 @@ const NFTCard = ({
   // Redux
   const loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
   const localNode = useAppSelector((state) => state.node.localNode);
-  const feeRateDeSoPerKB = useAppSelector((state) => state.fees.feeRateDeSoPerKB);
+  const feeRateDeSoPerKB = useAppSelector(
+    (state) => state.fees.feeRateDeSoPerKB
+  );
+  const dispatch = useAppDispatch();
   // Redux end
 
   // Vars
@@ -90,7 +94,7 @@ const NFTCard = ({
   // State end
 
   // Functions
-  const setPost = (postEntry: PostEntryResponse) => {    
+  const setPost = (postEntry: PostEntryResponse) => {
     setBasePost(postEntry);
     if (isRepost(postEntry)) {
       setPostContent(postEntry.RepostedPostEntryResponse);
@@ -183,7 +187,6 @@ const NFTCard = ({
     setEthPublicKeyNoDesoProfile(
       this.ethPublicKeyNoDesoProfile.slice(0, 15) + "..."
     );
-    const dispatch = useAppDispatch();
 
     let tempIMXwalletAddress = localStorage.getItem("address");
     dispatch(setIMXWalletAddress(tempIMXwalletAddress));
@@ -231,11 +234,11 @@ const NFTCard = ({
     const postHashHex = post.PostHashHex;
     const inGlobalFeed = post.InGlobalFeed;
     AdminUpdateGlobalFeed(
-        localNode,
-        loggedInUser.PublicKeyBase58Check,
-        postHashHex,
-        inGlobalFeed /*RemoveFromGlobalFeed*/
-      )
+      localNode,
+      loggedInUser.PublicKeyBase58Check,
+      postHashHex,
+      inGlobalFeed /*RemoveFromGlobalFeed*/
+    )
       .subscribe(
         (res) => {
           post.InGlobalFeed = !post.InGlobalFeed;
@@ -249,7 +252,7 @@ const NFTCard = ({
         setAddingPostToGlobalFeed(false);
         // this.ref.detectChanges();
       });
-  }
+  };
 
   const _pinPostToGlobalFeed = (event: any) => {
     // Prevent the post from navigating.
@@ -258,11 +261,11 @@ const NFTCard = ({
     const postHashHex = post.PostHashHex;
     const isPostPinned = post.IsPinned;
     AdminPinPost(
-        localNode,
-        loggedInUser.PublicKeyBase58Check,
-        postHashHex,
-        isPostPinned
-      )
+      localNode,
+      loggedInUser.PublicKeyBase58Check,
+      postHashHex,
+      isPostPinned
+    )
       .subscribe(
         (res) => {
           post.IsPinned = isPostPinned;
@@ -276,7 +279,7 @@ const NFTCard = ({
         setPinningPost(false);
         // this.ref.detectChanges();
       });
-  }
+  };
 
   const hidePost = () => {
     SwalHelper.fire({
@@ -302,30 +305,29 @@ const NFTCard = ({
         setHidingPost(true);
         // this.ref.detectChanges();
         SubmitPost(
-            localNode,
-            loggedInUser.PublicKeyBase58Check,
-            post.PostHashHex /*PostHashHexToModify*/,
-            "" /*ParentPostHashHex*/,
-            "" /*Title*/,
-            { Body: post.Body, ImageURLs: post.ImageURLs } /*BodyObj*/,
-            post.RepostedPostEntryResponse?.PostHashHex || "",
-            {},
-            "" /*Sub*/,
-            true /*IsHidden*/,
-            feeRateDeSoPerKB * 1e9 /*feeRateNanosPerKB*/
-          )
-          .subscribe(
-            (response) => {
-              postDeleted(response.PostEntryResponse);
-            },
-            (err) => {
-              const parsedError = parsePostError(err);
-              _alertError(parsedError);
-            }
-          );
+          localNode,
+          loggedInUser.PublicKeyBase58Check,
+          post.PostHashHex /*PostHashHexToModify*/,
+          "" /*ParentPostHashHex*/,
+          "" /*Title*/,
+          { Body: post.Body, ImageURLs: post.ImageURLs } /*BodyObj*/,
+          post.RepostedPostEntryResponse?.PostHashHex || "",
+          {},
+          "" /*Sub*/,
+          true /*IsHidden*/,
+          feeRateDeSoPerKB * 1e9 /*feeRateNanosPerKB*/
+        ).subscribe(
+          (response) => {
+            postDeleted(response.PostEntryResponse);
+          },
+          (err) => {
+            const parsedError = parsePostError(err);
+            _alertError(parsedError);
+          }
+        );
       }
     });
-  }
+  };
 
   const blockUser = () => {
     SwalHelper.fire({
@@ -341,24 +343,23 @@ const NFTCard = ({
     }).then((response: any) => {
       if (response.isConfirmed) {
         BlockPublicKey(
-            localNode,
-            loggedInUser.PublicKeyBase58Check,
-            post.PosterPublicKeyBase58Check
-          )
-          .subscribe(
-            () => {
-              loggedInUser.BlockedPubKeys[post.PosterPublicKeyBase58Check] = {};
-              userBlocked(post.PosterPublicKeyBase58Check);
-            },
-            (err) => {
-              console.error(err);
-              const parsedError = stringifyError(err);
-              _alertError(parsedError);
-            }
-          );
+          localNode,
+          loggedInUser.PublicKeyBase58Check,
+          post.PosterPublicKeyBase58Check
+        ).subscribe(
+          () => {
+            loggedInUser.BlockedPubKeys[post.PosterPublicKeyBase58Check] = {};
+            userBlocked(post.PosterPublicKeyBase58Check);
+          },
+          (err) => {
+            console.error(err);
+            const parsedError = stringifyError(err);
+            _alertError(parsedError);
+          }
+        );
       }
     });
-  }
+  };
 
   const isRepost = (post: any): boolean => {
     return (
@@ -378,7 +379,10 @@ const NFTCard = ({
 
   // Change image url, either to use bitclout stuff or cloudflare img cdn...
   const changeImageURLs = (url: string) => {
-    if (url.startsWith("https://arweave.net/") || url.includes(".arweave.net")) {
+    if (
+      url.startsWith("https://arweave.net/") ||
+      url.includes(".arweave.net")
+    ) {
       // Build cloudflare imageString
       url =
         "https://supernovas.app/cdn-cgi/image/height=500,fit=scale-down,quality=85/" +
@@ -416,137 +420,130 @@ const NFTCard = ({
 
   return (
     <>
-    {!postContent.IsHidden && nftPost ?
-    <div className="card-header nft-post-top">
-    <div className="profile-img">
-      {/* [routerLink]="['/' + globalVars.RouteNames.USER_PREFIX, postContent.ProfileEntryResponse.Username]"
+      {!postContent?.IsHidden && nftPost ? (
+        <div className={styles.card_header + " " + styles.nft_post_top}>
+          <div className={styles.profile_img}>
+            {/* [routerLink]="['/' + globalVars.RouteNames.USER_PREFIX, postContent.ProfileEntryResponse.Username]"
         queryParamsHandling="merge" */}
-      <Avatar
-            avatar={postContent?.ProfileEntryResponse.PublicKeyBase58Check} classN={undefined}    ></Avatar>
-      {showThreadConnectionLine ?
-      <div className="feed-post__parent-thread-connector"></div>
-      :
-      null
-      }
-    </div>
-    {/* [routerLink]="['/' + globalVars.RouteNames.USER_PREFIX, postContent.ProfileEntryResponse.Username]"
+            <Avatar
+              avatar={postContent?.ProfileEntryResponse.PublicKeyBase58Check}
+              classN={styles.avatar}
+            ></Avatar>
+            {showThreadConnectionLine ? (
+              <div className="feed-post__parent-thread-connector"></div>
+            ) : null}
+          </div>
+          {/* [routerLink]="['/' + globalVars.RouteNames.USER_PREFIX, postContent.ProfileEntryResponse.Username]"
       queryParamsHandling="merge" */}
-    <h6
-      className="cursor-pointer"
-    >
-      { postContent?.ProfileEntryResponse.Username }
-      {postContent?.ProfileEntryResponse.IsVerified ?
-      <i className="fas fa-check-circle fa-md text-primary"></i>
-      :
-      null
-      }
-    </h6>
-    <div className="value-buy-cover"></div>
-    {/*     className="ml-auto" */}
-    <FeedPostDropdown
+          <h6 className="cursor-pointer">
+            {postContent?.ProfileEntryResponse.Username}
+            {postContent?.ProfileEntryResponse.IsVerified ? (
+              <i className="fas fa-check-circle fa-md text-primary"></i>
+            ) : null}
+          </h6>
+          <div className={styles.value_buy_cover}></div>
+          {/*     className="ml-auto" */}
+          <FeedPostDropdown
             post={post}
             postContent={postContent}
             nftEntryResponses={nftEntryResponses}
             postHidden={() => hidePost()}
             userBlocked={() => blockUser()}
             toggleGlobalFeed={(e) => _addPostToGlobalFeed(e)}
-            togglePostPin={(e) => _pinPostToGlobalFeed(e)} ownsEthNFT={false}    
-    ></FeedPostDropdown>
-  </div>
-  :
-  null
-    }
-    <div
-      className={[
-        styles.single_card,
-        !hoverable && !mobile ? styles.hover_icons : "",
-        !hoverable && !reposterProfile && mobile
-          ? styles.mobile_icons_visible
-          : "",
-        postContent?.IsHidden || allCopiesBurned() ? "br-0px" : "",
-        insidePost ? styles.card_diff_width : "",
-        marketplaceCard ? styles.marketplaceCard : "",
-      ].join(" ")}
-    >
-      <div className="w-100">
-        {/* If Unavailable show one of the unavailable options, otherwise the card */}
-        {showCardOrUnavailable() ? (
-          <div className="d-flex flex-column js-feed-post position-relative">
-            {/* (click)="onPostClicked($event)" */}
-            <a
-              className={[
-                "link--unstyled",
-                contentShouldLinkToThread ? "cursor-inherit" : "",
-              ].join(" ")}
-            >
-              <div className={styles.card_body}>
-                {/* All the media of the card */}
-                <NFTCardMedia
-                  postContent={postContent}
-                  constructedEmbedURL={constructedEmbedURL}
-                  isQuotedCard={isQuotedCard}
-                  showAudioTypeIcon={showAudioTypeIcon}
-                  imageURL={imageURL}
-                ></NFTCardMedia>
-
-                {/* If card quotes something... */}
-                {quotedContent?.IsNFT && profileFeed ? (
-                  <NFTCardQuoted
-                    quotedContent={quotedContent}
-                    hoverable={hoverable}
-                    contentShouldLinkToThread={contentShouldLinkToThread}
-                    showQuotedContent={showQuotedContent}
-                  ></NFTCardQuoted>
-                ) : null}
-
-                {/* QUOTING CARD WAS HERE ,,, Needs feed post */}
-
-                {/* Card caption, so NFT name, creator name etc */}
-                {!(quotedContent?.IsNFT && profileFeed) ? (
-                  <NFTCardCaption
+            togglePostPin={(e) => _pinPostToGlobalFeed(e)}
+            ownsEthNFT={false}
+          ></FeedPostDropdown>
+        </div>
+      ) : null}
+      <div
+        className={[
+          styles.single_card,
+          !hoverable && !mobile ? styles.hover_icons : "",
+          !hoverable && !reposterProfile && mobile
+            ? styles.mobile_icons_visible
+            : "",
+          postContent?.IsHidden || allCopiesBurned() ? "br-0px" : "",
+          insidePost ? styles.card_diff_width : "",
+          marketplaceCard ? styles.marketplaceCard : "",
+        ].join(" ")}
+      >
+        <div className="w-100">
+          {/* If Unavailable show one of the unavailable options, otherwise the card */}
+          {showCardOrUnavailable() ? (
+            <div className="d-flex flex-column js-feed-post position-relative">
+              {/* (click)="onPostClicked($event)" */}
+              <a
+                className={[
+                  "link--unstyled",
+                  contentShouldLinkToThread ? "cursor-inherit" : "",
+                ].join(" ")}
+              >
+                <div className={styles.card_body}>
+                  {/* All the media of the card */}
+                  <NFTCardMedia
                     postContent={postContent}
-                    loadProfile={loadProfile}
-                    creatorProfile={creatorProfile}
-                  ></NFTCardCaption>
-                ) : null}
+                    constructedEmbedURL={constructedEmbedURL}
+                    isQuotedCard={isQuotedCard}
+                    showAudioTypeIcon={showAudioTypeIcon}
+                    imageURL={imageURL}
+                  ></NFTCardMedia>
 
-                {/* Bidding related info, also the bottom most part of the card. (Hover excluded & mobile excluded) */}
-                {postContent ? 
-                <NFTCardBidInfo
-                  showPlaceABid={showPlaceABid}
-                  postContent={postContent}
-                  pending={pending}
-                  creatorProfile={creatorProfile}
-                  loadProfile={loadProfile}
-                  isEthOwner={isEthOwner}
-                  isEthereumNFTForSale={isEthereumNFTForSale}
-                  ethPublicKeyNoDesoProfile={ethPublicKeyNoDesoProfile}
-                  ethereumNFTSalePrice={ethereumNFTSalePrice}
-                  isBuyNow={isBuyNow}
-                  isForSale={isForSale}
-                  buyNowPriceNanos={buyNowPriceNanos}
-                  nftEntryResponses={nftEntryResponses}
-                  minBid={minBid}
-                  highBid={highBid}
-                  lastSalePrice={lastSalePrice}
-                ></NFTCardBidInfo>
-                :
-                null
-                }
+                  {/* If card quotes something... */}
+                  {quotedContent?.IsNFT && profileFeed ? (
+                    <NFTCardQuoted
+                      quotedContent={quotedContent}
+                      hoverable={hoverable}
+                      contentShouldLinkToThread={contentShouldLinkToThread}
+                      showQuotedContent={showQuotedContent}
+                    ></NFTCardQuoted>
+                  ) : null}
 
-                {/* Card footer, contains the engagement metrics */}
-                <NFTCardFooter
-                  postContent={postContent}
-                  showIconRow={showIconRow}
-                ></NFTCardFooter>
-              </div>
-            </a>
-          </div>
-        ) : (
-          <NFTCardUnavailable></NFTCardUnavailable>
-        )}
+                  {/* QUOTING CARD WAS HERE ,,, Needs feed post */}
+
+                  {/* Card caption, so NFT name, creator name etc */}
+                  {!(quotedContent?.IsNFT && profileFeed) ? (
+                    <NFTCardCaption
+                      postContent={postContent}
+                      loadProfile={loadProfile}
+                      creatorProfile={creatorProfile}
+                    ></NFTCardCaption>
+                  ) : null}
+
+                  {/* Bidding related info, also the bottom most part of the card. (Hover excluded & mobile excluded) */}
+                  {postContent ? (
+                    <NFTCardBidInfo
+                      showPlaceABid={showPlaceABid}
+                      postContent={postContent}
+                      pending={pending}
+                      creatorProfile={creatorProfile}
+                      loadProfile={loadProfile}
+                      isEthOwner={isEthOwner}
+                      isEthereumNFTForSale={isEthereumNFTForSale}
+                      ethPublicKeyNoDesoProfile={ethPublicKeyNoDesoProfile}
+                      ethereumNFTSalePrice={ethereumNFTSalePrice}
+                      isBuyNow={isBuyNow}
+                      isForSale={isForSale}
+                      buyNowPriceNanos={buyNowPriceNanos}
+                      nftEntryResponses={nftEntryResponses}
+                      minBid={minBid}
+                      highBid={highBid}
+                      lastSalePrice={lastSalePrice}
+                    ></NFTCardBidInfo>
+                  ) : null}
+
+                  {/* Card footer, contains the engagement metrics */}
+                  <NFTCardFooter
+                    postContent={postContent}
+                    showIconRow={showIconRow}
+                  ></NFTCardFooter>
+                </div>
+              </a>
+            </div>
+          ) : (
+            <NFTCardUnavailable></NFTCardUnavailable>
+          )}
+        </div>
       </div>
-    </div>
     </>
   );
 };

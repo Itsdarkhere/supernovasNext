@@ -3,6 +3,7 @@
     align-items: center;
     justify-content: flex-start;
     background: transparent;
+    padding: 0.75rem 1.25rem;
     .profile_img {
         width: 25px;
         height: 25px;
@@ -53,6 +54,17 @@
     @media screen and (max-width: 767px) {
         border-radius: 0;
     }
+}
+.nft_background {
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
 }
 .card_footer_2 {
     background: transparent;

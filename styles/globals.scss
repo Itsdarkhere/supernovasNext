@@ -11,6 +11,9 @@
 // @import "~ngx-toastr/toastr";
 // CSS FIX END
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+@import "/vendor/bootstrap.min.css";
+@import "/vendor/fontello.css";
+
 $feed-border-radius: 12px;
 // New themeing class
 
@@ -3159,6 +3162,12 @@ em {
 }
 .d-flex {
   display: flex;
+}
+.justify-content-center {
+  justify-content: center;
+}
+.align-items-center {
+  align-items: center;
 }
 .d-none {
   display: none;

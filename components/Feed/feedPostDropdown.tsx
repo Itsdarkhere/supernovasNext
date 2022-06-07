@@ -126,7 +126,7 @@ const FeedPostDropdown = ({
           className="d-inline-block ml-1 cursor-pointer lh-12px fc-muted align-middle"
           mat-raised-button
         >
-          {convertTstampToDaysOrHours(postContent.TimestampNanos)}
+          {convertTstampToDaysOrHours(postContent?.TimestampNanos)}
         </span>
       </div>
       {/* dropdownToggle */}

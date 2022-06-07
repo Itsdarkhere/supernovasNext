@@ -15,10 +15,10 @@ import {
   GetAppState,
   GetTxn,
   LegacySeedListKey,
-  GetReferralInfoForReferralHash, 
-  LastIdentityServiceKey, 
-  LastLocalNodeKey, 
-  User
+  GetReferralInfoForReferralHash,
+  LastIdentityServiceKey,
+  LastLocalNodeKey,
+  User,
 } from "../utils/backendapi-context";
 import {
   identityServicePublicKeyAdded,
@@ -46,24 +46,51 @@ import {
 import { Provider } from "react-redux";
 import store from "../utils/Redux/store";
 import { useAppSelector, useAppDispatch } from "../utils/Redux/hooks";
-import { setBuyETHAddress, setJumioDeSoNanos, setMinSatoshisBurnedForProfileCreation, 
-  setReferralUSDCents } from "../utils/Redux/Slices/otherSlice";
-import { setGloboMods, setRequestedStorageAccess, 
-  setRequestingStorageAccess, setShowBuyWithETH, setShowBuyWithUSD, setShowJumio, 
-  setShowPhoneNumberVerification } from "../utils/Redux/Slices/appSlice";
+import {
+  setBuyETHAddress,
+  setJumioDeSoNanos,
+  setMinSatoshisBurnedForProfileCreation,
+  setReferralUSDCents,
+} from "../utils/Redux/Slices/otherSlice";
+import {
+  setGloboMods,
+  setRequestedStorageAccess,
+  setRequestingStorageAccess,
+  setShowBuyWithETH,
+  setShowBuyWithUSD,
+  setShowJumio,
+  setShowPhoneNumberVerification,
+} from "../utils/Redux/Slices/appSlice";
 import { setUserList } from "../utils/Redux/Slices/loggedInSlice";
 import { setMessageMeta } from "../utils/Redux/Slices/messagesSlice";
-import { setDefaultFeeRateNanosPerKB, setFeeRateDeSoPerKB, setTransactionFeeInfo, setTransactionFeeMap, 
-  setTransactionFeeMax } from "../utils/Redux/Slices/feesSlice";
-import { createYouHodlMap, setDiamondLevelMap } from "../utils/Redux/Slices/userSlice";
-import { setIsCompProfileCreation, setIsTestnetGlob, setLocalNode, setNodes } from "../utils/Redux/Slices/nodeSlice";
-import { setNanosPerUSDExchangeRate, setSatoshisPerDeSoExchangeRate, setUSDPerBitcoinExchangeRate } 
-from "../utils/Redux/Slices/exhangeRatesSlice";
+import {
+  setDefaultFeeRateNanosPerKB,
+  setFeeRateDeSoPerKB,
+  setTransactionFeeInfo,
+  setTransactionFeeMap,
+  setTransactionFeeMax,
+} from "../utils/Redux/Slices/feesSlice";
+import {
+  createYouHodlMap,
+  setDiamondLevelMap,
+} from "../utils/Redux/Slices/userSlice";
+import {
+  setIsCompProfileCreation,
+  setIsTestnetGlob,
+  setLocalNode,
+  setNodes,
+} from "../utils/Redux/Slices/nodeSlice";
+import {
+  setNanosPerUSDExchangeRate,
+  setSatoshisPerDeSoExchangeRate,
+  setUSDPerBitcoinExchangeRate,
+} from "../utils/Redux/Slices/exhangeRatesSlice";
 import Loader from "../components/Loading/loader";
+import Head from "next/head";
 // Redux end
 
 // Dispatch wont work without being wrapped inside a <Provider> so...
-function AppWrapper({children}) {
+function AppWrapper({ children }) {
   // Redux
   const dispatch = useAppDispatch();
 
@@ -80,17 +107,22 @@ function AppWrapper({children}) {
   // Redux
   const loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
   const localNode = useAppSelector((state) => state.node.localNode);
-  const DEFAULT_NANOS_PER_USD_EXCHANGE_RATE = useAppSelector((state) => state.exhange.DEFAULT_NANOS_PER_USD_EXCHANGE_RATE)
+  const DEFAULT_NANOS_PER_USD_EXCHANGE_RATE = useAppSelector(
+    (state) => state.exhange.DEFAULT_NANOS_PER_USD_EXCHANGE_RATE
+  );
   const userList = useAppSelector((state) => state.loggedIn.userList);
-  const updateEverything = useAppSelector((state) => state.other.updateEverything);
+  const updateEverything = useAppSelector(
+    (state) => state.other.updateEverything
+  );
   const pausePolling = useAppSelector((state) => state.app.pausePolling);
-  let requestingStorageAccess = useAppSelector((state) => state.app.requestingStorageAccess);
-
+  let requestingStorageAccess = useAppSelector(
+    (state) => state.app.requestingStorageAccess
+  );
 
   const Init = () => {
     _setUpLoggedInUserObservable();
     _setUpFollowChangeObservable();
-  
+
     // Rewrite in react ,,, this handles referralcode, which we dont use... but still..
     // route.queryParams.subscribe((queryParams) => {
     //   if (queryParams.r) {
@@ -111,26 +143,26 @@ function AppWrapper({children}) {
     // Rewrite in react END
     console.log("getReferralUSDCents");
     getReferralUSDCents();
-    dispatch(setSatoshisPerDeSoExchangeRate(0))
-    dispatch(setNanosPerUSDExchangeRate(DEFAULT_NANOS_PER_USD_EXCHANGE_RATE))
-    dispatch(setUSDPerBitcoinExchangeRate(10000))
+    dispatch(setSatoshisPerDeSoExchangeRate(0));
+    dispatch(setNanosPerUSDExchangeRate(DEFAULT_NANOS_PER_USD_EXCHANGE_RATE));
+    dispatch(setUSDPerBitcoinExchangeRate(10000));
     // Set temp vars for state that needs to be done comparisons on
     const tempDefaultFeeRateNanosPerKB = 1000.0;
     let tempLocalNode = GetStorage(LastLocalNodeKey);
     // Also set them to state
     dispatch(setDefaultFeeRateNanosPerKB(1000.0));
     dispatch(setLocalNode(GetStorage(LastLocalNodeKey)));
-  
+
     if (!tempLocalNode) {
       const hostname = (window as any).location.hostname;
       if (process.env.NEXT_PUBLIC_production) {
-        dispatch(setLocalNode(hostname))
+        dispatch(setLocalNode(hostname));
         tempLocalNode = hostname;
       } else {
-        dispatch(setLocalNode(`${hostname}:17001`))
-        tempLocalNode = `${hostname}:17001`
+        dispatch(setLocalNode(`${hostname}:17001`));
+        tempLocalNode = `${hostname}:17001`;
       }
-  
+
       SetStorage(LastLocalNodeKey, tempLocalNode);
     }
     // Var at the end since the naming convention is the same here and in identity-context
@@ -147,16 +179,15 @@ function AppWrapper({children}) {
     //     `${identityServiceURL}/embed?v=2`
     //   );
     // Rewrite in react end
-  
+
     _globopoll(() => {
       if (!tempDefaultFeeRateNanosPerKB) {
         return false;
       }
-      dispatch(setFeeRateDeSoPerKB(tempDefaultFeeRateNanosPerKB / 1e9))
+      dispatch(setFeeRateDeSoPerKB(tempDefaultFeeRateNanosPerKB / 1e9));
       return true;
     });
-  }
-
+  };
 
   useEffect(() => {
     // This used to be inside the identityService / context
@@ -165,7 +196,7 @@ function AppWrapper({children}) {
       handleMessage(event);
     });
     setIdentityURL("https://identity.deso.org/embed?v=2");
-  
+
     // Init app
     Init();
 
@@ -220,22 +251,22 @@ function AppWrapper({children}) {
     // We need to fetch this data before we start an import. Can remove once import code is gone.
     updateDeSoExchangeRate();
     _updateAppState();
-    console.log("info sub")
+    console.log("info sub");
     console.log(info());
     info().subscribe((res) => {
       // If the browser is not supported, display the browser not supported screen.
-      console.log("info inside")
+      console.log("info inside");
       if (!res.browserSupported) {
         dispatch(setRequestingStorageAccess(true));
         dispatch(setRequestedStorageAccess(true));
         return;
       }
       const isLoggedIn = GetStorage(LastLoggedInUserKey);
-      console.log("preload app")
+      console.log("preload app");
       if (res.hasStorageAccess || !isLoggedIn) {
         loadApp();
       } else {
-       console.log("preload app 2")
+        console.log("preload app 2");
         dispatch(setRequestingStorageAccess(true));
         storageGranted.subscribe(() => {
           dispatch(setRequestingStorageAccess(false));
@@ -244,7 +275,7 @@ function AppWrapper({children}) {
         });
       }
     });
-    console.log("sub  after")
+    console.log("sub  after");
 
     installDD();
 
@@ -280,7 +311,7 @@ function AppWrapper({children}) {
         }
       });
     }
-  }
+  };
 
   const _globopoll = (passedFunc: any, expirationSecs?: any) => {
     const startTime = new Date();
@@ -295,30 +326,34 @@ function AppWrapper({children}) {
         return true;
       }
     }, 1000);
-  }
-
+  };
 
   function _updateAppState() {
     GetAppState(localNode, loggedInUser?.PublicKeyBase58Check).subscribe(
       (res: any) => {
-        dispatch(setMinSatoshisBurnedForProfileCreation(res.data.MinSatoshisBurnedForProfileCreation))
-        dispatch(setDiamondLevelMap(res.data.DiamondLevelMap))
-        dispatch(setShowBuyWithUSD(res.data.HasWyreIntegration))
-        dispatch(setShowBuyWithETH(res.data.BuyWithETH))
-        dispatch(setShowJumio(res.data.HasJumioIntegration))
-        dispatch(setJumioDeSoNanos(res.data.JumioDeSoNanos))
-        dispatch(setIsTestnetGlob(res.data.IsTestnet))
+        dispatch(
+          setMinSatoshisBurnedForProfileCreation(
+            res.data.MinSatoshisBurnedForProfileCreation
+          )
+        );
+        dispatch(setDiamondLevelMap(res.data.DiamondLevelMap));
+        dispatch(setShowBuyWithUSD(res.data.HasWyreIntegration));
+        dispatch(setShowBuyWithETH(res.data.BuyWithETH));
+        dispatch(setShowJumio(res.data.HasJumioIntegration));
+        dispatch(setJumioDeSoNanos(res.data.JumioDeSoNanos));
+        dispatch(setIsTestnetGlob(res.data.IsTestnet));
         // FIX NOW
         // dispatch(setIsTestNet(res.data.IsTestnet))
-        dispatch(setShowPhoneNumberVerification(
-          res.data.HasTwilioAPIKey && res.data.HasStarterDeSoSeed
-        ));
+        dispatch(
+          setShowPhoneNumberVerification(
+            res.data.HasTwilioAPIKey && res.data.HasStarterDeSoSeed
+          )
+        );
         // showPhoneNumberVerification && res.data.CompProfileCreation CODE REMOVAL
         dispatch(setIsCompProfileCreation(false));
-        dispatch(setBuyETHAddress(res.data.BuyETHAddress))
-        dispatch(setNodes(res.data.Nodes))
-        dispatch(setTransactionFeeMap(res.data.TransactionFeeMap))
-
+        dispatch(setBuyETHAddress(res.data.BuyETHAddress));
+        dispatch(setNodes(res.data.Nodes));
+        dispatch(setTransactionFeeMap(res.data.TransactionFeeMap));
 
         // Calculate max fee for display in frontend
         // Sort so highest fee is at the top
@@ -347,13 +382,18 @@ function AppWrapper({children}) {
           .sort((a, b) => b.fees - a.fees);
 
         //Get the max of all fees
-        dispatch(setTransactionFeeMax(Math.max(...simpleFeeMap?.map((k) => k?.fees))));
+        dispatch(
+          setTransactionFeeMax(Math.max(...simpleFeeMap?.map((k) => k?.fees)))
+        );
 
         //Prepare text detailed info of fees and join with newlines
-        dispatch(setTransactionFeeInfo(simpleFeeMap
-          ?.map((k) => `${k?.txnType}: ${nanosToUSD(k?.fees, 4)}`)
-          .join("\n")));
-
+        dispatch(
+          setTransactionFeeInfo(
+            simpleFeeMap
+              ?.map((k) => `${k?.txnType}: ${nanosToUSD(k?.fees, 4)}`)
+              .join("\n")
+          )
+        );
       }
     );
   }
@@ -370,10 +410,12 @@ function AppWrapper({children}) {
     let tempMessageMeta = GetStorage(MessageMetaKey);
 
     if (!tempMessageMeta) {
-      dispatch(setMessageMeta({
-        decryptedMessgesMap: {},
-        notificationMap: {},
-      }))
+      dispatch(
+        setMessageMeta({
+          decryptedMessgesMap: {},
+          notificationMap: {},
+        })
+      );
     }
     // If we have a transaction to wait for, we do a GetTxn call for a maximum of 10s (250ms * 40).
     // There is a success and error callback so that the caller gets feedback on the polling.
@@ -420,7 +462,7 @@ function AppWrapper({children}) {
   };
 
   const loadApp = () => {
-    console.log("loadApp")
+    console.log("loadApp");
     // Redux
     setIdentityServiceUsersVariable(GetStorage(IdentityUsersKey) || {});
     // Filter out invalid public keys
@@ -436,7 +478,7 @@ function AppWrapper({children}) {
       if (!_.isEqual(userList, res.UserList)) {
         dispatch(setUserList(res.UserList || []));
       }
-      console.log("_updateEverything 1")
+      console.log("_updateEverything 1");
       _updateEverything();
     });
 
@@ -444,7 +486,7 @@ function AppWrapper({children}) {
     DeleteIdentities(localNode).subscribe();
     RemoveStorage(LegacyUserListKey);
     RemoveStorage(LegacySeedListKey);
-  }
+  };
 
   function updateDeSoExchangeRate() {
     _updateDeSoExchangeRate();
@@ -469,10 +511,9 @@ function AppWrapper({children}) {
     datadomeScript.async = true;
     datadomeScript.src = jsPath;
     firstScript.parentNode.insertBefore(datadomeScript, firstScript);
-  }
+  };
 
   const _updateTopLevelData = (): Subscription => {
-
     if (callingUpdateTopLevelData) {
       return new Subscription();
     }
@@ -503,7 +544,7 @@ function AppWrapper({children}) {
         // Check works ,,, this might take too long to iterate for it to work...
         iterateAndSetUserList(loggedInUserr, loggedInUserPublicKey);
         // Only call setLoggedInUser if logged in user has changed.
-        console.log("---SET LOGGED IN----")
+        console.log("---SET LOGGED IN----");
         if (!_.isEqual(loggedInUser, loggedInUserr) && loggedInUserPublicKey) {
           console.log("set logged in");
           setLoggedInUser(loggedInUserr);
@@ -521,25 +562,25 @@ function AppWrapper({children}) {
         // TODD: I've intermittently seen errors here where UsersYouHODL is null.
         // That's why I added this || [] thing. We should figure
         // out the root cause.
-        dispatch(createYouHodlMap(loggedInUser?.UsersYouHODL))
+        dispatch(createYouHodlMap(loggedInUser?.UsersYouHODL));
 
         if (res.DefaultFeeRateNanosPerKB > 0) {
-          dispatch(setDefaultFeeRateNanosPerKB(res.DefaultFeeRateNanosPerKB))
+          dispatch(setDefaultFeeRateNanosPerKB(res.DefaultFeeRateNanosPerKB));
         }
         dispatch(setGloboMods(res.GloboMods));
 
         // Check works,,, react changedetection is different with the virtual dom so idk if we need this
         // ref.detectChanges();
-        setLoadingInitialAppState(false)
+        setLoadingInitialAppState(false);
       },
       (error) => {
         problemWithNodeConnection = true;
         callingUpdateTopLevelData = false;
-        setLoadingInitialAppState(false)
+        setLoadingInitialAppState(false);
         console.error(error);
       }
     );
-  }
+  };
 
   return (
     <>
@@ -554,7 +595,7 @@ function AppWrapper({children}) {
         className="global__iframe"
       ></iframe>
     </>
-  )
+  );
 }
 
 function MyApp({ Component, pageProps }) {
@@ -591,7 +632,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <Provider store={store}>
       <AppWrapper>
-          <Component {...pageProps} />
+        <Component {...pageProps} />
       </AppWrapper>
     </Provider>
   );

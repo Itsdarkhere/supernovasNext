@@ -6,7 +6,6 @@ import nftBackground from "../../../public/img/nft-background.svg";
 // Mostly it just applies a background
 const NFTCardQuoted = ({
   quotedContent,
-  hoverable,
   contentShouldLinkToThread,
   showQuotedContent,
 }) => {
@@ -24,7 +23,7 @@ const NFTCardQuoted = ({
           showIconRow={false}
           showQuotedContent={false}
           contentShouldLinkToThread={contentShouldLinkToThread}
-          hoverable={hoverable}
+          hoverable={false}
           insidePost={false}
           marketplaceCard={false}
           isQuotedCard={false}

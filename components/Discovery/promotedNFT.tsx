@@ -7,9 +7,7 @@ import {
   NFTBidData,
   NFTBidEntryResponse,
 } from "../../utils/backendapi-context";
-import {
-  _alertError,
-} from "../../utils/global-context";
+import { _alertError } from "../../utils/global-context";
 import { useAppSelector } from "../../utils/Redux/hooks";
 import ModelComponent from "../Media/modelComponent";
 import ImageComponent from "../Media/imageComponent";
@@ -137,27 +135,31 @@ const PromotedNFT = ({ post, mobile }) => {
             {/*(click)="openPlaceBidModal($event)" */}
             {loggedInUser?.PublicKeyBase58Check !=
               post?.PosterPublicKeyBase58Check &&
-                post?.NumNFTCopiesForSale > 0 ? (
-                isBuyNow ? <button
-                    type="button"
-                    className={styles.fill_btn + " " + styles.discovery_button_movement}
-                  >
-                    Buy Now
-                  </button>
-                  :
-                  <button
-                type="button"
-                className={styles.fill_btn + " " + styles.discovery_button_movement}
-              >
-                {myBidsLength > 0 ? "Bid again" : "Place a Bid"}
-              </button>
-            ) : (
-              null
-            )}
+            post?.NumNFTCopiesForSale > 0 ? (
+              isBuyNow ? (
+                <button
+                  type="button"
+                  className={
+                    styles.fill_btn + " " + styles.discovery_button_movement
+                  }
+                >
+                  Buy Now
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className={
+                    styles.fill_btn + " " + styles.discovery_button_movement
+                  }
+                >
+                  {myBidsLength > 0 ? "Bid again" : "Place a Bid"}
+                </button>
+              )
+            ) : null}
             {/* THIS CLASS BELOW, IS FOR THE BUTTON ABOVE */}
             {/*(click)="openBuyNowModal($event)" */}
 
-            {loggedInUser?.PublicKeyBase58Check && 
+            {loggedInUser?.PublicKeyBase58Check &&
             loggedInUser?.PublicKeyBase58Check !==
               post?.PosterPublicKeyBase58Check &&
             post?.NumNFTCopiesForSale === 0 ? (
@@ -184,7 +186,7 @@ const PromotedNFT = ({ post, mobile }) => {
         !post.ParentStakeID &&
         !post?.PostExtraData["arweaveAudioSrc"] &&
         !post?.PostExtraData["arweaveModelSrc"] ? (
-            <ImageComponent imageSrc={post.ImageURLs[0]}></ImageComponent>
+          <ImageComponent imageSrc={post.ImageURLs[0]}></ImageComponent>
         ) : null}
 
         {/* <!-- Audio Post --> */}

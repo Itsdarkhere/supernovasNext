@@ -16,8 +16,9 @@ import Avatar from "../Reusables/avatar";
 import NFTEditionDropdown from "../NFT/NFTProfile/nftEditionDropdown";
 import FeedPostDropdown from "./feedPostDropdown";
 import { useEffect, useState } from "react";
+import nftBackground from "../../public/img/nft-background.svg";
 import {
-    AdminPinPost,
+  AdminPinPost,
   AdminUpdateGlobalFeed,
   BlockPublicKey,
   DecryptUnlockableTexts,
@@ -41,6 +42,7 @@ import {
 import { setIsEthereumNFTForSale } from "../../utils/Redux/Slices/imxSlice";
 import { ethers } from "ethers";
 import { SwalHelper } from "../../utils/helpers/swal-helper";
+import { SanitizeAndAutoLink } from "../../utils/sanitizeAndAutoLink";
 
 const FeedPost = ({
   hoverable,
@@ -405,31 +407,34 @@ const FeedPost = ({
         setHidingPost(true);
         // this.ref.detectChanges();
         SubmitPost(
-            localNode,
-            loggedInUser.PublicKeyBase58Check,
-            _post.PostHashHex /*PostHashHexToModify*/,
-            "" /*ParentPostHashHex*/,
-            "" /*Title*/,
-            { Body: _post.Body, ImageURLs: _post.ImageURLs, VideoURLs: _post.VideoURLs } /*BodyObj*/,
-            _post.RepostedPostEntryResponse?.PostHashHex || "",
-            {},
-            "" /*Sub*/,
-            true /*IsHidden*/,
-            feeRateDeSoPerKB * 1e9 /*feeRateNanosPerKB*/
-          )
-          .subscribe(
-            (response) => {
-              postDeleted(response.PostEntryResponse);
-            },
-            (err) => {
-              console.error(err);
-              const parsedError = parsePostError(err);
-              _alertError(parsedError);
-            }
-          );
+          localNode,
+          loggedInUser.PublicKeyBase58Check,
+          _post.PostHashHex /*PostHashHexToModify*/,
+          "" /*ParentPostHashHex*/,
+          "" /*Title*/,
+          {
+            Body: _post.Body,
+            ImageURLs: _post.ImageURLs,
+            VideoURLs: _post.VideoURLs,
+          } /*BodyObj*/,
+          _post.RepostedPostEntryResponse?.PostHashHex || "",
+          {},
+          "" /*Sub*/,
+          true /*IsHidden*/,
+          feeRateDeSoPerKB * 1e9 /*feeRateNanosPerKB*/
+        ).subscribe(
+          (response) => {
+            postDeleted(response.PostEntryResponse);
+          },
+          (err) => {
+            console.error(err);
+            const parsedError = parsePostError(err);
+            _alertError(parsedError);
+          }
+        );
       }
     });
-  }
+  };
 
   const blockUser = () => {
     SwalHelper.fire({
@@ -445,24 +450,23 @@ const FeedPost = ({
     }).then((response: any) => {
       if (response.isConfirmed) {
         BlockPublicKey(
-            localNode,
-            loggedInUser.PublicKeyBase58Check,
-            post.PosterPublicKeyBase58Check
-          )
-          .subscribe(
-            () => {
-              loggedInUser.BlockedPubKeys[post.PosterPublicKeyBase58Check] = {};
-              userBlocked(post.PosterPublicKeyBase58Check);
-            },
-            (err) => {
-              console.error(err);
-              const parsedError = stringifyError(err);
-              _alertError(parsedError);
-            }
-          );
+          localNode,
+          loggedInUser.PublicKeyBase58Check,
+          post.PosterPublicKeyBase58Check
+        ).subscribe(
+          () => {
+            loggedInUser.BlockedPubKeys[post.PosterPublicKeyBase58Check] = {};
+            userBlocked(post.PosterPublicKeyBase58Check);
+          },
+          (err) => {
+            console.error(err);
+            const parsedError = stringifyError(err);
+            _alertError(parsedError);
+          }
+        );
       }
     });
-  }
+  };
 
   const _addPostToGlobalFeed = (event: any) => {
     // Prevent the post from navigating.
@@ -472,15 +476,15 @@ const FeedPost = ({
     const postHashHex = post.PostHashHex;
     const inGlobalFeed = post.InGlobalFeed;
     AdminUpdateGlobalFeed(
-        localNode,
-        loggedInUser.PublicKeyBase58Check,
-        postHashHex,
-        inGlobalFeed /*RemoveFromGlobalFeed*/
-      )
+      localNode,
+      loggedInUser.PublicKeyBase58Check,
+      postHashHex,
+      inGlobalFeed /*RemoveFromGlobalFeed*/
+    )
       .subscribe(
         (res) => {
           post.InGlobalFeed = !post.InGlobalFeed;
-        //   this.ref.detectChanges();
+          //   this.ref.detectChanges();
         },
         (err) => {
           _alertError(JSON.stringify(err.error));
@@ -490,7 +494,7 @@ const FeedPost = ({
         setAddingPostToGlobalFeed(false);
         // this.ref.detectChanges();
       });
-  }
+  };
 
   const _pinPostToGlobalFeed = (event: any) => {
     // Prevent the post from navigating.
@@ -500,15 +504,15 @@ const FeedPost = ({
     const postHashHex = _post.PostHashHex;
     const isPostPinned = _post.IsPinned;
     AdminPinPost(
-        localNode,
-        loggedInUser.PublicKeyBase58Check,
-        postHashHex,
-        isPostPinned
-      )
+      localNode,
+      loggedInUser.PublicKeyBase58Check,
+      postHashHex,
+      isPostPinned
+    )
       .subscribe(
         (res) => {
           _post.IsPinned = isPostPinned;
-        //   this.ref.detectChanges();
+          //   this.ref.detectChanges();
         },
         (err) => {
           _alertError(JSON.stringify(err.error));
@@ -518,7 +522,7 @@ const FeedPost = ({
         setPinningPost(false);
         // ref.detectChanges();
       });
-  }
+  };
 
   // Functions end
 
@@ -635,7 +639,9 @@ const FeedPost = ({
                     <FeedPostDropdown
                       post={post}
                       postContent={postContent}
-                      decryptableNFTEntryResponses={decryptableNFTEntryResponses}
+                      decryptableNFTEntryResponses={
+                        decryptableNFTEntryResponses
+                      }
                       nftEntryResponses={nftEntryResponses}
                       ownsEthNFT={ownsEthNFT}
                       postHidden={() => hidePost()}
@@ -796,8 +802,13 @@ const FeedPost = ({
                                             <div>
                                               #{nftEntry.SerialNumber}:&nbsp;
                                             </div>
-                                            {/* [innerHTML]="nftEntry.DecryptedUnlockableText | sanitizeAndAutoLink" */}
-                                            <div></div>
+                                            <div
+                                              dangerouslySetInnerHTML={{
+                                                __html: SanitizeAndAutoLink(
+                                                  nftEntry?.DecryptedUnlockableText
+                                                ),
+                                              }}
+                                            ></div>
                                           </div>
                                         )
                                       )}
@@ -817,7 +828,9 @@ const FeedPost = ({
                           {/* class.ml-auto="!isNFTDetail" */}
                           <FeedPostDropdown
                             post={post}
-                            decryptableNFTEntryResponses={decryptableNFTEntryResponses}
+                            decryptableNFTEntryResponses={
+                              decryptableNFTEntryResponses
+                            }
                             postContent={postContent}
                             nftEntryResponses={nftEntryResponses}
                             ownsEthNFT={ownsEthNFT}
@@ -847,15 +860,16 @@ const FeedPost = ({
                     ) : null}
 
                     {/* <!-- Content --> */}
-                    {/* [innerHTML]="postContent.PostExtraData?.name | sanitizeAndAutoLink" */}
                     {showName ? (
-                      <div className="feed-post-PED-name"></div>
+                      <div
+                        className="feed-post-PED-name"
+                        dangerouslySetInnerHTML={{
+                          __html: SanitizeAndAutoLink(
+                            postContent?.PostExtraData?.name
+                          ),
+                        }}
+                      ></div>
                     ) : null}
-
-                    {/* 
-                        [innerHTML]="postContent.Body | sanitizeAndAutoLink" 
-                        queryParamsHandling="merge"
-                        */}
                     <div
                       className={[
                         "poppins-regular disable-scrollbars mt-1 feed-text-wrap overflow-wrap: anywhere; word-break: break-word; outline: none",
@@ -863,6 +877,9 @@ const FeedPost = ({
                         isNFTDetail ? "nft_para" : "",
                         isNFTProfile ? styles.nft_prof_text : "",
                       ].join(" ")}
+                      dangerouslySetInnerHTML={{
+                        __html: SanitizeAndAutoLink(postContent?.Body),
+                      }}
                     ></div>
 
                     {postContent?.ImageURLs && postContent.ImageURLs[0] ? (
@@ -950,7 +967,7 @@ const FeedPost = ({
                           ].join(" ")}
                         >
                           <object
-                            data="/assets/img/nft-background.svg"
+                            data={nftBackground}
                             className="nft-background"
                             type="image/svg+xml"
                           ></object>
@@ -962,12 +979,18 @@ const FeedPost = ({
                               pending={false}
                               showIconRow={false}
                               showQuotedContent={false}
-                              contentShouldLinkToThread={contentShouldLinkToThread}
-                              hoverable={hoverable}
+                              contentShouldLinkToThread={
+                                contentShouldLinkToThread
+                              }
+                              hoverable={false}
                               isQuotedCard={true}
                               marketplaceCard={undefined}
                               profileFeed={undefined}
                               loadProfile={undefined}
+                              nftPost={undefined}
+                              showThreadConnectionLine={undefined}
+                              userBlocked={undefined}
+                              postDeleted={undefined}
                             ></NFTCard>
                           ) : null}
                         </div>
@@ -987,7 +1010,7 @@ const FeedPost = ({
                           ].join(" ")}
                         >
                           <object
-                            data="/assets/img/nft-background.svg"
+                            data={nftBackground}
                             className="nft-background"
                             type="image/svg+xml"
                           ></object>
@@ -999,12 +1022,18 @@ const FeedPost = ({
                               pending={false}
                               showIconRow={false}
                               showQuotedContent={false}
-                              contentShouldLinkToThread={contentShouldLinkToThread}
-                              hoverable={hoverable}
+                              contentShouldLinkToThread={
+                                contentShouldLinkToThread
+                              }
+                              hoverable={false}
                               isQuotedCard={true}
                               marketplaceCard={false}
                               profileFeed={false}
                               loadProfile={false}
+                              nftPost={undefined}
+                              showThreadConnectionLine={false}
+                              userBlocked={undefined}
+                              postDeleted={undefined}
                             ></NFTCard>
                           ) : null}
                         </div>
@@ -1017,16 +1046,34 @@ const FeedPost = ({
                       <>
                         {quotedContent && showQuotedContent ? (
                           <FeedPost
-                                                              post={quotedContent}
-                                                              isQuotedContent={true}
-                                                              includePaddingOnPost={true}
-                                                              showIconRow={false}
-                                                              showDropdown={false}
-                                                              showQuotedContent={false}
-                                                              contentShouldLinkToThread={contentShouldLinkToThread}
-                                                              hoverable={hoverable}
-                                                              showNFTDetails={true}
-                                                              cardStyle={true} showInteractionDetails={undefined} postThread={undefined} showPostsShadow={undefined} postThreadComment={undefined} showReplyingToContent={undefined} parentPost={undefined} showName={undefined} afterRepostCreatedCallback={undefined} changeEdition={undefined} profilePublicKeyBase58Check={undefined} isForSaleOnly={undefined} afterCommentCreatedCallback={undefined} diamondSent={undefined} userBlocked={undefined} postDeleted={undefined}                          ></FeedPost>
+                            post={quotedContent}
+                            isQuotedContent={true}
+                            includePaddingOnPost={true}
+                            showIconRow={false}
+                            showDropdown={false}
+                            showQuotedContent={false}
+                            contentShouldLinkToThread={
+                              contentShouldLinkToThread
+                            }
+                            hoverable={hoverable}
+                            showNFTDetails={true}
+                            cardStyle={true}
+                            showInteractionDetails={undefined}
+                            postThread={undefined}
+                            showPostsShadow={undefined}
+                            postThreadComment={undefined}
+                            showReplyingToContent={undefined}
+                            parentPost={undefined}
+                            showName={undefined}
+                            afterRepostCreatedCallback={undefined}
+                            changeEdition={undefined}
+                            profilePublicKeyBase58Check={undefined}
+                            isForSaleOnly={undefined}
+                            afterCommentCreatedCallback={undefined}
+                            diamondSent={undefined}
+                            userBlocked={undefined}
+                            postDeleted={undefined}
+                          ></FeedPost>
                         ) : null}
                       </>
                     ) : null}
@@ -1041,7 +1088,6 @@ const FeedPost = ({
                   <div className="icons-hodlr">
                     {showIconRow ? (
                       <PostIconRow
-                        isNFTProfile={isNFTProfileComment}
                         post={post}
                         postContent={postContent}
                         parentPost={parentPost}
@@ -1049,7 +1095,6 @@ const FeedPost = ({
                           afterCommentCreatedCallback
                         }
                         afterRepostCreatedCallback={afterRepostCreatedCallback}
-                        inTutorial={false}
                         diamondSent={() => diamondSent()}
                       ></PostIconRow>
                     ) : null}
@@ -1112,15 +1157,36 @@ const FeedPost = ({
               <div className="feed-post__blue-border nft_details_relout pb-5px">
                 <div className={styles.container + " p-0px"}>
                   {/* <!-- DESKTOP --> */}
-                  <div className={styles.post_engagement_border + " row no-gutters d-none d-lg-block py-10px fs-15px cursor-pointer"}>
-                    <div className={styles.interaction_details_container + " d-flex"}>
+                  <div
+                    className={
+                      styles.post_engagement_border +
+                      " row no-gutters d-none d-lg-block py-10px fs-15px cursor-pointer"
+                    }
+                  >
+                    <div
+                      className={
+                        styles.interaction_details_container + " d-flex"
+                      }
+                    >
                       {/* (click)="openRepostsModal($event)" */}
-                      <span className={[styles.post_thread_engagement_detail, styles.interaction_detail, styles.interaction_detail_item].join(" ")}>
+                      <span
+                        className={[
+                          styles.post_thread_engagement_detail,
+                          styles.interaction_detail,
+                          styles.interaction_detail_item,
+                        ].join(" ")}
+                      >
                         <b>{abbreviateNumber(post.CommentCount)}</b>
                         Comments&nbsp;
                       </span>
                       {/* (click)="openQuoteRepostsModal($event)" */}
-                      <span className={[styles.post_thread_engagement_detail, styles.interaction_detail, styles.interaction_detail_item].join(" ")}>
+                      <span
+                        className={[
+                          styles.post_thread_engagement_detail,
+                          styles.interaction_detail,
+                          styles.interaction_detail_item,
+                        ].join(" ")}
+                      >
                         <b>
                           {abbreviateRepostsNumber(
                             post.RepostCount,
@@ -1130,12 +1196,24 @@ const FeedPost = ({
                         Reposts&nbsp;
                       </span>
                       {/* (click)="openLikesModal($event)" */}
-                      <span className={[styles.post_thread_engagement_detail, styles.interaction_detail, styles.interaction_detail_item].join(" ")}>
+                      <span
+                        className={[
+                          styles.post_thread_engagement_detail,
+                          styles.interaction_detail,
+                          styles.interaction_detail_item,
+                        ].join(" ")}
+                      >
                         <b>{abbreviateNumber(post.LikeCount)}</b>
                         Likes
                       </span>
                       {/* (click)="openDiamondsModal($event)" */}
-                      <span className={[styles.post_thread_engagement_detail, styles.interaction_detail, styles.interaction_detail_item].join(" ")}>
+                      <span
+                        className={[
+                          styles.post_thread_engagement_detail,
+                          styles.interaction_detail,
+                          styles.interaction_detail_item,
+                        ].join(" ")}
+                      >
                         <b>{abbreviateNumber(post.DiamondCount)}</b>
                         Diamonds
                       </span>
@@ -1144,12 +1222,22 @@ const FeedPost = ({
                   {/* <!-- MOBILE --> */}
                   <div className="d-flex flex-row justify-content-between d-lg-none py-10px px-5px fs-15px border-top border-bottom border-color-light-grey cursor-pointer">
                     {/* (click)="openRepostsModal($event)" */}
-                    <div className={styles.mobile_post_interaction_detail + " mb-0 interaction-detail pl-5px fs-12px"}>
+                    <div
+                      className={
+                        styles.mobile_post_interaction_detail +
+                        " mb-0 interaction-detail pl-5px fs-12px"
+                      }
+                    >
                       <b>{abbreviateNumber(post.CommentCount)}</b>
                       Comments
                     </div>
                     {/* (click)="openQuoteRepostsModal($event)" */}
-                    <div className={styles.mobile_post_interaction_detail + " mb-0 interaction-detail px-5px fs-12px"}>
+                    <div
+                      className={
+                        styles.mobile_post_interaction_detail +
+                        " mb-0 interaction-detail px-5px fs-12px"
+                      }
+                    >
                       <b>
                         {abbreviateRepostsNumber(
                           post.RepostCount,
@@ -1159,12 +1247,22 @@ const FeedPost = ({
                       Reposts
                     </div>
                     {/* (click)="openLikesModal($event)" */}
-                    <div className={styles.mobile_post_interaction_detail + " mb-0 interaction-detail px-5px fs-12px"}>
+                    <div
+                      className={
+                        styles.mobile_post_interaction_detail +
+                        " mb-0 interaction-detail px-5px fs-12px"
+                      }
+                    >
                       <b>{abbreviateNumber(postContent.LikeCount)}</b>
                       Likes
                     </div>
                     {/* (click)="openDiamondsModal($event)" */}
-                    <div className={styles.mobile_post_interaction_detail + " mb-0 interaction-detail px-5px fs-12px"}>
+                    <div
+                      className={
+                        styles.mobile_post_interaction_detail +
+                        " mb-0 interaction-detail px-5px fs-12px"
+                      }
+                    >
                       <b>{abbreviateNumber(postContent.DiamondCount)}</b>
                       Diamonds
                     </div>

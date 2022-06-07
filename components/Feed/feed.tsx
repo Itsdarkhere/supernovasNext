@@ -7,7 +7,11 @@ import {
   GetStorage,
   stringifyError,
 } from "../../utils/backendapi-context";
-import { showAdminTools, _alertError } from "../../utils/global-context";
+import {
+  hasUserBlockedCreator,
+  showAdminTools,
+  _alertError,
+} from "../../utils/global-context";
 import { track4 } from "../../utils/mixpanel";
 import { useAppDispatch, useAppSelector } from "../../utils/Redux/hooks";
 import {
@@ -394,6 +398,16 @@ const Feed = ({ isMobile }) => {
     });
   };
 
+  const findParentPostIndex = (postsToShow, postEntryResponse) => {
+    return postsToShow.findIndex((post) => {
+      return post.PostHashHex === postEntryResponse.ParentStakeID;
+    });
+  };
+
+  const prependPostToFeed = (postsToShow, postEntryResponse) => {
+    postsToShow.unshift(postEntryResponse);
+  };
+
   const _loadHotFeedPosts = (reload: boolean = false) => {
     setLoadingMoreHotFeedPosts(true);
 
@@ -451,8 +465,34 @@ const Feed = ({ isMobile }) => {
     });
   };
 
+  const appendCommentAfterParentPost = (postsToShow, postEntryResponse) => {
+    const parentPostIndex = findParentPostIndex(postsToShow, postEntryResponse);
+    const parentPost = postsToShow[parentPostIndex];
+
+    // Note: we don't worry about updating the grandparent posts' commentCount in the feed
+    parentPost.CommentCount += 1;
+
+    // This is a hack to make it so that the new comment shows up in the
+    // feed with the "replying to @[parentPost.Username]" content displayed.
+    postEntryResponse.parentPost = parentPost;
+
+    // Insert the new comment in the correct place in the postsToShow list.
+    // TODO: This doesn't work properly for comments on subcomments (they appear in the wrong
+    // place in the list), but whatever, we can try to fix this edge case later
+    postsToShow.splice(parentPostIndex + 1, 0, postEntryResponse);
+
+    // Add the post to the parent's list of comments so that the comment count gets updated
+    parentPost.Comments = parentPost.Comments || [];
+    parentPost.Comments.unshift(postEntryResponse);
+  };
+
   const changeCanPost = (canPost: boolean) => {
     setCanPost(canPost);
+  };
+
+  const userBlocked = () => {
+    // put back ,, / find a way to do
+    // this.cdr.detectChanges();
   };
 
   const _loadPosts = (reload: boolean = false, scrolltop: boolean = false) => {
@@ -528,9 +568,10 @@ const Feed = ({ isMobile }) => {
             >
               <CreatePost
                 parentPost={undefined}
-                numberOfRowsInTextArea="2"
+                numberOfRowsInTextArea={2}
                 // changeCanPost={(e) => changeCanPost(e)}
-                postRefreshFunc="prependPostToFeed.bind(this)"
+                // Put back
+                postRefreshFunc={undefined}
               ></CreatePost>
             </div>
           ) : null}
@@ -591,21 +632,33 @@ const Feed = ({ isMobile }) => {
                       <div className="mobile_feed_post">
                         <NFTCardPost
                           post={post}
-                          afterCommentCreatedCallback="appendCommentAfterParentPost.bind(this)"
-                          afterRepostCreatedCallback="prependPostToFeed.bind(this)"
+                          afterCommentCreatedCallback={() =>
+                            appendCommentAfterParentPost(
+                              whichPostsToShow(),
+                              post
+                            )
+                          }
+                          afterRepostCreatedCallback={() =>
+                            prependPostToFeed(whichPostsToShow(), post)
+                          }
+                          parentPost={undefined}
                         >
                           <NFTCard
-                            contentShouldLinkToThread="true"
-                            pending="false"
+                            contentShouldLinkToThread={true}
+                            pending={false}
                             post={post}
-                            profileFeed="true"
-                            hoverable="true"
-                            insidePost={undefined}
-                            marketplaceCard={undefined}
-                            isQuotedCard={undefined}
-                            showIconRow={undefined}
-                            showQuotedContent={undefined}
-                            loadProfile={undefined}
+                            profileFeed={true}
+                            hoverable={false}
+                            insidePost={false}
+                            marketplaceCard={false}
+                            isQuotedCard={false}
+                            showIconRow={false}
+                            showQuotedContent={false}
+                            loadProfile={false}
+                            nftPost={true}
+                            showThreadConnectionLine={false}
+                            userBlocked={userBlocked()}
+                            postDeleted={undefined}
                           ></NFTCard>
                         </NFTCardPost>
                       </div>
@@ -622,21 +675,33 @@ const Feed = ({ isMobile }) => {
                       <div className="mobile_feed_post">
                         <NFTCardRepost
                           post={post}
-                          afterCommentCreatedCallback="appendCommentAfterParentPost.bind(this)"
-                          afterRepostCreatedCallback="prependPostToFeed.bind(this)"
+                          afterCommentCreatedCallback={() =>
+                            appendCommentAfterParentPost(
+                              whichPostsToShow(),
+                              post
+                            )
+                          }
+                          afterRepostCreatedCallback={() =>
+                            prependPostToFeed(whichPostsToShow(), post)
+                          }
+                          parentPost={undefined}
                         >
                           <NFTCard
-                            contentShouldLinkToThread="true"
-                            pending="false"
+                            contentShouldLinkToThread={true}
+                            pending={false}
                             post={post}
-                            profileFeed="true"
-                            hoverable="true"
-                            insidePost={undefined}
-                            marketplaceCard={undefined}
-                            isQuotedCard={undefined}
-                            showIconRow={undefined}
-                            showQuotedContent={undefined}
-                            loadProfile={undefined}
+                            profileFeed={true}
+                            hoverable={false}
+                            insidePost={false}
+                            marketplaceCard={false}
+                            isQuotedCard={false}
+                            showIconRow={false}
+                            showQuotedContent={false}
+                            loadProfile={false}
+                            nftPost={false}
+                            showThreadConnectionLine={false}
+                            userBlocked={userBlocked()}
+                            postDeleted={false}
                           ></NFTCard>
                         </NFTCardRepost>
                       </div>
@@ -651,19 +716,24 @@ const Feed = ({ isMobile }) => {
                       ?.isEthereumNFT) ? (
                     <>
                       <FeedPost
-                        contentShouldLinkToThread="true"
-                        includePaddingOnPost="true"
-                        post="post"
-                        afterCommentCreatedCallback="appendCommentAfterParentPost.bind(this)"
-                        afterRepostCreatedCallback="prependPostToFeed.bind(this)"
-                        blocked="
-                    globalVars.hasUserBlockedCreator(globalVars.loggedInUser?.ProfileEntryResponse?.PublicKeyBase58Check)
-                    "
-                        cardStyle="true"
-                        showNFTDetails="true"
-                        profileFeed="true"
-                        userBlocked="userBlocked()"
-                        showPostsShadow="true"
+                        contentShouldLinkToThread={true}
+                        includePaddingOnPost={true}
+                        post={post}
+                        afterCommentCreatedCallback={() =>
+                          appendCommentAfterParentPost(whichPostsToShow(), post)
+                        }
+                        afterRepostCreatedCallback={() =>
+                          prependPostToFeed(whichPostsToShow(), post)
+                        }
+                        blocked={hasUserBlockedCreator(
+                          loggedInUser?.ProfileEntryResponse
+                            ?.PublicKeyBase58Check
+                        )}
+                        cardStyle={true}
+                        showNFTDetails={true}
+                        profileFeed={true}
+                        userBlocked={userBlocked()}
+                        showPostsShadow={true}
                       ></FeedPost>
                     </>
                   ) : null}
@@ -678,20 +748,25 @@ const Feed = ({ isMobile }) => {
                   ) ? (
                     <>
                       <FeedPost
-                        contentShouldLinkToThread="true"
-                        includePaddingOnPost="true"
+                        contentShouldLinkToThread={true}
+                        includePaddingOnPost={true}
                         post={post}
-                        afterCommentCreatedCallback="appendCommentAfterParentPost.bind(this)"
-                        afterRepostCreatedCallback="prependPostToFeed.bind(this)"
-                        blocked="
-                    globalVars.hasUserBlockedCreator(globalVars.loggedInUser?.ProfileEntryResponse?.PublicKeyBase58Check)
-                    "
-                        cardStyle="true"
-                        showNFTDetails="true"
-                        showInteractionDetails="false"
-                        profileFeed="true"
-                        userBlocked="userBlocked()"
-                        showPostsShadow="true"
+                        afterCommentCreatedCallback={() =>
+                          appendCommentAfterParentPost(whichPostsToShow(), post)
+                        }
+                        afterRepostCreatedCallback={() =>
+                          prependPostToFeed(whichPostsToShow(), post)
+                        }
+                        blocked={hasUserBlockedCreator(
+                          loggedInUser?.ProfileEntryResponse
+                            ?.PublicKeyBase58Check
+                        )}
+                        cardStyle={true}
+                        showNFTDetails={true}
+                        showInteractionDetails={false}
+                        profileFeed={true}
+                        userBlocked={userBlocked()}
+                        showPostsShadow={true}
                       ></FeedPost>
                     </>
                   ) : null}

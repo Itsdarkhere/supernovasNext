@@ -1,4 +1,4 @@
-import styles from "../../styles/Feed/postIconRow.module.scss";
+import styles from "../../styles/fontello.module.scss";
 import {
   abbreviateRepostsNumber,
   getUSDForDiamond,
@@ -6,7 +6,14 @@ import {
 import { useState } from "react";
 import { useAppSelector } from "../../utils/Redux/hooks";
 
-const PostIconRow = ({ postContent, hideNumbers }) => {
+const PostIconRow = ({
+  postContent,
+  hideNumbers,
+  post,
+  parentPost,
+  afterCommentCreatedCallback,
+  afterRepostCreatedCallback,
+}) => {
   // Vars
   const diamondCount = 6;
   let loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
@@ -50,9 +57,6 @@ const PostIconRow = ({ postContent, hideNumbers }) => {
 
   // Functions end
 
-  if (!postContent?.RepostCount) {
-    return null;
-  }
   return (
     <div className="mt-5px js-feed-post-icon-row__container fs-14px text-grey5 d-flex justify-content-between unselectable">
       {/* (click)="openModal($event)" */}
@@ -61,7 +65,12 @@ const PostIconRow = ({ postContent, hideNumbers }) => {
         data-toggle="modal"
         data-target=".js-feed-post-icon-row__comment-modal"
       >
-        <i className="icon-reply-2 feed-post-icon-row__icon background-hover-blue"></i>
+        <i
+          className={
+            styles.icon_reply_2 +
+            " feed-post-icon-row__icon background-hover-blue"
+          }
+        ></i>
 
         {!hideNumbers ? <span>{postContent.CommentCount}</span> : null}
       </div>
@@ -86,7 +95,12 @@ const PostIconRow = ({ postContent, hideNumbers }) => {
           aria-haspopup="true"
           aria-expanded="false"
         >
-          <i className="icon-repost-2 feed-post-icon-row__icon background-hover-green"></i>
+          <i
+            className={
+              styles.icon_repost_2 +
+              " feed-post-icon-row__icon background-hover-green"
+            }
+          ></i>
         </div>
 
         {!hideNumbers ? (
@@ -104,7 +118,6 @@ const PostIconRow = ({ postContent, hideNumbers }) => {
           style={{ minWidth: "6rem" }}
           aria-labelledby="repostActionsButton"
         >
-          {/* *ngIf="sendingRepostRequest; else repostOptions" */}
           {sendingRepostRequest ? (
             <div className="dropdown-menu-item d-block p-5px feed-post__dropdown-menu-item">
               <div className="fc-muted">Loading...</div>
@@ -114,14 +127,14 @@ const PostIconRow = ({ postContent, hideNumbers }) => {
               {userHasReposted() ? (
                 <a className="dropdown-menu-item d-block link--unstyled p-5px feed-post__dropdown-menu-item">
                   {/* (click)="_undoRepost($event)" THIS WAS ABOVE */}
-                  <i className="icon-repost fs-12px"></i>
+                  <i className={styles.icon_repost + " fs-12px"}></i>
                   Hide
                 </a>
               ) : (
                 <>
                   {/* (click)="_repost($event)" */}
                   <a className="dropdown-menu-item d-block link--unstyled p-5px feed-post__dropdown-menu-item">
-                    <i className="icon-repost fs-12px"></i>
+                    <i className={styles.icon_repost + " fs-12px"}></i>
                     Repost
                   </a>
                 </>
@@ -151,15 +164,20 @@ const PostIconRow = ({ postContent, hideNumbers }) => {
         <i
           className={[
             "feed-post-icon-row__icon background-hover-red",
-            postContent.PostEntryReaderState
-              ? !postContent.PostEntryReaderState.LikedByReader
-              : true
-              ? "icon-heart-2"
+            animateLike ? "is_animating" : "",
+            (
+              postContent.PostEntryReaderState
+                ? !postContent.PostEntryReaderState.LikedByReader
+                : true
+            )
+              ? styles.icon_heart_2
               : "",
-            postContent.PostEntryReaderState
-              ? postContent.PostEntryReaderState.LikedByReader
-              : false
-              ? "icon-heart-fill"
+            (
+              postContent.PostEntryReaderState
+                ? postContent.PostEntryReaderState.LikedByReader
+                : false
+            )
+              ? styles.icon_heart_fill
               : "",
           ].join(" ")}
         ></i>
@@ -215,9 +233,9 @@ const PostIconRow = ({ postContent, hideNumbers }) => {
           <i
             className={[
               "feed-post-icon-row__icon",
-              !sendingDiamonds ? "icon-diamond" : "fas fa-spinner fa-spin",
+              !sendingDiamonds ? styles.icon_diamond : "fas fa-spinner fa-spin",
               postContent.PostEntryReaderState?.DiamondLevelBestowed > 0
-                ? "icon-diamond-fill"
+                ? styles.icon_diamond_fill
                 : "",
             ].join(" ")}
             style={{ visibility: diamondDragging ? "hidden" : "visible" }}
@@ -225,7 +243,8 @@ const PostIconRow = ({ postContent, hideNumbers }) => {
 
           <div
             className={[
-              "diamond-btn icon-diamond fs-22px",
+              "diamond-btn fs-22px",
+              styles.icon_diamond,
               diamondDragging ? "dragged-like" : "",
               postContent.ProfileEntryResponse?.PublicKeyBase58Check ===
                 loggedInUser?.PublicKeyBase58Check || sendingDiamonds
@@ -267,7 +286,7 @@ const PostIconRow = ({ postContent, hideNumbers }) => {
                 >
                   <label>{getUSDForDiamond(diamondIndex + 1)}</label>
                   <i
-                    className={"icon-diamond diamond-reaction"}
+                    className={styles.icon_diamond + " diamond-reaction"}
                     style={{
                       color:
                         diamondIndex < getCurrentDiamondLevel() ||
