@@ -1,4 +1,5 @@
 import styles from "../../../styles/NFT/NFTCard/nftCard.module.scss";
+import Avatar from "../../Reusables/avatar";
 
 // This component is responsible for display the creator name, nft name etc
 // Could be called the middle section of the basic nft card
@@ -7,9 +8,7 @@ const NFTCardCaption = ({ postContent, loadProfile, creatorProfile }) => {
   const showNameOrDescription = () => {
     if (postContent?.PostExtraData?.name) {
       return (
-        <p className={styles.fs_20px_im}>
-          {postContent.PostExtraData?.name}
-        </p>
+        <p className={styles.fs_20px_im}>{postContent.PostExtraData?.name}</p>
       );
     } else {
       return <p className="pt-10px">{postContent?.Body}</p>;
@@ -22,14 +21,17 @@ const NFTCardCaption = ({ postContent, loadProfile, creatorProfile }) => {
       <div className="d-flex flex-row">
         <div className={styles.card_header} style={{ borderBottom: "0px" }}>
           <div className={styles.profile_img}>
-            {/* [avatar]="postContent.PosterPublicKeyBase58Check"
+            {/*
                     [routerLink]="[
                       '/' + globalVars.RouteNames.USER_PREFIX,
                       loadProfile ? this.creatorProfile?.Username : postContent.ProfileEntryResponse?.Username
                     ]" 
                     queryParamsHandling="merge"
                     */}
-            <div></div>
+            <Avatar
+              classN={styles.avatar}
+              avatar={postContent?.PosterPublicKeyBase58Check}
+            ></Avatar>
           </div>
         </div>
         <div className="d-flex flex-column">

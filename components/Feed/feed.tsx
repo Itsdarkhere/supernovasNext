@@ -18,6 +18,8 @@ import {
   setFollowFeedPosts,
   setHotFeedPosts,
   setPostsToShow,
+  unShiftFollowFeedPosts,
+  unShiftPostsToShow,
 } from "../../utils/Redux/Slices/feedSlice";
 import LoadingCard from "../NFT/NFTCard/loadingCard";
 import NFTCard from "../NFT/NFTCard/nftCard";
@@ -405,7 +407,7 @@ const Feed = ({ isMobile }) => {
   };
 
   const prependPostToFeed = (postsToShow, postEntryResponse) => {
-    postsToShow.unshift(postEntryResponse);
+    dispatch(unShiftPostsToShow(postEntryResponse));
   };
 
   const _loadHotFeedPosts = (reload: boolean = false) => {
@@ -424,8 +426,8 @@ const Feed = ({ isMobile }) => {
       NUM_TO_FETCH
     ).subscribe({
       next: (res) => {
-        if (res.HotFeedPage) {
-          dispatch(setHotFeedPosts(hotFeedPosts.concat(res.HotFeedPage)));
+        if (res.data.HotFeedPage) {
+          dispatch(setHotFeedPosts(hotFeedPosts.concat(res.data.HotFeedPage)));
         }
 
         // Remove pinned post if it's been dismissed by the user
@@ -445,7 +447,7 @@ const Feed = ({ isMobile }) => {
           followFeedPosts.length > 0 &&
           !followFeedPosts[0].IsPinned
         ) {
-          followFeedPosts.unshift(hotFeedPosts[0]);
+          dispatch(unShiftFollowFeedPosts(hotFeedPosts[0]));
         }
         for (let ii = 0; ii < hotFeedPosts.length; ii++) {
           // Check works,,, might not
@@ -603,9 +605,7 @@ const Feed = ({ isMobile }) => {
               <div className="d-flex flex-column js-feed-post position-relative">
                 {[...Array(20)].map((_, i) => (
                   <div key={i} className="nft-col-wrap">
-                    <div className="card">
-                      <LoadingCard></LoadingCard>
-                    </div>
+                    <LoadingCard></LoadingCard>
                   </div>
                 ))}
               </div>

@@ -1,0 +1,1918 @@
+.onboarding-card-shadow {
+    //   width: 700px;
+    //   height: 1025px;
+    //   left: 2px;
+    //   top: -1px;
+    //   background: #f3f3f3;
+    //   border-radius: 30.2255px;
+    position: relative;
+  }
+  
+  .onboarding-card-shadow-hasProfile {
+    //   width: 700px;
+    //   height: 645px;
+    //   left: 2px;
+    //   top: -1px;
+    //   background: #f3f3f3;
+    //   border-radius: 30.2255px;
+    position: relative;
+  }
+  
+  .onboarding-card-shadow-collector {
+    //   width: 700px;
+    //   height: 975px;
+    //   left: 2px;
+    //   top: -1px;
+    //   background: #f3f3f3;
+    //   border-radius: 30.2255px;
+    position: relative;
+  }
+  
+  .onboarding-card {
+    width: 819px;
+    height: 1027px;
+    margin-left: auto;
+    margin-right: auto;
+    background: #ffffff;
+    border-radius: 30px;
+    position: relative;
+    outline-width: 1ex;
+    outline-color: #f3f3f3;
+    outline-style: solid;
+    margin-top: 20px;
+  }
+  
+  .onboarding-card-hasProfile {
+    width: 819px;
+    height: 595px;
+    left: 10px;
+    top: 10px;
+  
+    background: #ffffff;
+    border-radius: 29.6169px;
+    position: absolute;
+  
+    outline-width: 1ex;
+    outline-color: #f3f3f3;
+    outline-style: solid;
+    margin-top: 20px;
+  }
+  
+  .onboarding-card-collector {
+    width: 819px;
+    height: 885px;
+    left: 10px;
+    top: 10px;
+    
+    margin-left: auto;
+    margin-right: auto;
+    background: #ffffff;
+    border-radius: 30px;
+    position: relative;
+    margin-top: 20px;
+  
+    outline-width: 1ex;
+    outline-color: #f3f3f3;
+    outline-style: solid;
+    margin-top: 20px;
+  }
+  
+  .onboarding-card-header-1 {
+    position: absolute;
+    left: 58px;
+    top: 38px;
+  
+    font-style: normal;
+    font-weight: 600;
+    font-size: 33px;
+    line-height: 48px;
+  
+    color: #0d0d0d;
+  }
+  
+  .onboarding-card-subheader {
+    position: absolute;
+    left: 58px;
+    top: 93px;
+  
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    line-height: 30px;
+  
+    color: #2e2e2e;
+  }
+  
+  .onboarding-card-subheader-hasProfile {
+    position: absolute;
+    left: 58px;
+    top: 93px;
+  
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    line-height: 30px;
+    display: flex;
+    align-items: center;
+    width: 550px;
+  
+    color: #2e2e2e;
+  }
+  
+  .color-gradient {
+    left: 58px;
+    top: 175px;
+    position: absolute;
+    width: 11.69px;
+    height: 550px;
+  }
+  
+  .color-gradient-collector {
+    left: 58px;
+    top: 175px;
+    position: absolute;
+    width: 11.69px;
+    height: 425px;
+  }
+  
+  .onboarding-card-button {
+    width: 150px;
+    height: 56px;
+    border: 3px solid #000000;
+    border-radius: 31.879194259643555px;
+    box-shadow: 0.4547150731086731px 0.4547150731086731px 2.2735750675201416px rgba(0, 0, 0, 0.11);
+    background-color: white;
+    position: absolute;
+    font-weight: bold;
+    font-size: 13px;
+  }
+  
+  // Step 1
+  .checkmark-1 {
+    position: absolute;
+    width: 26.57px;
+    height: 26.57px;
+    left: 50px;
+    top: 170px;
+  }
+  
+  .step-1-header {
+    position: absolute;
+    left: 95px;
+    top: 167px;
+  
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18.5px;
+    line-height: 112.5%;
+  
+    color: #262626;
+  }
+  
+  .step-1-text {
+    position: absolute;
+    left: 95px;
+    top: 197px;
+    width: 495px;
+  
+    font-style: normal;
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 137%;
+  
+    color: #707070;
+  }
+  
+  .onboarding-card-button-1 {
+    top: 197px;
+    right: 50px;
+  }
+  
+  // Step 2
+  .checkmark-2 {
+    position: absolute;
+    width: 26.57px;
+    height: 26.57px;
+    left: 50px;
+    top: 297px;
+  }
+  
+  .step-2-header {
+    position: absolute;
+    left: 95px;
+    top: 297px;
+  
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18.5px;
+    line-height: 112.5%;
+  
+    color: #262626;
+  }
+  
+  .step-2-text {
+    position: absolute;
+    left: 95px;
+    top: 327px;
+    width: 495px;
+  
+    font-style: normal;
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 137%;
+  
+    color: #707070;
+  }
+  
+  .onboarding-card-button-2 {
+    top: 327px;
+    right: 50px;
+  }
+  
+  // Step 3
+  .checkmark-3 {
+    position: absolute;
+    width: 26.57px;
+    height: 26.57px;
+    left: 50px;
+    top: 405px;
+  }
+  
+  .step-3-header {
+    position: absolute;
+    left: 95px;
+    top: 405px;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18.5px;
+    line-height: 112.5%;
+    color: #262626;
+  }
+  
+  .step-3-text {
+    position: absolute;
+    left: 95px;
+    top: 435px;
+    width: 495px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 137%;
+    color: #707070;
+  }
+  
+  .onboarding-card-button-3 {
+    top: 435px;
+    right: 50px;
+  }
+  
+  // Step 4
+  .checkmark-4 {
+    position: absolute;
+    width: 26.57px;
+    height: 26.57px;
+    left: 50px;
+    top: 577px;
+  }
+  
+  .step-4-header {
+    position: absolute;
+    left: 95px;
+    top: 577px;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18.5px;
+    line-height: 112.5%;
+    color: #262626;
+  }
+  
+  .step-4-header-hasProfile {
+    position: absolute;
+    left: 58px;
+    top: 200px;
+    font-size: 18px;
+  
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18.5px;
+    line-height: 112.5%;
+  
+    color: #262626;
+  }
+  
+  .step-4-text {
+    position: absolute;
+    left: 95px;
+    top: 607px;
+    width: 495px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 137%;
+    color: #707070;
+  }
+  
+  .step-4-text-hasProfile {
+    position: absolute;
+    left: 58px;
+    top: 230px;
+    width: 480px;
+  
+    font-style: normal;
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 137%;
+  
+    color: #707070;
+  }
+  
+  .onboarding-card-button-4 {
+    top: 605px;
+    right: 50px;
+  }
+  
+  .onboarding-card-button-4-hasProfile {
+    top: 230px;
+    right: 50px;
+    width: 200px;
+  }
+  
+  // done
+  .done {
+    position: absolute;
+    width: 46.76px;
+    height: 26.57px;
+    left: 40px;
+    top: 700px;
+  }
+  
+  .done-collector {
+    position: absolute;
+    width: 46.76px;
+    height: 26.57px;
+    left: 40px;
+    top: 575px;
+  }
+  
+  // line-break
+  .line-break {
+    position: absolute;
+    width: 819px;
+    height: 0px;
+    left: 0px;
+    top: 760px;
+    border: 0.25px solid #c7c7c7;
+  }
+  
+  .line-break-collector {
+    position: absolute;
+    width: 819px;
+    height: 0px;
+    left: 0px;
+    top: 645px;
+  
+    border: 1px solid rgba(199, 199, 199, 0.25);
+  }
+  
+  .line-break-collector-mobile {
+    position: absolute;
+    width: 100%;
+    height: 0px;
+    left: 0px;
+    top: 620px;
+    border: 1px solid rgba(199, 199, 199, 0.5);
+  }
+  
+  // support
+  .support-header {
+    position: absolute;
+    left: 95px;
+    top: 785px;
+  
+    font-style: normal;
+    font-weight: 600;
+    font-size: 25.5px;
+    line-height: 112.5%;
+  
+    color: #000000;
+  }
+  
+  .support-header-hasProfile {
+    position: absolute;
+    left: 95px;
+    top: 400px;
+  
+    font-style: normal;
+    font-weight: 600;
+    font-size: 25.5px;
+    line-height: 112.5%;
+  
+    color: #000000;
+  }
+  
+  .support-header-collector {
+    position: absolute;
+    left: 95px;
+    top: 680px;
+  
+    font-style: normal;
+    font-weight: 600;
+    font-size: 25.5px;
+    line-height: 112.5%;
+    color: #000000;
+  }
+  
+  .support-text {
+    position: absolute;
+    left: 95px;
+    top: 820px;
+    font-size: 15px;
+    width: 450px;
+  }
+  
+  .support-text-hasProfile {
+    position: absolute;
+    left: 95px;
+    top: 435px;
+    width: 575px;
+  
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 137%;
+  
+    color: #707070;
+  }
+  
+  .support-text-collector {
+    position: absolute;
+    left: 95px;
+    top: 725px;
+  
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 137%;
+    width: 580px;
+    color: #707070;
+  }
+  
+  .onboarding-support-button {
+    top: 900px;
+    left: 95px;
+    width: 275px;
+    font-size: 15px;
+  }
+  
+  .onboarding-support-button-hasProfile {
+    top: 495px;
+    left: 95px;
+    width: 275px;
+  }
+  
+  .onboarding-support-button-collector {
+    top: 785px;
+    left: 95px;
+    width: 290px;
+  }
+  
+  // ------------------------- mobile -------------------------
+  // bottom browser search bar plus the nav bar is about 345px you have to subtract that from the height of the phone
+  // creator no profile
+  .onboarding-card-mobile {
+    width: 740px;
+    height: 960px;
+    left: 35px;
+    top: 100px;
+    background: #ffffff;
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    overflow-y: scroll;
+    overflow-x: hidden;
+  }
+  
+  .onboarding-card-header-1-mobile {
+    position: absolute;
+    left: 15px;
+    top: 35px;
+  
+    font-style: normal;
+    font-weight: 600;
+    font-size: 33px;
+    line-height: 48px;
+  
+    color: #0d0d0d;
+  }
+  
+  .onboarding-card-subheader-mobile {
+    position: absolute;
+    left: 15px;
+    top: 80px;
+  
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    line-height: 30px;
+  
+    color: #2e2e2e;
+  }
+  
+  .color-gradient-mobile {
+    left: 15px;
+    top: 145px;
+    position: absolute;
+    height: 570px;
+    width: 16px;
+  }
+  
+  .checkmark-1-mobile {
+    position: absolute;
+    height: 30px;
+    left: 9px;
+    top: 140px;
+  }
+  
+  .step-1-header-mobile {
+    position: absolute;
+    left: 60px;
+    top: 145px;
+  
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18.5px;
+    line-height: 112.5%;
+  
+    color: #262626;
+  }
+  
+  .step-1-text-mobile {
+    position: absolute;
+    left: 60px;
+    top: 175px;
+    width: 415px;
+  
+    font-style: normal;
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 137%;
+  
+    color: #707070;
+  }
+  
+  .onboarding-card-button-mobile {
+    width: 175px;
+    height: 55px;
+    border: 3px solid #000000;
+    border-radius: 31.8791942596px;
+    box-shadow: 0.4547150731px 0.4547150731px 2.2735750675px rgb(0 0 0 / 11%);
+    background-color: white;
+    position: absolute;
+    font-weight: bold;
+    font-size: 15px;
+    color: black;
+  }
+  
+  .onboarding-card-button-1-mobile {
+    top: 175px;
+    right: 40px;
+  }
+  
+  .checkmark-2-mobile {
+    position: absolute;
+    height: 30px;
+    left: 9px;
+    top: 270px;
+  }
+  
+  .step-2-header-mobile {
+    position: absolute;
+    left: 60px;
+    top: 275px;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18.5px;
+    line-height: 112.5%;
+    color: #262626;
+  }
+  
+  .step-2-text-mobile {
+    position: absolute;
+    left: 60px;
+    top: 305px;
+    width: 415px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 137%;
+    color: #707070;
+  }
+  
+  .onboarding-card-button-2-mobile {
+    top: 305px;
+    right: 40px;
+  }
+  
+  .checkmark-3-mobile {
+    position: absolute;
+    height: 30px;
+    left: 9px;
+    top: 390px;
+  }
+  
+  .step-3-header-mobile {
+    position: absolute;
+    left: 60px;
+    top: 390px;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18.5px;
+    line-height: 112.5%;
+    color: #262626;
+  }
+  
+  .step-3-text-mobile {
+    position: absolute;
+    left: 60px;
+    top: 420px;
+    width: 415px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 137%;
+    color: #707070;
+  }
+  
+  .onboarding-card-button-3-mobile {
+    top: 420px;
+    right: 40px;
+  }
+  
+  .checkmark-4-mobile {
+    position: absolute;
+    height: 30px;
+    left: 9px;
+    top: 575px;
+  }
+  
+  .step-4-header-mobile {
+    position: absolute;
+    left: 60px;
+    top: 575px;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18.5px;
+    line-height: 112.5%;
+    color: #262626;
+  }
+  
+  .step-4-text-mobile {
+    position: absolute;
+    left: 60px;
+    top: 605px;
+    width: 415px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 137%;
+    color: #707070;
+  }
+  
+  .onboarding-card-button-4-mobile {
+    top: 605px;
+    right: 40px;
+  }
+  
+  .done-mobile {
+    position: absolute;
+    height: 20px;
+    left: 5px;
+    top: 700px;
+  }
+  
+  .line-break-mobile {
+    position: absolute;
+    width: 100%;
+    height: 0px;
+    left: 0px;
+    top: 745px;
+    border: 1px solid rgba(199, 199, 199, 0.5);
+  }
+  
+  .support-header-mobile {
+    position: absolute;
+    left: 60px;
+    top: 765px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 25.5px;
+    line-height: 112.5%;
+    color: #000000;
+  }
+  
+  .support-text-mobile {
+    position: absolute;
+    left: 60px;
+    top: 800px;
+    width: 70vw;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 137%;
+    color: #707070;
+  }
+  
+  .onboarding-support-button-mobile {
+    top: 845px;
+    left: 60px;
+    width: 300px;
+  }
+  
+  .mobile-navbar-buffer {
+    height: 100px;
+    bottom: 0;
+    position: absolute;
+    width: 100vw;
+  }
+  
+  // creator has profile
+  .onboarding-card-hasProfile-mobile {
+    width: 740px;
+    height: 960px;
+    left: 35px;
+    top: 100px;
+    background: #ffffff;
+    position: absolute;
+    overflow-y: scroll;
+    overflow-x: hidden;
+  }
+  
+  .onboarding-card-subheader-hasProfile-mobile {
+    position: absolute;
+    left: 15px;
+    top: 80px;
+  
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    line-height: 30px;
+  
+    color: #2e2e2e;
+  }
+  
+  .line-break-hasProfile {
+    position: absolute;
+    width: 100%;
+    height: 0px;
+    left: 0px;
+    top: 350px;
+    border: 0.25px solid #c7c7c7;
+  }
+  
+  .line-break-hasProfile-mobile {
+    position: absolute;
+    width: 100%;
+    height: 0px;
+    left: 0px;
+    top: 305px;
+    border: 0.25px solid #c7c7c7;
+  }
+  
+  .onboarding-card-button-4-hasProfile-mobile {
+    top: 210px;
+    right: 40px;
+    width: 200px;
+  }
+  
+  .step-4-header-hasProfile-mobile {
+    position: absolute;
+    left: 15px;
+    top: 180px;
+  
+    font-size: 18.5px;
+    font-style: normal;
+    font-weight: bold;
+    line-height: 112.5%;
+  
+    color: #262626;
+  }
+  
+  .step-4-text-hasProfile-mobile {
+    position: absolute;
+    left: 15px;
+    top: 210px;
+    width: 470px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 137%;
+    color: #707070;
+  }
+  
+  .support-header-hasProfile-mobile {
+    position: absolute;
+    left: 80px;
+    top: 335px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 25.5px;
+    line-height: 112.5%;
+    color: #000000;
+  }
+  
+  .support-text-hasProfile-mobile {
+    position: absolute;
+    left: 80px;
+    top: 370px;
+    width: 600px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 137%;
+    color: #707070;
+  }
+  
+  .onboarding-support-button-hasProfile-mobile {
+    top: 430px;
+    left: 80px;
+    width: 300px;
+  }
+  
+  // collector
+  .onboarding-card-collector-mobile {
+    width: 740px;
+    height: 800px;
+    left: 35px;
+    top: 0px;
+    background: #ffffff;
+    position: absolute;
+    overflow-y: scroll;
+    overflow-x: hidden;
+  }
+  
+  .color-gradient-collector-mobile {
+    left: 15px;
+    top: 145px;
+    position: absolute;
+    height: 445px;
+    width: 16px;
+  }
+  
+  .done-collector-mobile {
+    position: absolute;
+    height: 20px;
+    left: 5px;
+    top: 570px;
+  }
+  
+  .support-header-collector-mobile {
+    position: absolute;
+    left: 60px;
+    top: 645px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 25.5px;
+    line-height: 112.5%;
+    color: #000000;
+  }
+  
+  .support-text-collector-mobile {
+    position: absolute;
+    left: 60px;
+    top: 680px;
+    width: 70vw;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 137%;
+    color: #707070;
+  }
+  
+  .onboarding-support-button-collector-mobile {
+    top: 730px;
+    left: 60px;
+    width: 300px;
+  }
+  
+  // 775 responsive
+  @media screen and (max-width: 775px) {
+    // creator no profile
+    .onboarding-card-mobile {
+      width: 92.5%;
+      height: calc(var(--pixelHeight) - 165px);
+      top: 80px;
+      margin-right: 5%;
+      background: #ffffff;
+      position: absolute;
+      overflow-y: scroll;
+      overflow-x: hidden;
+    }
+  
+    .onboarding-card-header-1-mobile {
+      left: 5px;
+      top: 10px;
+  
+      font-style: normal;
+      font-weight: 600;
+      font-size: 23px;
+      line-height: 33px;
+  
+      color: #0d0d0d;
+    }
+  
+    .onboarding-card-subheader-mobile {
+      left: 5px;
+      top: 45px;
+  
+      font-style: normal;
+      font-weight: normal;
+      font-size: 13px;
+      line-height: 21px;
+  
+      display: flex;
+      align-items: center;
+  
+      color: #2e2e2e;
+    }
+  
+    .onboarding-card-subheader-hasProfile-mobile {
+      left: 5px;
+      top: 45px;
+  
+      font-style: normal;
+      font-weight: normal;
+      font-size: 13px;
+      line-height: 21px;
+  
+      display: flex;
+      align-items: center;
+  
+      color: #2e2e2e;
+    }
+  
+    .color-gradient-mobile {
+      left: 5px;
+      top: 112px;
+      position: absolute;
+      height: 870px;
+      width: 7px;
+    }
+  
+    .checkmark-1-mobile {
+      position: absolute;
+      height: 20px;
+      left: -1px;
+      top: 110px;
+    }
+  
+    .step-1-header-mobile {
+      left: 40px;
+      top: 110px;
+      font-size: 16px;
+      font-weight: bold;
+      display: block;
+      line-height: 112.5%;
+    }
+  
+    .step-1-text-mobile {
+      left: 40px;
+      top: 140px;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 14px;
+      width: 90%;
+      display: block;
+      line-height: 137%;
+      color: #707070;
+    }
+  
+    .onboarding-card-button-mobile {
+      width: 290px;
+      height: 55px;
+      border: 3px solid #000000;
+      border-radius: 31.8791942596px;
+      box-shadow: 0.4547150731px 0.4547150731px 2.2735750675px rgb(0 0 0 / 11%);
+      background-color: white;
+      font-weight: bold;
+      font-size: 15px;
+      display: block;
+      color: black;
+    }
+  
+    .onboarding-card-button-1-mobile {
+      top: 235px;
+      left: 40px;
+    }
+  
+    .checkmark-2-mobile {
+      position: absolute;
+      height: 20px;
+      left: -1px;
+      top: 340px;
+    }
+  
+    .step-2-header-mobile {
+      left: 40px;
+      top: 340px;
+      font-size: 16px;
+      font-weight: bold;
+      display: block;
+      line-height: 112.5%;
+      color: #262626;
+    }
+  
+    .step-2-text-mobile {
+      left: 40px;
+      top: 370px;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 14px;
+      width: 90%;
+      display: block;
+      line-height: 137%;
+      color: #707070;
+    }
+  
+    .onboarding-card-button-2-mobile {
+      top: 485px;
+      left: 40px;
+    }
+  
+    .checkmark-3-mobile {
+      position: absolute;
+      height: 20px;
+      left: -1px;
+      top: 590px;
+    }
+  
+    .step-3-header-mobile {
+      position: absolute;
+      left: 40px;
+      top: 590px;
+      font-style: normal;
+      font-weight: bold;
+      font-size: 18.5px;
+      line-height: 112.5%;
+      color: #262626;
+    }
+  
+    .step-3-text-mobile {
+      position: absolute;
+      left: 40px;
+      top: 620px;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 14px;
+      width: 90%;
+      display: block;
+      line-height: 137%;
+      color: #707070;
+    }
+  
+    .onboarding-card-button-3-mobile {
+      top: 700px;
+      left: 40px;
+    }
+  
+    .checkmark-4-mobile {
+      position: absolute;
+      height: 20px;
+      left: -1px;
+      top: 790px;
+    }
+  
+    .step-4-header-mobile {
+      position: absolute;
+      left: 40px;
+      top: 790px;
+      font-style: normal;
+      font-weight: bold;
+      font-size: 18.5px;
+      line-height: 112.5%;
+      color: #262626;
+    }
+  
+    .step-4-text-mobile {
+      position: absolute;
+      left: 40px;
+      top: 820px;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 14px;
+      width: 90%;
+      display: block;
+      line-height: 137%;
+      color: #707070;
+    }
+  
+    .onboarding-card-button-4-mobile {
+      top: 900px;
+      left: 40px;
+    }
+  
+    .done-mobile {
+      position: absolute;
+      height: 12px;
+      left: 0px;
+      top: 970px;
+    }
+  
+    .line-break-mobile {
+      position: absolute;
+      width: 100%;
+      height: 0px;
+      left: 0px;
+      top: 1005px;
+      border: 1px solid rgba(199, 199, 199, 0.5);
+    }
+  
+    .support-header-mobile {
+      position: absolute;
+      left: 40px;
+      top: 1025px;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 112.5%;
+      color: #000000;
+    }
+  
+    .support-text-mobile {
+      position: absolute;
+      left: 40px;
+      top: 1050px;
+      width: 70vw;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 8.75px;
+      line-height: 137%;
+      color: #707070;
+    }
+  
+    .onboarding-support-button-mobile {
+      top: 1090px;
+      left: 40px;
+      width: 290px;
+    }
+  
+    // creator has profile
+    .onboarding-card-hasProfile-mobile {
+      width: 92.5%;
+      height: calc(var(--pixelHeight) - 165px);
+      left: 10px;
+      top: 80px;
+      background: #ffffff;
+      position: absolute;
+      overflow-y: scroll;
+      overflow-x: hidden;
+    }
+  
+    .line-break-hasProfile-mobile {
+      position: absolute;
+      width: 100%;
+      height: 0px;
+      left: 0px;
+      top: 320px;
+      border: 0.25px solid #c7c7c7;
+    }
+  
+    .step-4-header-hasProfile-mobile {
+      position: absolute;
+      left: 5px;
+      top: 130px;
+      font-size: 16px;
+      font-style: normal;
+      font-weight: bold;
+      line-height: 112.5%;
+      color: #262626;
+    }
+  
+    .step-4-text-hasProfile-mobile {
+      position: absolute;
+      left: 5px;
+      top: 155px;
+      width: 90%;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 137%;
+      color: #707070;
+    }
+  
+    .onboarding-card-button-4-hasProfile-mobile {
+      top: 235px;
+      left: 5px;
+      width: 290px;
+    }
+  
+    .support-header-hasProfile-mobile {
+      position: absolute;
+      left: 5px;
+      top: 345px;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 112.5%;
+      color: #000000;
+    }
+  
+    .support-text-hasProfile-mobile {
+      position: absolute;
+      left: 5px;
+      top: 365px;
+      width: 600px;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 9px;
+      line-height: 137%;
+      color: #707070;
+    }
+  
+    .onboarding-support-button-hasProfile-mobile {
+      top: 405px;
+      left: 5px;
+      width: 290px;
+    }
+  
+    //   collector
+    .onboarding-card-collector-mobile {
+      width: 95%;
+      height: calc(var(--pixelHeight) - 165px);
+      left: 10px;
+      top: 0px;
+      background: #ffffff;
+      position: absolute;
+      overflow-y: scroll;
+      overflow-x: hidden;
+    }
+  
+    .color-gradient-collector-mobile {
+      left: 5px;
+      top: 112px;
+      position: absolute;
+      height: 700px;
+      width: 7px;
+    }
+  
+    .done-collector-mobile {
+      position: absolute;
+      height: 12px;
+      left: 0px;
+      top: 805px;
+    }
+  
+    .line-break-collector-mobile {
+      position: absolute;
+      width: 100%;
+      height: 0px;
+      left: 0px;
+      top: 840px;
+      border: 1px solid rgba(199, 199, 199, 0.5);
+    }
+  
+    .support-header-collector-mobile {
+      position: absolute;
+      left: 40px;
+      top: 865px;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 112.5%;
+      color: #000000;
+    }
+  
+    .support-text-collector-mobile {
+      position: absolute;
+      left: 40px;
+      top: 890px;
+      width: 70vw;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 8.75px;
+      line-height: 137%;
+      color: #707070;
+    }
+  
+    .onboarding-support-button-collector-mobile {
+      top: 935px;
+      left: 40px;
+      width: 290px;
+    }
+  }
+  
+  // iphone 13 pro max and above
+  @media screen and (max-width: 480px) {
+    // creator no profile
+    .onboarding-card-mobile {
+      max-width: 410px;
+      width: 100%;
+      height: calc(var(--pixelHeight) - 165px);
+      left: 10px;
+      top: 80px;
+      background: #ffffff;
+      position: absolute;
+      overflow-y: scroll;
+      overflow-x: hidden;
+    }
+  
+    .onboarding-card-header-1-mobile {
+      left: 5px;
+      top: 10px;
+  
+      font-style: normal;
+      font-weight: 600;
+      font-size: 23px;
+      line-height: 33px;
+  
+      color: #0d0d0d;
+    }
+  
+    .onboarding-card-subheader-mobile {
+      left: 5px;
+      top: 45px;
+  
+      font-style: normal;
+      font-weight: normal;
+      font-size: 13px;
+      line-height: 21px;
+  
+      display: flex;
+      align-items: center;
+  
+      color: #2e2e2e;
+    }
+  
+    .onboarding-card-subheader-hasProfile-mobile {
+      left: 5px;
+      top: 45px;
+  
+      font-style: normal;
+      font-weight: normal;
+      font-size: 13px;
+      line-height: 21px;
+  
+      display: flex;
+      align-items: center;
+  
+      color: #2e2e2e;
+    }
+  
+    .color-gradient-mobile {
+      left: 5px;
+      top: 112px;
+      position: absolute;
+      height: 870px;
+      width: 7px;
+    }
+  
+    .checkmark-1-mobile {
+      position: absolute;
+      height: 20px;
+      left: -1px;
+      top: 110px;
+    }
+  
+    .step-1-header-mobile {
+      left: 40px;
+      top: 110px;
+      font-size: 16px;
+      font-weight: bold;
+      display: block;
+      line-height: 112.5%;
+    }
+  
+    .step-1-text-mobile {
+      left: 40px;
+      top: 140px;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 14px;
+      width: 310px;
+      display: block;
+      line-height: 137%;
+      color: #707070;
+    }
+  
+    .onboarding-card-button-mobile {
+      width: 290px;
+      height: 55px;
+      border: 3px solid #000000;
+      border-radius: 31.8791942596px;
+      box-shadow: 0.4547150731px 0.4547150731px 2.2735750675px rgb(0 0 0 / 11%);
+      background-color: white;
+      font-weight: bold;
+      font-size: 15px;
+      display: block;
+      color: black;
+    }
+  
+    .onboarding-card-button-1-mobile {
+      top: 235px;
+      left: 40px;
+    }
+  
+    .checkmark-2-mobile {
+      position: absolute;
+      height: 20px;
+      left: -1px;
+      top: 325px;
+    }
+  
+    .step-2-header-mobile {
+      left: 40px;
+      top: 325px;
+      font-size: 16px;
+      font-weight: bold;
+      display: block;
+      line-height: 112.5%;
+      color: #262626;
+    }
+  
+    .step-2-text-mobile {
+      left: 40px;
+      top: 355px;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 14px;
+      width: 310px;
+      display: block;
+      line-height: 137%;
+      color: #707070;
+    }
+  
+    .onboarding-card-button-2-mobile {
+      top: 430px;
+      left: 40px;
+    }
+  
+    .checkmark-3-mobile {
+      position: absolute;
+      height: 20px;
+      left: -1px;
+      top: 515px;
+    }
+  
+    .step-3-header-mobile {
+      position: absolute;
+      left: 40px;
+      top: 515px;
+      font-style: normal;
+      font-weight: bold;
+      font-size: 16px;
+      line-height: 112.5%;
+      color: #262626;
+    }
+  
+    .step-3-text-mobile {
+      position: absolute;
+      left: 40px;
+      top: 550px;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 14px;
+      width: 310px;
+      display: block;
+      line-height: 137%;
+      color: #707070;
+    }
+  
+    .onboarding-card-button-3-mobile {
+      top: 680px;
+      left: 40px;
+    }
+  
+    .checkmark-4-mobile {
+      position: absolute;
+      height: 20px;
+      left: -1px;
+      top: 760px;
+    }
+  
+    .step-4-header-mobile {
+      position: absolute;
+      left: 40px;
+      top: 760px;
+      font-style: normal;
+      font-weight: bold;
+      font-size: 16px;
+      line-height: 112.5%;
+      color: #262626;
+    }
+  
+    .step-4-text-mobile {
+      position: absolute;
+      left: 40px;
+      top: 790px;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 14px;
+      width: 310px;
+      display: block;
+      line-height: 137%;
+      color: #707070;
+    }
+  
+    .onboarding-card-button-4-mobile {
+      top: 880px;
+      left: 40px;
+    }
+  
+    .done-mobile {
+      position: absolute;
+      height: 12px;
+      left: 0px;
+      top: 970px;
+    }
+  
+    .line-break-mobile {
+      position: absolute;
+      width: 100%;
+      height: 0px;
+      left: 0px;
+      top: 1005px;
+      border: 1px solid rgba(199, 199, 199, 0.5);
+    }
+  
+    .support-header-mobile {
+      position: absolute;
+      left: 40px;
+      top: 1025px;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 112.5%;
+      color: #000000;
+    }
+  
+    .support-text-mobile {
+      position: absolute;
+      left: 40px;
+      top: 1050px;
+      width: 70vw;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 8.75px;
+      line-height: 137%;
+      color: #707070;
+    }
+  
+    .onboarding-support-button-mobile {
+      top: 1090px;
+      left: 40px;
+      width: 290px;
+    }
+  
+    // creator has profile
+    .onboarding-card-hasProfile-mobile {
+      width: 410px;
+      height: calc(var(--pixelHeight) - 165px);
+      left: 10px;
+      top: 80px;
+      background: #ffffff;
+      position: absolute;
+      overflow-y: scroll;
+      overflow-x: hidden;
+    }
+  
+    .line-break-hasProfile-mobile {
+      position: absolute;
+      width: 100%;
+      height: 0px;
+      left: 0px;
+      top: 320px;
+      border: 0.25px solid #c7c7c7;
+    }
+  
+    .step-4-header-hasProfile-mobile {
+      position: absolute;
+      left: 5px;
+      top: 130px;
+      font-size: 16px;
+      font-style: normal;
+      font-weight: bold;
+      line-height: 112.5%;
+      color: #262626;
+    }
+  
+    .step-4-text-hasProfile-mobile {
+      position: absolute;
+      left: 5px;
+      top: 155px;
+      width: 400px;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 137%;
+      color: #707070;
+    }
+  
+    .onboarding-card-button-4-hasProfile-mobile {
+      top: 235px;
+      left: 5px;
+      width: 290px;
+    }
+  
+    .support-header-hasProfile-mobile {
+      position: absolute;
+      left: 5px;
+      top: 345px;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 112.5%;
+      color: #000000;
+    }
+  
+    .support-text-hasProfile-mobile {
+      position: absolute;
+      left: 5px;
+      top: 365px;
+      width: 600px;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 9px;
+      line-height: 137%;
+      color: #707070;
+    }
+  
+    .onboarding-support-button-hasProfile-mobile {
+      top: 405px;
+      left: 5px;
+      width: 290px;
+    }
+  
+    //   collector
+    .onboarding-card-collector-mobile {
+      width: 95%;
+      height: calc(var(--pixelHeight) - 165px);
+      left: 10px;
+      top: 0px;
+      background: #ffffff;
+      position: absolute;
+      overflow-y: scroll;
+      overflow-x: hidden;
+    }
+  
+    .color-gradient-collector-mobile {
+      left: 5px;
+      top: 112px;
+      position: absolute;
+      height: 650px;
+      width: 7px;
+    }
+  
+    .done-collector-mobile {
+      position: absolute;
+      height: 12px;
+      left: 0px;
+      top: 750px;
+    }
+  
+    .line-break-collector-mobile {
+      position: absolute;
+      width: 100%;
+      height: 0px;
+      left: 0px;
+      top: 785px;
+      border: 1px solid rgba(199, 199, 199, 0.5);
+    }
+  
+    .support-header-collector-mobile {
+      position: absolute;
+      left: 40px;
+      top: 805px;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 112.5%;
+      color: #000000;
+    }
+  
+    .support-text-collector-mobile {
+      position: absolute;
+      left: 40px;
+      top: 830px;
+      width: 70vw;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 8.75px;
+      line-height: 137%;
+      color: #707070;
+    }
+  
+    .onboarding-support-button-collector-mobile {
+      top: 870px;
+      left: 40px;
+      width: 290px;
+    }
+  }
+  
+  // iphone 13 pro
+  @media screen and (max-width: 390px) {
+    .onboarding-card-mobile {
+      width: 370px;
+      height: calc(var(--pixelHeight) - 165px);
+      left: 10px;
+      top: 80px;
+      background: #ffffff;
+      position: absolute;
+      overflow-y: scroll;
+      overflow-x: hidden;
+    }
+  
+    .onboarding-card-hasProfile-mobile {
+      width: 370px;
+      height: calc(var(--pixelHeight) - 165px);
+      left: 10px;
+      top: 80px;
+      background: #ffffff;
+      position: absolute;
+      overflow-y: scroll;
+      overflow-x: hidden;
+    }
+  
+    .onboarding-card-collector-mobile {
+      width: 370px;
+      height: calc(var(--pixelHeight) - 165px);
+      left: 10px;
+      top: 0px;
+      background: #ffffff;
+      position: absolute;
+      overflow-y: scroll;
+      overflow-x: hidden;
+    }
+  
+    .step-4-text-hasProfile-mobile {
+      font-size: 13px;
+      width: 360px;
+    }
+  }
+  
+  // iphone x
+  @media screen and (max-width: 375px) and (max-height: 812px) {
+    .onboarding-card-mobile {
+      width: 360px;
+      height: calc(var(--pixelHeight) - 165px);
+      left: 7.5px;
+      top: 80px;
+      background: #ffffff;
+      position: absolute;
+      overflow-y: scroll;
+      overflow-x: hidden;
+    }
+  
+    .onboarding-card-hasProfile-mobile {
+      width: 360px;
+      height: calc(var(--pixelHeight) - 165px);
+      left: 7.5px;
+      top: 80px;
+      background: #ffffff;
+      position: absolute;
+      overflow-y: scroll;
+      overflow-x: hidden;
+    }
+  
+    .onboarding-card-collector-mobile {
+      width: 360px;
+      height: calc(var(--pixelHeight) - 165px);
+      left: 7.5px;
+      top: 00px;
+      background: #ffffff;
+      position: absolute;
+      overflow-y: scroll;
+      overflow-x: hidden;
+    }
+  
+    .onboarding-card-header-1-mobile {
+      font-size: 22px;
+    }
+  
+    .onboarding-card-subheader-mobile {
+      font-size: 12px;
+    }
+  
+    .onboarding-card-subheader-hasProfile-mobile {
+      font-size: 12px;
+    }
+  
+    .step-1-text-mobile {
+      font-size: 13px;
+      width: 290px;
+    }
+  
+    .step-2-text-mobile {
+      font-size: 13px;
+      width: 290px;
+    }
+  
+    .step-3-text-mobile {
+      font-size: 13px;
+      width: 290px;
+    }
+  
+    .step-4-text-mobile {
+      font-size: 13px;
+      width: 290px;
+    }
+  
+    .step-4-text-hasProfile-mobile {
+      font-size: 13px;
+      width: 290px;
+    }
+  
+    .onboarding-card-button-mobile {
+      width: 270px;
+    }
+  }
+  
+  // iphone se
+  @media screen and (max-width: 375px) and (max-height: 667px) {
+    .onboarding-card-mobile {
+      width: 360px;
+      height: calc(var(--pixelHeight) - 165px);
+      left: 7.5px;
+      top: 80px;
+      background: #ffffff;
+      position: absolute;
+      overflow-y: scroll;
+      overflow-x: hidden;
+    }
+  
+    .onboarding-card-hasProfile-mobile {
+      width: 360px;
+      height: calc(var(--pixelHeight) - 165px);
+      left: 7.5px;
+      top: 80px;
+      background: #ffffff;
+      position: absolute;
+      overflow-y: scroll;
+      overflow-x: hidden;
+    }
+  
+    .onboarding-card-collector-mobile {
+      width: 360px;
+      height: calc(var(--pixelHeight) - 165px);
+      left: 7.5px;
+      top: 80px;
+      background: #ffffff;
+      position: absolute;
+      overflow-y: scroll;
+      overflow-x: hidden;
+    }
+  
+    .onboarding-card-header-1-mobile {
+      font-size: 22px;
+    }
+  
+    .onboarding-card-subheader-mobile {
+      font-size: 12px;
+    }
+  
+    .onboarding-card-subheader-hasProfile-mobile {
+      font-size: 12px;
+    }
+  
+    .step-1-text-mobile {
+      font-size: 13px;
+      width: 290px;
+    }
+  
+    .step-2-text-mobile {
+      font-size: 13px;
+      width: 290px;
+    }
+  
+    .step-3-text-mobile {
+      font-size: 13px;
+      width: 290px;
+    }
+  
+    .step-4-text-mobile {
+      font-size: 13px;
+      width: 290px;
+    }
+  
+    .step-4-text-hasProfile-mobile {
+      font-size: 13px;
+      width: 290px;
+    }
+  
+    .onboarding-card-button-mobile {
+      width: 270px;
+    }
+  }
+  
+  @media screen and (max-width: 350px) {
+    .onboarding-card-mobile {
+      width: 335px;
+    }
+  
+    .onboarding-card-hasProfile-mobile {
+      width: 335px;
+    }
+  
+    .onboarding-card-collector-mobile {
+      width: 335px;
+    }
+  }
+  

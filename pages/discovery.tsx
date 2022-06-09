@@ -6,15 +6,29 @@ import CategorySection from "../components/Discovery/categorySection";
 import PromotedNFT from "../components/Discovery/promotedNFT";
 import SectionTitle from "../components/Discovery/sectionTitle";
 import BottomButtons from "../components/Discovery/bottomButtons";
-import { GetNFTShowcase, post, GetSecondaryListings, GetRecentSales, GetFreshDrops, AdminGetVerifiedUsers } from "../utils/backendapi-context";
+import {
+  GetNFTShowcase,
+  post,
+  GetSecondaryListings,
+  GetRecentSales,
+  GetFreshDrops,
+  AdminGetVerifiedUsers,
+} from "../utils/backendapi-context";
 import { useState } from "react";
 // Redux
 import { useAppSelector, useAppDispatch } from "../utils/Redux/hooks";
-import { setMarketplaceContentFormat, setMarketplaceStatus, setMarketplaceNFTCategory, 
-    setMarketplaceMarketType, setMarketplaceSortType } from "../utils/Redux/Slices/sortSlice";
+import {
+  setMarketplaceContentFormat,
+  setMarketplaceStatus,
+  setMarketplaceNFTCategory,
+  setMarketplaceMarketType,
+  setMarketplaceSortType,
+} from "../utils/Redux/Slices/sortSlice";
+import FormatSection from "../components/Discovery/formatSection";
 // Redux end
 
 const Discovery = () => {
+  const dispatch = useAppDispatch();
   // State
   const [sectionLoadingOne, setSectionLoadingOne] = useState(true);
   const [sectionLoadingTwo, setSectionLoadingTwo] = useState(true);
@@ -56,9 +70,11 @@ const Discovery = () => {
         // This is used in the 'main' nft
         setPromotedNFT(featured[0]["PostEntryResponse"]);
         // The rest is 'trending auctions'
-        setDataToShowOne(featured.slice(1, getCardsPerRow() + 1).map((nft, index) => {
-            return nft["PostEntryResponse"]
-        }));
+        setDataToShowOne(
+          featured.slice(1, getCardsPerRow() + 1).map((nft, index) => {
+            return nft["PostEntryResponse"];
+          })
+        );
         setTimeout(() => {
           setSectionLoadingOne(false);
         }, 0);
@@ -89,35 +105,40 @@ const Discovery = () => {
       return;
     }
     setSectionLoadingThree(true);
-    GetRecentSales(localNode, loggedInUser?.PublicKeyBase58Check)
-      .subscribe({
-        next: (res) => {
-            setDataToShowThree(res.data["PostEntryResponse"].slice(0, getCardsPerRow()))
-            setTimeout(() => {
-                setSectionLoadingThree(false)
-            }, 0);
-        },
-        error: (err) => console.log(err),
-      });
-  }
+    GetRecentSales(localNode, loggedInUser?.PublicKeyBase58Check).subscribe({
+      next: (res) => {
+        setDataToShowThree(
+          res.data["PostEntryResponse"].slice(0, getCardsPerRow())
+        );
+        setTimeout(() => {
+          setSectionLoadingThree(false);
+        }, 0);
+      },
+      error: (err) => console.log(err),
+    });
+  };
 
-  const getSecondaryListings = () =>  {
+  const getSecondaryListings = () => {
     // dont get if we have the data
     if (dataToShowFour.length !== 0) {
       return;
     }
-    setSectionLoadingFour(true)
-    GetSecondaryListings(localNode, loggedInUser?.PublicKeyBase58Check)
-      .subscribe({
-        next: (res) => {
-            setDataToShowFour(res.data["PostEntryResponse"].slice(0, getCardsPerRow()))
-            setTimeout(() => {
-                setSectionLoadingFour(false)
-            }, 0);
-        },
-        error: (err) => console.log(err),
-      });
-  }
+    setSectionLoadingFour(true);
+    GetSecondaryListings(
+      localNode,
+      loggedInUser?.PublicKeyBase58Check
+    ).subscribe({
+      next: (res) => {
+        setDataToShowFour(
+          res.data["PostEntryResponse"].slice(0, getCardsPerRow())
+        );
+        setTimeout(() => {
+          setSectionLoadingFour(false);
+        }, 0);
+      },
+      error: (err) => console.log(err),
+    });
+  };
 
   const getFreshDrops = () => {
     // dont get if we have the data
@@ -125,67 +146,70 @@ const Discovery = () => {
       return;
     }
 
-    setSectionLoadingTwo(true)
+    setSectionLoadingTwo(true);
     GetFreshDrops(
-        localNode,
-        loggedInUser?.PublicKeyBase58Check,
-        "BC1YLiiQ36NSLSK2bpLqi4PsP85mzBaKRTLxBAoTdNELohuRdrSMX9w"
-      )
-      .subscribe({
-        next: (res) => {
-            setDataToShowTwo(res.data["PostEntryResponse"].slice(0, getCardsPerRow()))
-            setTimeout(() => {
-            setSectionLoadingTwo(false);
-            }, 0);
-        },
-        error: (err) => console.log(err),
-      });
-  }
+      localNode,
+      loggedInUser?.PublicKeyBase58Check,
+      "BC1YLiiQ36NSLSK2bpLqi4PsP85mzBaKRTLxBAoTdNELohuRdrSMX9w"
+    ).subscribe({
+      next: (res) => {
+        setDataToShowTwo(
+          res.data["PostEntryResponse"].slice(0, getCardsPerRow())
+        );
+        setTimeout(() => {
+          setSectionLoadingTwo(false);
+        }, 0);
+      },
+      error: (err) => console.log(err),
+    });
+  };
 
-  const loadVerifiedUsers = () =>  {
+  const loadVerifiedUsers = () => {
     // Dont load if we have the content
     if (dataToShowFive.length !== 0) {
       return;
     }
-    setSectionLoadingFive(true)
-    AdminGetVerifiedUsers(localNode, "BC1YLiiQ36NSLSK2bpLqi4PsP85mzBaKRTLxBAoTdNELohuRdrSMX9w")
-      .subscribe({
-        next: (res) => {
-            let arrayHolder = res.data.VerifiedUsers.sort(() => Math.random() - 0.5);
+    setSectionLoadingFive(true);
+    AdminGetVerifiedUsers(
+      localNode,
+      "BC1YLiiQ36NSLSK2bpLqi4PsP85mzBaKRTLxBAoTdNELohuRdrSMX9w"
+    ).subscribe({
+      next: (res) => {
+        let arrayHolder = res.data.VerifiedUsers.sort(
+          () => Math.random() - 0.5
+        );
 
-            setDataToShowFive(arrayHolder.slice(0, getCardsPerRow()))
-            console.log(arrayHolder)
-            console.log(dataToShowFive);
-            // Some of the users might have deleted their profiles
-            // So if fetch in creatorCard fails, we can try again with an additional profile
-            setDataToShowExtra(arrayHolder.slice(8, 10))
-            setTimeout(() => {
-                setSectionLoadingFive(false)
-            }, 300);
-        },
-        error: (err) => {
-            console.log(err);
-            setSectionLoadingFive(true)
-        }
-      });
-  }
+        setDataToShowFive(arrayHolder.slice(0, getCardsPerRow()));
+        console.log(arrayHolder);
+        console.log(dataToShowFive);
+        // Some of the users might have deleted their profiles
+        // So if fetch in creatorCard fails, we can try again with an additional profile
+        setDataToShowExtra(arrayHolder.slice(8, 10));
+        setTimeout(() => {
+          setSectionLoadingFive(false);
+        }, 300);
+      },
+      error: (err) => {
+        console.log(err);
+        setSectionLoadingFive(true);
+      },
+    });
+  };
 
   // OH lord... rewrite
   const routeViewAll = (category: string) => {
-    // Redux 
-    const dispatch = useAppDispatch();
     // Redux end
     switch (category) {
       // There is cases where old state store effects how these work in reality
       // Imo the issue is small enough not to set all to default b4
       case "trending":
-        dispatch(setMarketplaceStatus("has bids"))
+        dispatch(setMarketplaceStatus("has bids"));
         break;
       case "art":
         dispatch(setMarketplaceNFTCategory("art"));
         break;
       case "collectibles":
-        dispatch(setMarketplaceNFTCategory("collectibles"))
+        dispatch(setMarketplaceNFTCategory("collectibles"));
         break;
       case "generative":
         dispatch(setMarketplaceNFTCategory("generative art"));
@@ -234,7 +258,7 @@ const Discovery = () => {
     // Navigate to marketplace after setting what to search by
     // FIX NAVIGATE
     // router.navigate(["/" + globalVars.RouteNames.TRENDS]);
-  }
+  };
   // Functions end
 
   // Lifecycle methods
@@ -254,7 +278,12 @@ const Discovery = () => {
           whatAllToShow={undefined}
           routeViewAll={undefined}
         ></SectionTitle>
-        <NFTSection loading={sectionLoadingOne} fetching="one" function={null} nftData={dataToShowOne}></NFTSection>
+        <NFTSection
+          loading={sectionLoadingOne}
+          fetching="one"
+          function={null}
+          nftData={dataToShowOne}
+        ></NFTSection>
         <SectionTitle
           title={"Explore categories"}
           viewAll={false}
@@ -268,21 +297,36 @@ const Discovery = () => {
           whatAllToShow={undefined}
           routeViewAll={undefined}
         ></SectionTitle>
-        <NFTSection loading={sectionLoadingTwo} fetching="two" function={getFreshDrops} nftData={dataToShowTwo}></NFTSection>
+        <NFTSection
+          loading={sectionLoadingTwo}
+          fetching="two"
+          function={getFreshDrops}
+          nftData={dataToShowTwo}
+        ></NFTSection>
         <SectionTitle
           title={"Recent Sales"}
           viewAll={true}
           whatAllToShow={undefined}
           routeViewAll={undefined}
         ></SectionTitle>
-        <NFTSection loading={sectionLoadingThree} fetching="three" function={getRecentSales}  nftData={dataToShowThree}></NFTSection>
+        <NFTSection
+          loading={sectionLoadingThree}
+          fetching="three"
+          function={getRecentSales}
+          nftData={dataToShowThree}
+        ></NFTSection>
         <SectionTitle
           title={"Secondary Listings"}
           viewAll={true}
           whatAllToShow={undefined}
           routeViewAll={undefined}
         ></SectionTitle>
-        <NFTSection loading={sectionLoadingFour} fetching="four" function={getSecondaryListings}  nftData={dataToShowFour}></NFTSection>
+        <NFTSection
+          loading={sectionLoadingFour}
+          fetching="four"
+          function={getSecondaryListings}
+          nftData={dataToShowFour}
+        ></NFTSection>
         <SectionTitle
           title={"Verified Creators Snapshot"}
           viewAll={false}
@@ -290,11 +334,18 @@ const Discovery = () => {
           routeViewAll={undefined}
         ></SectionTitle>
         <CreatorSection
-            localNode={localNode}
-            loading={sectionLoadingFive}
-            userData={dataToShowFive}
-            dataToShowExtra={dataToShowExtra}
+          localNode={localNode}
+          loading={sectionLoadingFive}
+          userData={dataToShowFive}
+          dataToShowExtra={dataToShowExtra}
         ></CreatorSection>
+        <SectionTitle
+          title={"Explore content formats"}
+          viewAll={false}
+          whatAllToShow={undefined}
+          routeViewAll={undefined}
+        ></SectionTitle>
+        <FormatSection></FormatSection>
         <BottomButtons></BottomButtons>
       </div>
     </Page>

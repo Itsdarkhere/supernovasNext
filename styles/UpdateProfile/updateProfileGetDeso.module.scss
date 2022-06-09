@@ -1,0 +1,221 @@
+.card-box-profile-update {
+    width: 100%;
+    padding-bottom: 100px;
+    // max-width: 1000px;
+    max-width: 650px;
+    min-height: 300px;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .card-profile-update {
+    margin-top: 25px;
+    height: 240px;
+    min-width: 200px;
+    width: 23%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    border-radius: 20px;
+    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.19);
+    border: 0.5px solid #fcfcfc;
+    overflow: hidden;
+  }
+  @media (max-width: 440px) {
+    .card-profile-update {
+      height: 220px;
+      min-width: 180px;
+    }
+  }
+  .card-profile-header {
+    width: 95%;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
+  .card-profile-desc {
+    width: 95%;
+    text-align: center;
+    font-size: 12px;
+  }
+  .profile-icon {
+    //padding-bottom: 10px;
+    fill: white;
+  }
+  .background-profile {
+    height: 33%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+  .background-mobile {
+    background-image: url("/assets/img/phone-background.png");
+  }
+  .background-jumio {
+    background-image: url("/assets/img/jumio-background.png");
+  }
+  .background-deso {
+    background-image: url("/assets/img/deso-background.png");
+  }
+  .background-blockchain {
+    background-image: url("/assets/img/block-background.png");
+  }
+  
+  .finalize-deso-profile-text {
+    padding-top: 100px;
+  }
+  
+  .finalize-profile-box {
+    padding: 1em;
+    background: grey;
+    border-radius: 1em;
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: 600;
+    font-size: clamp(26px, 2.5vw, 46px);
+    align-items: center;
+    color: #2D2D2D;
+    text-align: center;
+    vertical-align: middle;
+    background: #FFFFFF;
+    border: 2px solid #F4F4F4;
+    box-sizing: border-box;
+    box-shadow: 0px 1.81225px 30px 1.81225px rgba(0, 0, 0, 0.05);
+    border-radius: 52px;
+  }
+  
+  .get-deso-container {
+    text-align: center;
+    vertical-align: middle;
+    margin-top: 2.5em;
+    margin-bottom: 2.5em;
+    font-weight: 600;
+    font-size: clamp(16px, 1.5vw, 24px);}
+  
+  .get-deso-box {
+    width: 50%;
+    margin-bottom: 2em;
+  
+    p {
+      font-size: 14px;
+      text-align: center;
+      width: 70%;
+      margin: auto;
+    }
+  
+    @media screen and (max-width: 664px) {
+      width: auto;
+      width: 100%;
+  
+    }
+  }
+  
+  .get-deso-coinbase-box {
+    width: 50%;
+  
+    p {
+      font-size: 14px;
+      text-align: center;
+    }
+  
+    @media screen and (max-width: 664px) {
+      width: auto;
+      width: 100%;
+  
+    }
+  }
+  
+  .get-deso-button {
+    display: inline-block;
+    border-radius: 10px;
+    border: 3px double #161724;
+    color: white;
+    text-align: center;
+    font-size: 28px;
+    padding: 20px;
+    width: 200px;
+    transition: all 0.5s;
+    cursor: pointer;
+    margin: 5px;
+    width: 310px;
+    height: 70px;
+    background: #161724;
+    border-radius: 20px;
+  }
+  
+  .coinbase-button {
+    background: #2054ff;
+    border: 3px double #2054ff;
+  }
+  
+  .coinbase-img {
+    display: block;
+    margin: auto;
+    width: 50%;
+  }
+  
+  .deso-img {
+    display: block;
+    margin: auto;
+    height: 100%;
+  }
+  
+  .get-deso-button:hover {
+    box-shadow: rgba(0, 0, 0, 0.068) 0 8px 15px;
+    transform: translateY(-2px);
+    color: #4285f4;
+  }
+  
+  .current-cost-container {
+    text-align: center;
+    vertical-align: middle;
+    font-size: clamp(14px, 1.5vw, 16px);
+    font-weight: 100;
+    color: grey;
+  }
+  
+  .finalize-profile-title {
+    font-weight: 600;
+  }
+  
+  .buttons-box {
+    display: flex;
+    text-align: center;
+  
+    @media screen and (max-width: 664px) {
+      display: inline;
+    }
+  }
+  
+  .mobile-create-your-profile-width {
+    width: 96%;
+  }
+  
+  @media screen and (max-width: 480px) {
+    .mobile-create-your-profile-width {
+      width: 92%;
+    }
+  
+    .card-box-profile-update {
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-template-rows: 1fr;
+      justify-items: center;
+    }
+  }
+  .bottom-spacer {
+    height: 50px;
+    @media screen and (max-width: 992px) {
+      height: 100px;
+    }
+  }
+  
+  

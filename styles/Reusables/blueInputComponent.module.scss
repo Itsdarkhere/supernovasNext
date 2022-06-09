@@ -1,0 +1,43 @@
+.blue-input {
+    width: 100%;
+    background: linear-gradient(to right top, #09084B, #003CD6, #24F5F6);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    max-height: 78px;
+    min-height: 70px;
+    height: 15vw;
+    border: 4px solid #ffffff;
+    border-radius: 20px;
+    padding: 5px 5px;
+    input {
+        height: 100%;
+        width: 60%;
+        border-radius: 15px;
+        border: 4px solid #0E0F22;
+        background-color: #FFFFFF;
+        font-size: 20px;
+        @media screen and (max-width: 525px) {
+            font-size: 4vw;
+        }
+    }
+    label {
+        margin-bottom: 0;
+        font-weight: 600;
+        color: #FFFFFF;
+        width: 40%;
+        font-size: 22px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        img {
+            margin-right: 8px;
+        }
+    }
+}
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}

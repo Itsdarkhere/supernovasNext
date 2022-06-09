@@ -1,0 +1,18 @@
+.dropdown_button {
+    border: none;
+    outline: none;
+    cursor: pointer;
+    background-color: transparent;
+    padding: 0  !important;
+}
+.dropdown {
+    ul {
+        min-width: 6rem;
+        li {
+            padding: 5px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+    }
+}

@@ -12,6 +12,7 @@ import {
   stringifyError,
   BlockPublicKey,
   SubmitPost,
+  GetSingleProfile,
 } from "../../../utils/backendapi-context";
 import {
   getTargetComponentSelector,
@@ -119,9 +120,9 @@ const NFTCard = ({
     GetNFTEntriesForNFTPost(
       localNode,
       loggedInUser?.PublicKeyBase58Check,
-      postContent.PostHashHex
+      post.PostHashHex
     ).subscribe((res) => {
-      nftEntryResponses = res.NFTEntryResponses;
+      nftEntryResponses = res.data.NFTEntryResponses;
       if (nftEntryResponses[0]) {
         setIsBuyNow(nftEntryResponses[0]?.IsBuyNow);
         setBuyNowPriceNanos(nftEntryResponses[0].BuyNowPriceNanos);
@@ -414,6 +415,46 @@ const NFTCard = ({
   useEffect(() => {
     if (typeof post?.PostHashHex !== "undefined") {
       setPost(post);
+    }
+
+    if (!post.RepostCount) {
+      // put back ?
+      //post.RepostCount = 0;
+    }
+    // If its the marketplace we need to load profile, since its not included
+    if (loadProfile) {
+      GetSingleProfile(
+        localNode,
+        post.PosterPublicKeyBase58Check,
+        ""
+      ).subscribe({
+        next: (res) => {
+          setCreatorProfile(res.data.Profile);
+          post.ProfileEntryResponse = res;
+        },
+        error: (err) => {
+          console.log(err);
+        },
+      });
+    }
+    // put back
+    // setMobileBasedOnViewport();
+    //this.setEmbedURLForPostContent();
+    if (
+      !post?.PostExtraData?.isEthereumNFT &&
+      post.IsNFT &&
+      !nftEntryResponses?.length
+    ) {
+      getNFTEntries();
+    }
+
+    // if the post is an Ethereum NFT, check if it's for sale
+    if (post.PostExtraData?.isEthereumNFT) {
+      console.log("isEthereumNFT hit");
+      updateEthNFTForSaleStatus();
+
+      // check eth NFT owner
+      checkEthNFTOwner();
     }
   }, [post]);
   // Lifecycle methods end

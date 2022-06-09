@@ -1,0 +1,15 @@
+.dropdown_button {
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+.dropdown {
+    ul {
+        min-width: 10rem;
+        li {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+    }
+}

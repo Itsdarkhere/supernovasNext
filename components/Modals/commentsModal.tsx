@@ -24,13 +24,13 @@ const CommentsModal = () => {
       </div>
       <div className="comment-section">
         <FeedPost
-          post="parentPost"
-          includePaddingOnPost="false"
-          contentShouldLinkToThread="false"
-          showIconRow="false"
-          showDropdown="false"
-          showReplyingToContent="false"
-          hoverable="false"
+          post={parentPost}
+          includePaddingOnPost={false}
+          contentShouldLinkToThread={false}
+          showIconRow={false}
+          showDropdown={false}
+          showReplyingToContent={false}
+          hoverable={false}
         ></FeedPost>
       </div>
 

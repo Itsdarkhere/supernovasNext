@@ -89,6 +89,10 @@ const NFTSection = (props) => {
                     showIconRow={true}
                     showQuotedContent={false}
                     loadProfile={false}
+                    nftPost={undefined}
+                    showThreadConnectionLine={undefined}
+                    userBlocked={undefined}
+                    postDeleted={undefined}
                   ></NFTCard>
                 </div>
               </div>
@@ -126,6 +130,10 @@ const NFTSection = (props) => {
                   showIconRow={true}
                   showQuotedContent={false}
                   loadProfile={false}
+                  nftPost={undefined}
+                  showThreadConnectionLine={undefined}
+                  userBlocked={undefined}
+                  postDeleted={undefined}
                 ></NFTCard>
               </div>
             ))}

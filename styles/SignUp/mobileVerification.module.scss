@@ -1,0 +1,216 @@
+.small-button-size {
+    width: 165px !important;
+    min-width: 165px;
+    height: 35px;
+  }
+  .small-button-width {
+    width: 165px !important;
+    min-width: 165px;
+  }
+  .mobile-input {
+    height: 36.5px !important;
+    border-radius: 5.669146537780762px;
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.05);
+  }
+  .signup-window-btn {
+    width: 250px; /* Need a specific value to work */
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 50px;
+  }
+  .button-solid {
+    border: none;
+    margin-top: 40px;
+    color: #787878;
+    background: white;
+    font-size: 15px;
+  }
+  button-solid:focus {
+    border: none;
+    outline: none;
+  }
+  .mobile-verification-input-button {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    @media (max-width: 520px) {
+      flex-direction: column;
+      .black-rounded-button {
+        margin-top: 10px;
+      }
+      .white-rounded-button {
+        margin-top: 10px;
+      }
+    }
+  }
+  .mobile-verification-input-button-one {
+    display: block !important;
+    @media (max-width: 520px) {
+      flex-direction: column;
+      .black-rounded-button {
+        margin-top: 10px;
+      }
+      .white-rounded-button {
+        margin-top: 10px;
+      }
+    }
+  }
+  .w-259px {
+    max-width: 259px;
+    width: 100%;
+  }
+  .h-100px {
+    min-height: 100px;
+  }
+  
+  .skip-phone-verification-button {
+    margin-left: auto;
+    margin-right: auto;
+    justify-content: center;
+    display: flex;
+    vertical-align: center;
+  }
+  
+  .phone-input-border {
+    border: 1px solid black !important;
+  }
+  
+  .phone-input-border:hover {
+    border: 1px solid black !important;
+  }
+  
+  // phone verification digits -----------------------------------
+  
+  .digit {
+    font-size: 2rem;
+    width: 50px;
+    border: 2px solid #aaa;
+    text-align: center;
+    box-shadow: 0 0 8px rgb(0 0 0 / 25%);
+    margin: 0px 10px;
+  }
+  
+  .digit:focus {
+    border: 2px solid black;
+    outline: none;
+  }
+  
+  #digits {
+    padding: 20px;
+    display: inline-block;
+  }
+  
+  .verification-complete-image {
+    width: 50px;
+    display: block;
+    text-align: center;
+    margin: 0 auto;
+  }
+  
+  // phone verification digits -----------------------------------
+  
+  #create-profile-button {
+    display: block;
+  }
+  
+  #complete-verfication-button {
+    margin-bottom: 5vh;
+    bottom: 0;
+    position: absolute;
+  }
+  
+  .phone-number-text-block {
+    margin-bottom: 5vh;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, 0%);
+    position: absolute;
+  }
+  
+  #verify-phone-button {
+    margin-bottom: 5vh;
+    bottom: 0;
+    position: absolute;
+  }
+  
+  .verification-complete-container {
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    display: flex;
+  }
+  
+  .verification-complete-container-mobile {
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    display: flex;
+    margin-top: 100px;
+  }
+  
+  .resend-verification-text {
+    display: inline-block;
+    margin-right: 10px;
+  }
+  
+  .resend-the-code-text {
+    text-decoration: underline;
+    font-weight: bold;
+  }
+  
+  // #phone {
+  //   border: 1px solid black !important;
+  // }
+  
+  // #phone:hover {
+  //   border: 1px solid black !important;
+  // }
+  
+  @media screen and (max-width: 480px) {
+    #create-profile-button {
+      width: 300px !important;
+    }
+  
+    #verify-phone-button {
+      width: 300px !important;
+    }
+  
+    .phone-number-text-block {
+      margin-top: 10vh;
+    }
+  
+    .mobile-verification-component {
+      display: flex;
+      flex-direction: column;
+    }
+  
+    #phone {
+      width: 315px;
+    }
+  
+    .resend-verification-text {
+      color: #7c7c7c;
+      display: inline-block;
+      margin-right: 10px !important;
+    }
+  
+    .resend-verification-text-block {
+      margin-top: 5vh;
+      margin-bottom: 5vh;
+    }
+  
+    .verification-complete-container-mobile {
+      margin-top: 50px;
+    }
+  }
+  
+  @media screen and (max-width: 390px) {
+    #digits {
+      padding: 0px;
+    }
+  }

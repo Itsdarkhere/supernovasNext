@@ -7,6 +7,7 @@ import { unreadNotifications } from "../../utils/global-context";
 import { RouteNames } from "../../utils/backendapi-context";
 import Link from "next/link";
 import { useAppSelector } from "../../utils/Redux/hooks";
+import ChangeAccountDropdown from "../Reusables/changeAccountDropdown";
 const Header = () => {
   // Redux
   const loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
@@ -178,7 +179,9 @@ const Header = () => {
                 {showOpenNotifications()}
               </li>
               {getCreateButton()}
-              {/* <change-account-selector class="ml-20px"></change-account-selector> */}
+              <div className="ml-20px">
+                <ChangeAccountDropdown></ChangeAccountDropdown>
+              </div>
             </ul>
           </div>
         </div>

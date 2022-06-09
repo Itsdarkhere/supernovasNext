@@ -11,6 +11,17 @@
 .padding_top_51px {
     padding-top: 71px;
 }
+.bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("../../../public/img/nft-background.svg");
+    background-position: center;
+    background-color: red;
+    background-size: cover;
+}
 .nft_background {
     border-top-left-radius: 30px;
     border-top-right-radius: 30px;

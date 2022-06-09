@@ -6,44 +6,84 @@ import type { AppState } from "../store";
 
 // Define type
 interface ProfileState {
-    ethNFTsCollected: NFTCollectionResponse[],
-    ethNFTsCreated: NFTCollectionResponse[],
-    createdNFTsToShow: any,
-    collectedNFTsToShow: any,
+  ethNFTsCollected: NFTCollectionResponse[];
+  ethNFTsCreated: NFTCollectionResponse[];
+  createdNFTsToShow: any;
+  collectedNFTsToShow: any;
 }
 
 // Define state
 const initialState: ProfileState = {
-    ethNFTsCollected: [],
-    ethNFTsCreated: [],
-    createdNFTsToShow: [],
-    collectedNFTsToShow: [],
-}
+  ethNFTsCollected: [],
+  ethNFTsCreated: [],
+  createdNFTsToShow: [],
+  collectedNFTsToShow: [],
+};
 
 export const profileSlice = createSlice({
-    name: "profile",
-    initialState,
-    reducers: {
-        setETHNFTsCollected: (state, action: PayloadAction<NFTCollectionResponse[]>) => {
-            state.ethNFTsCollected = action.payload;
-        },
-        concatToETHNFTsCollected: (state, action: PayloadAction<NFTCollectionResponse[]>) => {
-            state.ethNFTsCollected = state.ethNFTsCollected.concat(...state.ethNFTsCollected, action.payload);
-        },
-        setETHNFTsCreated: (state, action: PayloadAction<NFTCollectionResponse[]>) => {
-            state.ethNFTsCreated = action.payload;
-        },
-        concatToCollectedNFTsToShow: (state, action: PayloadAction<NFTCollectionResponse[]>) => {
-            state.collectedNFTsToShow = state.collectedNFTsToShow.concat(action.payload);
-        },
-        concatToCreatedNFTsToShow: (state, action: PayloadAction<NFTCollectionResponse[]>) => {
-            state.createdNFTsToShow = state.createdNFTsToShow.concat(action.payload);
-        },
-    }
-})
+  name: "profile",
+  initialState,
+  reducers: {
+    setETHNFTsCollected: (
+      state,
+      action: PayloadAction<NFTCollectionResponse[]>
+    ) => {
+      state.ethNFTsCollected = action.payload;
+    },
+    concatToETHNFTsCollected: (
+      state,
+      action: PayloadAction<NFTCollectionResponse[]>
+    ) => {
+      state.ethNFTsCollected = state.ethNFTsCollected.concat(
+        ...state.ethNFTsCollected,
+        action.payload
+      );
+    },
+    setETHNFTsCreated: (
+      state,
+      action: PayloadAction<NFTCollectionResponse[]>
+    ) => {
+      state.ethNFTsCreated = action.payload;
+    },
+    setCollectedNFTsToShow: (
+      state,
+      action: PayloadAction<NFTCollectionResponse[]>
+    ) => {
+      state.collectedNFTsToShow = action.payload;
+    },
+    concatToCollectedNFTsToShow: (
+      state,
+      action: PayloadAction<NFTCollectionResponse[]>
+    ) => {
+      state.collectedNFTsToShow = state.collectedNFTsToShow.concat(
+        action.payload
+      );
+    },
+    setCreatedNFTsToShow: (
+      state,
+      action: PayloadAction<NFTCollectionResponse[]>
+    ) => {
+      state.createdNFTsToShow = action.payload;
+    },
+    concatToCreatedNFTsToShow: (
+      state,
+      action: PayloadAction<NFTCollectionResponse[]>
+    ) => {
+      state.createdNFTsToShow = state.createdNFTsToShow.concat(action.payload);
+    },
+  },
+});
 
-// DEFINE ACTIONS 
-export const { setETHNFTsCollected, setETHNFTsCreated, concatToETHNFTsCollected, concatToCollectedNFTsToShow, concatToCreatedNFTsToShow} = profileSlice.actions;
+// DEFINE ACTIONS
+export const {
+  setETHNFTsCollected,
+  setETHNFTsCreated,
+  concatToETHNFTsCollected,
+  concatToCollectedNFTsToShow,
+  setCollectedNFTsToShow,
+  concatToCreatedNFTsToShow,
+  setCreatedNFTsToShow,
+} = profileSlice.actions;
 // Not entirely sure on this ,,, This is how the docs describe it
 // Other code such as selectors can use the imported `RootState` type
 // Info: https://react-redux.js.org/tutorials/typescript-quick-start

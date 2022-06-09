@@ -1,10 +1,12 @@
 import styles from "../../styles/fontello.module.scss";
+import styles2 from "../../styles/Feed/postIconRow.module.scss";
 import {
   abbreviateRepostsNumber,
   getUSDForDiamond,
 } from "../../utils/global-context";
 import { useState } from "react";
 import { useAppSelector } from "../../utils/Redux/hooks";
+import { Dropdown } from "rsuite";
 
 const PostIconRow = ({
   postContent,
@@ -45,18 +47,37 @@ const PostIconRow = ({
 
   // Functions
   const getCurrentDiamondLevel = (): number => {
-    return postContent.PostEntryReaderState?.DiamondLevelBestowed || 0;
+    return postContent?.PostEntryReaderState?.DiamondLevelBestowed || 0;
   };
 
   const userHasReposted = (): boolean => {
     return (
-      postContent.PostEntryReaderState &&
-      postContent.PostEntryReaderState.RepostedByReader
+      postContent?.PostEntryReaderState &&
+      postContent?.PostEntryReaderState.RepostedByReader
     );
   };
 
   // Functions end
 
+  // Dom manipulation
+
+  const renderDropdownButton = (props, ref) => {
+    return (
+      <button
+        {...props}
+        ref={ref}
+        className={styles2.dropdown_button}
+        id="repostActionsButton"
+      >
+        <i
+          className={
+            styles.icon_repost_2 +
+            " feed-post-icon-row__icon background-hover-green"
+          }
+        ></i>
+      </button>
+    );
+  };
   return (
     <div className="mt-5px js-feed-post-icon-row__container fs-14px text-grey5 d-flex justify-content-between unselectable">
       {/* (click)="openModal($event)" */}
@@ -72,7 +93,7 @@ const PostIconRow = ({
           }
         ></i>
 
-        {!hideNumbers ? <span>{postContent.CommentCount}</span> : null}
+        {!hideNumbers ? <span>{postContent?.CommentCount}</span> : null}
       </div>
 
       {/*#dropdown="bs-dropdown"
@@ -82,74 +103,68 @@ const PostIconRow = ({
       <div
         className={[
           "btn-group cursor-pointer d-flex align-items-center feed-post-icon-hv",
-          !!postContent.PostEntryReaderState?.RepostedByReader
+          !!postContent?.PostEntryReaderState?.RepostedByReader
             ? "fc-green"
             : "",
         ].join(" ")}
       >
-        {/* dropdownToggle */}
-        <div
-          className="link--unstyled"
-          id="repostActionsButton"
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="false"
+        {/**dropdownMenu*/}
+        <Dropdown
+          placement="bottomStart"
+          renderToggle={renderDropdownButton}
+          className={styles2.dropdown}
         >
-          <i
-            className={
-              styles.icon_repost_2 +
-              " feed-post-icon-row__icon background-hover-green"
-            }
-          ></i>
-        </div>
+          {sendingRepostRequest ? (
+            <Dropdown.Item className="dropdown-menu-item d-block p-5px feed-post__dropdown-menu-item">
+              <div className="fc-muted">Loading...</div>
+            </Dropdown.Item>
+          ) : (
+            <>
+              {userHasReposted() ? (
+                <Dropdown.Item
+                  icon={<i className={styles.icon_repost + " icon-repost"}></i>}
+                  className="dropdown-menu-item d-block fs-12px link--unstyled p-5px feed-post__dropdown-menu-item"
+                >
+                  {/* (click)="_undoRepost($event)" THIS WAS ABOVE */}
+                  Hide
+                </Dropdown.Item>
+              ) : (
+                <>
+                  {/* (click)="_repost($event)" */}
+                  <Dropdown.Item
+                    icon={
+                      <i className={styles.icon_repost + " icon-repost"}></i>
+                    }
+                    className="dropdown-menu-item d-block fs-12px link--unstyled p-5px feed-post__dropdown-menu-item"
+                  >
+                    Repost
+                  </Dropdown.Item>
+                </>
+              )}
+              {/*(click)="openModal($event, true)"*/}
+              <Dropdown.Item
+                icon={
+                  <i
+                    className="fas fa-pencil-alt pl-5px"
+                    style={{ fontSize: "10px" }}
+                  ></i>
+                }
+                className="dropdown-menu-item d-block fs-12px link--unstyled p-5px feed-post__dropdown-menu-item"
+              >
+                Quote
+              </Dropdown.Item>
+            </>
+          )}
+        </Dropdown>
 
         {!hideNumbers ? (
           <span>
             {abbreviateRepostsNumber(
-              postContent.RepostCount,
-              postContent.QuoteRepostCount
+              postContent?.RepostCount,
+              postContent?.QuoteRepostCount
             )}
           </span>
         ) : null}
-
-        {/**dropdownMenu*/}
-        <div
-          className="dropdown-menu p-0 fs-12px border background-color-light-grey"
-          style={{ minWidth: "6rem" }}
-          aria-labelledby="repostActionsButton"
-        >
-          {sendingRepostRequest ? (
-            <div className="dropdown-menu-item d-block p-5px feed-post__dropdown-menu-item">
-              <div className="fc-muted">Loading...</div>
-            </div>
-          ) : (
-            <>
-              {userHasReposted() ? (
-                <a className="dropdown-menu-item d-block link--unstyled p-5px feed-post__dropdown-menu-item">
-                  {/* (click)="_undoRepost($event)" THIS WAS ABOVE */}
-                  <i className={styles.icon_repost + " fs-12px"}></i>
-                  Hide
-                </a>
-              ) : (
-                <>
-                  {/* (click)="_repost($event)" */}
-                  <a className="dropdown-menu-item d-block link--unstyled p-5px feed-post__dropdown-menu-item">
-                    <i className={styles.icon_repost + " fs-12px"}></i>
-                    Repost
-                  </a>
-                </>
-              )}
-              {/*(click)="openModal($event, true)"*/}
-              <a className="dropdown-menu-item d-block link--unstyled p-5px feed-post__dropdown-menu-item">
-                <i
-                  className="fas fa-pencil-alt pl-5px"
-                  style={{ fontSize: "10px" }}
-                ></i>
-                Quote
-              </a>
-            </>
-          )}
-        </div>
       </div>
 
       {/*(click)="toggleLike($event)"
@@ -166,15 +181,15 @@ const PostIconRow = ({
             "feed-post-icon-row__icon background-hover-red",
             animateLike ? "is_animating" : "",
             (
-              postContent.PostEntryReaderState
-                ? !postContent.PostEntryReaderState.LikedByReader
+              postContent?.PostEntryReaderState
+                ? !postContent?.PostEntryReaderState.LikedByReader
                 : true
             )
               ? styles.icon_heart_2
               : "",
             (
-              postContent.PostEntryReaderState
-                ? postContent.PostEntryReaderState.LikedByReader
+              postContent?.PostEntryReaderState
+                ? postContent?.PostEntryReaderState.LikedByReader
                 : false
             )
               ? styles.icon_heart_fill
@@ -234,7 +249,7 @@ const PostIconRow = ({
             className={[
               "feed-post-icon-row__icon",
               !sendingDiamonds ? styles.icon_diamond : "fas fa-spinner fa-spin",
-              postContent.PostEntryReaderState?.DiamondLevelBestowed > 0
+              postContent?.PostEntryReaderState?.DiamondLevelBestowed > 0
                 ? styles.icon_diamond_fill
                 : "",
             ].join(" ")}

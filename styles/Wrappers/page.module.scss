@@ -1,5 +1,8 @@
 .page_main_wrapper {
-    padding-top: 80px;
+    padding-top: 84px;
+    @media screen and (max-width: 992px) {
+        padding-top: 63px;
+    }
 }
 .m_inner_wrapper {
     width: 1205px;

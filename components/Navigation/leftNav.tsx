@@ -27,7 +27,7 @@ const LeftNav = () => {
         ></LeftNavButton>
         <LeftNavButton
           hasNotifications="false"
-          link="/browser"
+          link="/"
           imgSrc={feedIcon}
           label="Feed"
         ></LeftNavButton>

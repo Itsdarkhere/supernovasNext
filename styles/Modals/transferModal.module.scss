@@ -1,0 +1,108 @@
+.modal-container {
+    height: 500px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center !important;
+    align-items: center;
+}
+
+.select-transfer-modal {
+    width: 200px;
+    height: calc(1.5em + .75rem + 2px);
+    border-radius: 30px;
+    border: 1px solid var(--border);
+    background: url(http://cdn1.iconfinder.com/data/icons/cc_mono_icon_set/blacks/16x16/br_down.png) no-repeat right rgb(255, 255, 255);
+    -webkit-appearance: none;
+    background-position-x: calc(100% - 10px);
+    background-size: 12px auto;
+}
+
+.transfer-modal-button {
+    border-radius: 5px;
+    color: white;
+    outline: none;
+    border: none;
+    font-weight: bold;
+    width: 349.92px;
+    max-width: 100%;
+    height: 66px;
+    background: #313131;
+    border: 0.28458px solid #000000;
+    box-shadow: 0.794738px 0.794738px 3.97369px 0.397369px rgba(0, 0, 0, 0.11), inset 0px -1.51437px 15.1437px 7.57187px #000000;
+    border-radius: 55.7175px;
+    &:hover {
+        transform: scale(1.03);
+        transition-duration: 0.3s;
+    }
+}
+
+.textarea-transfer {
+    border-radius: 5px !important;
+}
+
+.overwrite-min-height {
+    min-height: 450px !important;
+}
+
+.overwrite-min-height2 {
+    min-height: 400px !important;
+}
+
+.accept-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.mb--12px {
+    margin-bottom: -12px;
+}
+
+@media (max-width: 950px) {
+    .mb--12px {
+        margin-bottom: 0px;
+    }
+}
+
+.transfer-label {
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 37px;
+    text-align: center;
+}
+
+.burn-text {
+    font-weight: normal;
+    font-size: 18px;
+}
+
+.transfer-button {
+    background: #313131;
+    border: 0.28458px solid #000000;
+    box-shadow: 0.794738px 0.794738px 3.97369px 0.397369px rgba(0, 0, 0, 0.11), inset 0px -1.51437px 15.1437px 7.57187px #000000;
+    border-radius: 55.7175px;
+    height: 66px;
+}
+
+.accept-button {
+    background: #313131 !important;
+    border: 0.190811px solid #000000;
+    box-shadow: 0.53287px 0.53287px 2.66435px 0.266435px rgba(0, 0, 0, 0.11), inset 0px -1.01538px 10.1538px 5.07692px #000000;
+    border-radius: 37.3585px;
+    max-width: 350px;
+    height: 66px;
+}
+
+.burn-button {
+    background: linear-gradient(45deg, #f3a83c 0%, #ec5454 20%, #f51ac1 35%, #2749f0 74%, #593eb7 99%) !important;
+}
+
+.burn-button2 {
+    background-color: #000000;
+}
+
+.success-img {
+    transform: scale(0.95);
+}

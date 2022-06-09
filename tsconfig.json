@@ -23,7 +23,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-, "next.config.js"  ],
+, "next.config.js", "components/NFT/ETHNFTPostPage"  ],
   "exclude": [
     "node_modules"
   ]

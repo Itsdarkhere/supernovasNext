@@ -22,7 +22,10 @@ const CategorySection = ({ viewAll }) => {
       <div ref={sliderRef} className="keen-slider">
         <div
           onClick={() => viewAll("art")}
-          className={styles.category_slide1 + " keen-slider__slide pt-10px cursor-pointer"}
+          className={
+            styles.category_slide1 +
+            " keen-slider__slide pt-10px cursor-pointer"
+          }
         >
           <Image
             layout="fill"
@@ -34,7 +37,10 @@ const CategorySection = ({ viewAll }) => {
         </div>
         <div
           onClick={() => viewAll("collectibles")}
-          className={styles.category_slide1 + " keen-slider__slide pt-10px cursor-pointer"}
+          className={
+            styles.category_slide1 +
+            " keen-slider__slide pt-10px cursor-pointer"
+          }
         >
           <Image
             layout="fill"
@@ -46,7 +52,10 @@ const CategorySection = ({ viewAll }) => {
         </div>
         <div
           onClick={() => viewAll("generative")}
-          className={styles.category_slide1 + " keen-slider__slide pt-10px cursor-pointer"}
+          className={
+            styles.category_slide1 +
+            " keen-slider__slide pt-10px cursor-pointer"
+          }
         >
           <Image
             layout="fill"
@@ -58,7 +67,10 @@ const CategorySection = ({ viewAll }) => {
         </div>
         <div
           onClick={() => viewAll("metaverse")}
-          className={styles.category_slide1 + " keen-slider__slide pt-10px cursor-pointer"}
+          className={
+            styles.category_slide1 +
+            " keen-slider__slide pt-10px cursor-pointer"
+          }
         >
           <Image
             layout="fill"
@@ -70,7 +82,10 @@ const CategorySection = ({ viewAll }) => {
         </div>
         <div
           onClick={() => viewAll("categorymusic")}
-          className={styles.category_slide1 + " keen-slider__slide pt-10px cursor-pointer"}
+          className={
+            styles.category_slide1 +
+            " keen-slider__slide pt-10px cursor-pointer"
+          }
         >
           <Image
             layout="fill"
@@ -82,7 +97,10 @@ const CategorySection = ({ viewAll }) => {
         </div>
         <div
           onClick={() => viewAll("profilepic")}
-          className={styles.category_slide1 + " keen-slider__slide pt-10px cursor-pointer"}
+          className={
+            styles.category_slide1 +
+            " keen-slider__slide pt-10px cursor-pointer"
+          }
         >
           <Image
             layout="fill"
@@ -94,7 +112,10 @@ const CategorySection = ({ viewAll }) => {
         </div>
         <div
           onClick={() => viewAll("photography")}
-          className={styles.category_slide1 + " keen-slider__slide pt-10px cursor-pointer"}
+          className={
+            styles.category_slide1 +
+            " keen-slider__slide pt-10px cursor-pointer"
+          }
         >
           <Image
             layout="fill"
@@ -107,10 +128,13 @@ const CategorySection = ({ viewAll }) => {
       </div>
       {/* (click)="slider2.next() PUT BACK, Also fix all css to use stylesheet as intended"
        *ngIf="!mobile" */}
-      <button className={styles.discovery_arrow_box} onClick={(e) => {
-         e.stopPropagation();
-         instanceRef.current?.next();
-      }}>
+      <button
+        className={styles.discovery_arrow_box}
+        onClick={(e) => {
+          e.stopPropagation();
+          instanceRef.current?.next();
+        }}
+      >
         <Image
           height={40}
           width={40}

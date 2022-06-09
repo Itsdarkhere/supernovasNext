@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
+import "rsuite/dist/rsuite.min.css";
 import "../styles/globals.scss";
 import { Subscription } from "rxjs";
 import * as _ from "lodash";
+import { config } from "@fortawesome/fontawesome-svg-core";
+import "@fortawesome/fontawesome-svg-core/styles.css";
+config.autoAddCss = false;
 import {
   GetStorage,
   MessageMetaKey,

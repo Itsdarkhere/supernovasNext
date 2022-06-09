@@ -11,8 +11,15 @@ const NFTCardFooter = ({ showIconRow, postContent }) => {
       </div>
 
       <div className={styles.footer_icons_container + " w-80"}>
-        {showIconRow ? (
-          <PostIconRow postContent={postContent}></PostIconRow>
+        {showIconRow && postContent ? (
+          <PostIconRow
+            postContent={postContent}
+            hideNumbers={undefined}
+            post={postContent}
+            parentPost={undefined}
+            afterCommentCreatedCallback={undefined}
+            afterRepostCreatedCallback={undefined}
+          ></PostIconRow>
         ) : null}
       </div>
     </>

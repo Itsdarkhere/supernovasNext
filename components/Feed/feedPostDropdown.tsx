@@ -5,6 +5,10 @@ import transferIcon from "../../public/icons/transfer-icon.svg";
 import hideIcon from "../../public/icons/hide-icon.svg";
 import reportIcon from "../../public/icons/report-icon.svg";
 import blockIcon from "../../public/icons/block-icon.svg";
+import { Dropdown } from "rsuite";
+import { IconButton } from "rsuite";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
 
 import Image from "next/image";
 import {
@@ -103,6 +107,19 @@ const FeedPostDropdown = ({
     });
   };
 
+  const renderDropdownButton = (props, ref) => {
+    return (
+      <IconButton
+        {...props}
+        className={styles.dropdown_button}
+        ref={ref}
+        circle
+        color="white"
+        icon={<FontAwesomeIcon icon={faEllipsis} className="cursor-pointer" />}
+      />
+    );
+  };
+
   const showBlockUserDropdownItem = () => {
     if (!loggedInUser) {
       return false;
@@ -114,14 +131,12 @@ const FeedPostDropdown = ({
       !hasUserBlockedCreator(post.PosterPublicKeyBase58Check)
     );
   };
-  // Functions end
-  // dropdown (click)="$event.stopPropagation()" container="body"
   return (
-    <div className="d-flex" style={{ alignItems: "center" }}>
+    <div className="ml-auto d-flex flex-row flex-center">
       <div className="d-flex fs-12px fc-muted" style={{ paddingRight: "6px" }}>
         {/*  #tooltip="matTooltip"
-      [matTooltip]="globalVars.convertTstampToDateTime(postContent.TimestampNanos)" 
-      matTooltipClass="global__mat-tooltip global__mat-tooltip-font-size"*/}
+       [matTooltip]="globalVars.convertTstampToDateTime(postContent.TimestampNanos)"
+       matTooltipClass="global__mat-tooltip global__mat-tooltip-font-size"*/}
         <span
           className="d-inline-block ml-1 cursor-pointer lh-12px fc-muted align-middle"
           mat-raised-button
@@ -129,125 +144,151 @@ const FeedPostDropdown = ({
           {convertTstampToDaysOrHours(postContent?.TimestampNanos)}
         </span>
       </div>
-      {/* dropdownToggle */}
-      <a
-        className="js-feed-post__dropdown-toggle link--unstyled text-grey9"
-        role="button"
+      <Dropdown
+        placement="bottomEnd"
+        renderToggle={renderDropdownButton}
+        className={styles.dropdown}
       >
-        <i className="fas fa-ellipsis-h"></i>
-      </a>
-      {/* *dropdownMenu */}
-      <div className="dropdown-menu dropdown-menu-right p-0">
         {/* (click)="copyPostLinkToClipboard($event)" */}
-        <a className="dropdown-menu-item fs-12px d-block link--unstyled p-10px feed-post__dropdown-menu-item font-weight-semiboldn">
-          <Image src={linkIcon} height={15} alt="link icon" />
+        <Dropdown.Item
+          icon={<Image src={linkIcon} height={15} alt="link icon" />}
+          className="dropdown-menu-item fs-12px font-weight-semiboldn"
+        >
           Link to Post
-        </a>
+        </Dropdown.Item>
         {/* <!-- put on sale deso --> */}
         {/* (click)="openCreateNFTAuctionModal($event)" */}
         {showCreateNFTAuction() ? (
-          <a className="dropdown-menu-item fs-12px d-block link--unstyled p-10px feed-post__dropdown-menu-item font-weight-semiboldn">
-            <Image src={putForSaleIcon} height={15} alt="put for sale icon" />
+          <Dropdown.Item
+            icon={
+              <Image src={putForSaleIcon} height={15} alt="put for sale icon" />
+            }
+            className="dropdown-menu-item fs-12px font-weight-semiboldn"
+          >
             Put On Sale
-          </a>
+          </Dropdown.Item>
         ) : null}
 
         {/* <!-- put on sale eth --> */}
         {/* (click)="openCreateETHNFTAuctionModal($event)" */}
         {showCreateETHNFTAuction() ? (
-          <a className="dropdown-menu-item fs-12px d-block link--unstyled p-10px feed-post__dropdown-menu-item font-weight-semiboldn">
-            <Image src={putForSaleIcon} height={15} alt="put for sale icon" />
+          <Dropdown.Item
+            icon={
+              <Image src={putForSaleIcon} height={15} alt="put for sale icon" />
+            }
+            className="dropdown-menu-item fs-12px font-weight-semiboldn"
+          >
             Put On Sale
-          </a>
+          </Dropdown.Item>
         ) : null}
 
         {/* (click)="openTransferModal($event)" */}
         {showCreateNFTAuction() ? (
-          <a className="dropdown-menu-item fs-12px d-block link--unstyled p-10px feed-post__dropdown-menu-item font-weight-semiboldn">
-            <Image src={transferIcon} height={15} alt="transfer icon" />
+          <Dropdown.Item
+            icon={<Image src={transferIcon} height={15} alt="transfer icon" />}
+            className="dropdown-menu-item fs-12px font-weight-semiboldn"
+          >
             Transfer
-          </a>
+          </Dropdown.Item>
         ) : null}
 
         {/* (click)="openBurnModal($event)" */}
         {showCreateNFTAuction() ? (
-          <a className="dropdown-menu-item fs-12px d-block link--unstyled p-10px feed-post__dropdown-menu-item font-weight-semiboldn">
-            <Image src={hideIcon} height={15} alt="burn icon" />
+          <Dropdown.Item
+            icon={<Image src={hideIcon} height={15} alt="burn icon" />}
+            className="dropdown-menu-item fs-12px d-block link--unstyled p-10px feed-post__dropdown-menu-item font-weight-semiboldn"
+          >
             Burn
-          </a>
+          </Dropdown.Item>
         ) : null}
 
         {/* (click)="dropNFT()" */}
         {post.IsNFT && showAdminTools() ? (
-          <a className="dropdown-menu-item fs-12px d-block link--unstyled p-10px feed-post__dropdown-menu-item font-weight-semiboldn">
-            <i className="fas fa-tint"></i>
+          <Dropdown.Item
+            icon={<i className="fas fa-tint"></i>}
+            className="dropdown-menu-item fs-12px d-block link--unstyled p-10px feed-post__dropdown-menu-item font-weight-semiboldn"
+          >
             Add NFT to drop
-          </a>
+          </Dropdown.Item>
         ) : null}
 
         {post.InMempool ? (
-          <a
+          <Dropdown.Item
+            icon={<i className="fas fa-spinner"></i>}
             className="dropdown-menu-item fs-12px d-block link--unstyled p-10px feed-post__dropdown-menu-item font-weight-semiboldn"
             style={{ cursor: "default" }}
           >
-            <i className="fas fa-spinner"></i>
             Status: Mining...
-          </a>
+          </Dropdown.Item>
         ) : null}
 
         {/* (click)="reportPost()" */}
-        <a className="dropdown-menu-item border-top fs-12px d-block link--unstyled p-10px feed-post__dropdown-menu-item font-weight-semiboldn feed-post__dropdown-menu-item-color-light">
-          <Image src={reportIcon} height={15} alt="report icon" />
+        <Dropdown.Item
+          icon={<Image src={reportIcon} height={15} alt="report icon" />}
+          className="dropdown-menu-item border-top fs-12px font-weight-semiboldn"
+        >
           Report Content
-        </a>
+        </Dropdown.Item>
 
         {/*(click)="hidePost()" */}
-        <a className="dropdown-menu-item fs-12px d-block link--unstyled p-10px feed-post__dropdown-menu-item font-weight-semiboldn feed-post__dropdown-menu-item-color-light">
-          <Image src={hideIcon} height={15} alt="hide icon" />
+        <Dropdown.Item
+          icon={<Image src={hideIcon} height={15} alt="hide icon" />}
+          className="dropdown-menu-item fs-12px d-block link--unstyled p-10px feed-post__dropdown-menu-item font-weight-semiboldn feed-post__dropdown-menu-item-color-light"
+        >
           Hide
-        </a>
+        </Dropdown.Item>
 
         {/* (click)="blockUser()" */}
         {showBlockUserDropdownItem() ? (
-          <a className="dropdown-menu-item fs-12px d-block link--unstyled p-10px feed-post__dropdown-menu-item font-weight-semiboldn feed-post__dropdown-menu-item-color-light">
-            <Image src={blockIcon} height={15} alt="block icon" />
+          <Dropdown.Item
+            icon={<Image src={blockIcon} height={15} alt="block icon" />}
+            className="dropdown-menu-item fs-12px d-block link--unstyled p-10px feed-post__dropdown-menu-item font-weight-semiboldn feed-post__dropdown-menu-item-color-light"
+          >
             Block User
-          </a>
+          </Dropdown.Item>
         ) : null}
 
         {/*(click)="_addPostToGlobalFeed($event)" */}
         {showAddToGlobalFeedDropdownItem() ? (
-          <a className="dropdown-menu-item d-block link--unstyled p-10px feed-post__dropdown-menu-item font-weight-semiboldn fs-12px">
-            <i className="fas fa-folder-plus"></i>
+          <Dropdown.Item
+            icon={<i className="fas fa-folder-plus"></i>}
+            className="dropdown-menu-item d-block link--unstyled p-10px feed-post__dropdown-menu-item font-weight-semiboldn fs-12px"
+          >
             Add To Feed
-          </a>
+          </Dropdown.Item>
         ) : null}
 
         {/*
       (click)="_addPostToGlobalFeed($event)" */}
         {showRemoveFromGlobalFeedDropdownItem() ? (
-          <a className="dropdown-menu-item d-block link--unstyled p-10px feed-post__dropdown-menu-item font-weight-semiboldn fs-12px">
-            <i className="fas fa-folder-minus"></i>
+          <Dropdown.Item
+            icon={<i className="fas fa-folder-minus"></i>}
+            className="dropdown-menu-item d-block link--unstyled p-10px feed-post__dropdown-menu-item font-weight-semiboldn fs-12px"
+          >
             Remove From Feed
-          </a>
+          </Dropdown.Item>
         ) : null}
 
         {/* (click)="_pinPostToGlobalFeed($event)" */}
         {showPinPostToGlobalFeedDropdownItem() ? (
-          <a className="dropdown-menu-item d-block link--unstyled p-10px feed-post__dropdown-menu-item font-weight-semiboldn fs-12px">
-            <i className="fas fa-thumbtack"></i>
+          <Dropdown.Item
+            icon={<i className="fas fa-thumbtack"></i>}
+            className="dropdown-menu-item d-block link--unstyled p-10px feed-post__dropdown-menu-item font-weight-semiboldn fs-12px"
+          >
             Pin To Feed
-          </a>
+          </Dropdown.Item>
         ) : null}
 
         {/*(click)="_pinPostToGlobalFeed($event)" */}
         {showUnpinPostFromGlobalFeedDropdownItem() ? (
-          <a className="dropdown-menu-item d-block link--unstyled p-10px feed-post__dropdown-menu-item font-weight-semiboldn fs-12px">
-            <i className="fas fa-undo"></i>
+          <Dropdown.Item
+            icon={<i className="fas fa-undo"></i>}
+            className="dropdown-menu-item d-block link--unstyled p-10px feed-post__dropdown-menu-item font-weight-semiboldn fs-12px"
+          >
             Unpin From Feed
-          </a>
+          </Dropdown.Item>
         ) : null}
-      </div>
+      </Dropdown>
     </div>
   );
 };

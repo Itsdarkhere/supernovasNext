@@ -11,7 +11,7 @@ export function youtubeParser(url): string | boolean {
 }
 
 export function constructYoutubeEmbedURL(url: URL): string {
-  const youtubeVideoID = this.youtubeParser(url.toString());
+  const youtubeVideoID = youtubeParser(url.toString());
   // If we can't find the videoID, return the empty string which stops the iframe from loading.
   return youtubeVideoID
     ? `https://www.youtube.com/embed/${youtubeVideoID}`
@@ -26,7 +26,7 @@ export function vimeoParser(url: string): string | boolean {
 }
 
 export function constructVimeoEmbedURL(url: URL): string {
-  const vimeoVideoID = this.vimeoParser(url.toString());
+  const vimeoVideoID = vimeoParser(url.toString());
   return vimeoVideoID ? `https://player.vimeo.com/video/${vimeoVideoID}` : "";
 }
 
@@ -38,7 +38,7 @@ export function giphyParser(url: string): string | boolean {
 }
 
 export function constructGiphyEmbedURL(url: URL): string {
-  const giphyId = this.giphyParser(url.toString());
+  const giphyId = giphyParser(url.toString());
   return giphyId ? `https://giphy.com/embed/${giphyId}` : "";
 }
 
@@ -58,7 +58,7 @@ export function spotifyParser(url: string): string | boolean {
 }
 
 export function constructSpotifyEmbedURL(url: URL): string {
-  const spotifyEmbedSuffix = this.spotifyParser(url.toString());
+  const spotifyEmbedSuffix = spotifyParser(url.toString());
   return spotifyEmbedSuffix
     ? `https://open.spotify.com/${spotifyEmbedSuffix}`
     : "";
@@ -71,7 +71,7 @@ export function soundCloudParser(url: string): string | boolean {
 }
 
 export function constructSoundCloudEmbedURL(url: URL): string {
-  const soundCloudURL = this.soundCloudParser(url.toString());
+  const soundCloudURL = soundCloudParser(url.toString());
   return soundCloudURL
     ? `https://w.soundcloud.com/player/?url=https://${soundCloudURL}?hide_related=true&show_comments=false`
     : "";
@@ -125,7 +125,7 @@ export function twitchParser(url: string): string | boolean {
 }
 
 export function constructTwitchEmbedURL(url: URL): string {
-  const twitchParsed = this.twitchParser(url.toString());
+  const twitchParsed = twitchParser(url.toString());
   return twitchParsed ? `https://${twitchParsed}` : "";
 }
 
@@ -154,11 +154,11 @@ export function tiktokParser(
     }
     return GetFullTikTokURL(localNode, match[2]).pipe(
       map((res) => {
-        return this.extractTikTokVideoID(res);
+        return extractTikTokVideoID(res);
       })
     );
   } else {
-    return of(this.extractTikTokVideoID(url));
+    return of(extractTikTokVideoID(url));
   }
 }
 
@@ -166,7 +166,7 @@ export function constructTikTokEmbedURL(
   localNode: string,
   url: URL
 ): Observable<string> {
-  return this.tiktokParser(localNode, url.toString()).pipe(
+  return tiktokParser(localNode, url.toString()).pipe(
     map((res) => {
       return res ? `https://www.tiktok.com/embed/v2/${res}` : "";
     })
@@ -186,30 +186,30 @@ export function getEmbedURL(
   } catch (e) {
     // If the embed video URL doesn't start with http(s), try the url with that as a prefix.
     if (!embedURL.startsWith("https://") && !embedURL.startsWith("http://")) {
-      return this.getEmbedURL(localNode, `https://${embedURL}`);
+      return getEmbedURL(localNode, `https://${embedURL}`);
     }
     return of("");
   }
-  if (this.isYoutubeFromURL(url)) {
-    return of(this.constructYoutubeEmbedURL(url));
+  if (isYoutubeFromURL(url)) {
+    return of(constructYoutubeEmbedURL(url));
   }
-  if (this.isVimeoFromURL(url)) {
-    return of(this.constructVimeoEmbedURL(url));
+  if (isVimeoFromURL(url)) {
+    return of(constructVimeoEmbedURL(url));
   }
-  if (this.isTiktokFromURL(url)) {
-    return this.constructTikTokEmbedURL(localNode, url);
+  if (isTiktokFromURL(url)) {
+    return constructTikTokEmbedURL(localNode, url);
   }
-  if (this.isGiphyFromURL(url)) {
-    return of(this.constructGiphyEmbedURL(url));
+  if (isGiphyFromURL(url)) {
+    return of(constructGiphyEmbedURL(url));
   }
-  if (this.isSpotifyFromURL(url)) {
-    return of(this.constructSpotifyEmbedURL(url));
+  if (isSpotifyFromURL(url)) {
+    return of(constructSpotifyEmbedURL(url));
   }
-  if (this.isSoundCloudFromURL(url)) {
-    return of(this.constructSoundCloudEmbedURL(url));
+  if (isSoundCloudFromURL(url)) {
+    return of(constructSoundCloudEmbedURL(url));
   }
-  if (this.isTwitchFromURL(url)) {
-    return of(this.constructTwitchEmbedURL(url)).pipe(
+  if (isTwitchFromURL(url)) {
+    return of(constructTwitchEmbedURL(url)).pipe(
       map((embedURL) =>
         embedURL ? embedURL + `&autoplay=false&parent=${location.hostname}` : ""
       )
@@ -221,7 +221,7 @@ export function getEmbedURL(
 export function isVimeoLink(link: string): boolean {
   try {
     const url = new URL(link);
-    return this.isVimeoFromURL(url);
+    return isVimeoFromURL(url);
   } catch (e) {
     return false;
   }
@@ -235,7 +235,7 @@ export function isVimeoFromURL(url: URL): boolean {
 export function isYoutubeLink(link: string): boolean {
   try {
     const url = new URL(link);
-    return this.isYoutubeFromURL(url);
+    return isYoutubeFromURL(url);
   } catch (e) {
     return false;
   }
@@ -249,7 +249,7 @@ export function isYoutubeFromURL(url: URL): boolean {
 export function isTikTokLink(link: string): boolean {
   try {
     const url = new URL(link);
-    return this.isTiktokFromURL(url);
+    return isTiktokFromURL(url);
   } catch (e) {
     return false;
   }
@@ -263,7 +263,7 @@ export function isTiktokFromURL(url: URL): boolean {
 export function isGiphyLink(link: string): boolean {
   try {
     const url = new URL(link);
-    return this.isGiphyFromURL(url);
+    return isGiphyFromURL(url);
   } catch (e) {
     return false;
   }
@@ -277,7 +277,7 @@ export function isGiphyFromURL(url: URL): boolean {
 export function isSpotifyLink(link: string): boolean {
   try {
     const url = new URL(link);
-    return this.isSpotifyFromURL(url);
+    return isSpotifyFromURL(url);
   } catch (e) {
     return false;
   }
@@ -291,7 +291,7 @@ export function isSpotifyFromURL(url: URL): boolean {
 export function isSoundCloudLink(link: string): boolean {
   try {
     const url = new URL(link);
-    return this.isSoundCloudFromURL(url);
+    return isSoundCloudFromURL(url);
   } catch (e) {
     return false;
   }
@@ -305,7 +305,7 @@ export function isSoundCloudFromURL(url: URL): boolean {
 export function isTwitchLink(link: string): boolean {
   try {
     const url = new URL(link);
-    return this.isTwitchFromURL(url);
+    return isTwitchFromURL(url);
   } catch (e) {
     return false;
   }
@@ -364,32 +364,32 @@ export function isValidTwitchEmbedURLWithParent(link: string): boolean {
 export function isValidEmbedURL(link: string): boolean {
   if (link) {
     return (
-      this.isValidVimeoEmbedURL(link) ||
-      this.isValidYoutubeEmbedURL(link) ||
-      this.isValidTiktokEmbedURL(link) ||
-      this.isValidGiphyEmbedURL(link) ||
-      this.isValidSpotifyEmbedURL(link) ||
-      this.isValidSoundCloudEmbedURL(link) ||
-      this.isValidTwitchEmbedURL(link) ||
-      this.isValidTwitchEmbedURLWithParent(link)
+      isValidVimeoEmbedURL(link) ||
+      isValidYoutubeEmbedURL(link) ||
+      isValidTiktokEmbedURL(link) ||
+      isValidGiphyEmbedURL(link) ||
+      isValidSpotifyEmbedURL(link) ||
+      isValidSoundCloudEmbedURL(link) ||
+      isValidTwitchEmbedURL(link) ||
+      isValidTwitchEmbedURLWithParent(link)
     );
   }
   return false;
 }
 
 export function getEmbedHeight(link: string): number {
-  if (this.isValidTiktokEmbedURL(link)) {
+  if (isValidTiktokEmbedURL(link)) {
     return 700;
   }
-  if (this.isValidSpotifyEmbedURL(link)) {
+  if (isValidSpotifyEmbedURL(link)) {
     return link.indexOf("embed-podcast") > -1 ? 232 : 380;
   }
-  if (this.isValidSoundCloudEmbedURL(link)) {
+  if (isValidSoundCloudEmbedURL(link)) {
     return link.indexOf("/sets/") > -1 ? 350 : 180;
   }
   return 315;
 }
 
 export function getEmbedWidth(link: string): string {
-  return this.isValidTiktokEmbedURL(link) ? "325px" : "";
+  return isValidTiktokEmbedURL(link) ? "325px" : "";
 }

@@ -48,9 +48,9 @@ const NFTCardBidInfo = ({
 
   // Dom manipulation
   const getSectionBasedOnChainAndSaleStatus = () => {
-    // Is not eth ( so its deso )    
+    // Is not eth ( so its deso )
     if (!postContent?.PostExtraData?.isEthereumNFT) {
-      if (postContent?.IsNFT && !pending) {        
+      if (postContent?.IsNFT && !pending) {
         // Basically deso nft not pending
         return (
           <div
@@ -94,7 +94,7 @@ const NFTCardBidInfo = ({
                         <p
                           className={
                             styles.overflow_ellipsis_price +
-                            "font-weight-semiboldn"
+                            " font-weight-semiboldn"
                           }
                         >
                           {highBid === 0
@@ -108,7 +108,7 @@ const NFTCardBidInfo = ({
                         <p
                           className={
                             styles.overflow_ellipsis_price +
-                            "font-weight-semiboldn"
+                            " font-weight-semiboldn"
                           }
                         >
                           {nanosToDeSo(lastSalePrice, 5)}
@@ -122,7 +122,7 @@ const NFTCardBidInfo = ({
                 {isBuyNow && isForSale ? (
                   <div className={styles.bid_buy_now}>
                     <button className={styles.nft_card_buy_now_button}>
-                      <Image height={"50%"} src={buyNowIcon} alt="lightning" />
+                      <Image height={15} src={buyNowIcon} alt="lightning" />
                       Buy Now
                     </button>
                   </div>
@@ -218,11 +218,11 @@ const NFTCardBidInfo = ({
         // Not for sale
         return (
           <div
-            className={
-              [styles.bid_cover,
+            className={[
+              styles.bid_cover,
               styles.eth_nft_not_for_sale_container,
-              styles.is_ethereum_nft_not_for_sale].join(" ")
-            }
+              styles.is_ethereum_nft_not_for_sale,
+            ].join(" ")}
           >
             <p className={styles.eth_nft_not_for_sale_text}>OWNER</p>
 

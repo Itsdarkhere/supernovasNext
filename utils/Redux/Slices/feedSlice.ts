@@ -13,9 +13,9 @@ interface FeedState {
 
 // Define state
 const initialState: FeedState = {
-  postsToShow: [],
-  followFeedPosts: [],
   hotFeedPosts: [],
+  followFeedPosts: [],
+  postsToShow: [],
 };
 
 export const feedSlice = createSlice({
@@ -25,18 +25,36 @@ export const feedSlice = createSlice({
     setFollowFeedPosts: (state, action: PayloadAction<PostEntryResponse[]>) => {
       state.followFeedPosts = action.payload;
     },
+    unShiftFollowFeedPosts: (
+      state,
+      action: PayloadAction<PostEntryResponse>
+    ) => {
+      state.postsToShow.unshift(action.payload);
+    },
     setHotFeedPosts: (state, action: PayloadAction<PostEntryResponse[]>) => {
       state.hotFeedPosts = action.payload;
     },
+    unShiftHotFeedPosts: (state, action: PayloadAction<PostEntryResponse>) => {
+      state.followFeedPosts.unshift(action.payload);
+    },
     setPostsToShow: (state, action: PayloadAction<PostEntryResponse[]>) => {
       state.postsToShow = action.payload;
+    },
+    unShiftPostsToShow: (state, action: PayloadAction<PostEntryResponse>) => {
+      state.postsToShow.unshift(action.payload);
     },
   },
 });
 
 // DEFINE ACTIONS
-export const { setFollowFeedPosts, setHotFeedPosts, setPostsToShow } =
-  feedSlice.actions;
+export const {
+  setFollowFeedPosts,
+  setHotFeedPosts,
+  setPostsToShow,
+  unShiftFollowFeedPosts,
+  unShiftHotFeedPosts,
+  unShiftPostsToShow,
+} = feedSlice.actions;
 // Not entirely sure on this ,,, This is how the docs describe it
 // Other code such as selectors can use the imported `RootState` type
 // Info: https://react-redux.js.org/tutorials/typescript-quick-start

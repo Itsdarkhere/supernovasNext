@@ -36,7 +36,7 @@ const NFTCardPost = ({
             parentPost={parentPost}
             afterCommentCreatedCallback={afterCommentCreatedCallback}
             afterRepostCreatedCallback={afterRepostCreatedCallback}
-            hideNumbers={false}
+            hideNumbers={undefined}
           ></PostIconRow>
         </div>
       </div>

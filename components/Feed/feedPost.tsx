@@ -13,7 +13,7 @@ import NFTCard from "../NFT/NFTCard/nftCard";
 import PostIconRow from "./postIconRow";
 import Image from "next/image";
 import Avatar from "../Reusables/avatar";
-import NFTEditionDropdown from "../NFT/NFTProfile/nftEditionDropdown";
+import NFTEditionDropdown from "../NFT/nftEditionDropdown";
 import FeedPostDropdown from "./feedPostDropdown";
 import { useEffect, useState } from "react";
 import nftBackground from "../../public/img/nft-background.svg";
@@ -26,6 +26,7 @@ import {
   NFTEntryResponse,
   parsePostError,
   PostEntryResponse,
+  RouteNames,
   stringifyError,
   SubmitPost,
 } from "../../utils/backendapi-context";
@@ -80,6 +81,7 @@ const FeedPost = ({
   diamondSent,
   userBlocked,
   postDeleted,
+  containerModalRef,
 }) => {
   const dispatch = useAppDispatch();
   const [hidingPost, setHidingPost] = useState(false);
@@ -422,18 +424,60 @@ const FeedPost = ({
           "" /*Sub*/,
           true /*IsHidden*/,
           feeRateDeSoPerKB * 1e9 /*feeRateNanosPerKB*/
-        ).subscribe(
-          (response) => {
+        ).subscribe({
+          next: (res) => {
             postDeleted(response.PostEntryResponse);
           },
-          (err) => {
+          error: (err) => {
             console.error(err);
             const parsedError = parsePostError(err);
             _alertError(parsedError);
-          }
-        );
+          },
+        });
       }
     });
+  };
+
+  const onPostClicked = (event) => {
+    if (containerModalRef !== null) {
+      containerModalRef.hide();
+    }
+
+    // if we shouldn't be navigating the user to a new page, just return
+    if (!contentShouldLinkToThread) {
+      return true;
+    }
+
+    // don't navigate if the user is selecting text
+    // from https://stackoverflow.com/questions/31982407/prevent-onclick-event-when-selecting-text
+    const selection = window.getSelection();
+    if (selection.toString().length !== 0) {
+      return true;
+    }
+
+    // don't navigate if the user clicked a link
+    if (event.target.tagName.toLowerCase() === "a") {
+      return true;
+    }
+
+    const route = postContent.IsNFT ? RouteNames.NFT : RouteNames.POSTS;
+
+    // identify ctrl+click (or) cmd+clik and opens feed in new tab
+    if (event.ctrlKey) {
+      // put back
+      // const url = this.router.serializeUrl(
+      //   this.router.createUrlTree(["/" + route, this.postContent.PostHashHex], {
+      //     queryParamsHandling: "merge",
+      //   })
+      // );
+      // window.open(url, "_blank");
+      // don't navigate after new tab is opened
+      return true;
+    }
+    // put back
+    // this.router.navigate(["/" + route, this.postContent.PostHashHex], {
+    //   queryParamsHandling: "merge",
+    // });
   };
 
   const blockUser = () => {
@@ -891,8 +935,8 @@ const FeedPost = ({
                       >
                         {/* (click)="openImgModal($event, postContent.ImageURLs[0])" */}
                         <Image
-                          height={200}
-                          width={200}
+                          width={680}
+                          height={400}
                           data-toggle="modal"
                           className="feed-post__image"
                           src={mapImageURLs(postContent?.ImageURLs[0])}
