@@ -4,25 +4,30 @@ import Image from "next/image";
 const ModalHeader = () => {
   return (
     <div className="w-100 d-flex nft_bid_header justify-content-between py-15px">
-      {/* *ngIf="!this.isBuyNow" */}
-      <div className="fs-20px head_txt lh-20px d-flex align-items-center font-weight-500">
-        { header }
-      </div>
-      {/* *ngIf="isBuyNow && clickedBuyNow" */}
-      <div className="buy-now-header-container">
-        <Image
-          src={lightningIcon}
-          className="buy-now-lightning-black-img"
-          alt="lightning icon"
-        />
-        <p className="buy-now-modal-header">Buy Now</p>
-      </div>
-      {/* *ngIf="isBuyNow && clickedPlaceABid" */}
-      <div className="buy-now-header-container">
-        <p className="buy-now-modal-header">Place a Bid</p>
-      </div>
-      {/* (click)="bsModalRef.hide()" */}
-      <div className="fs-25px lh-20px close_btn cursor-pointer pr-15px">
+      {!this.isBuyNow ? (
+        <div className="fs-20px head_txt lh-20px d-flex align-items-center font-weight-500">
+          {header}
+        </div>
+      ) : null}
+
+      {isBuyNow && clickedBuyNow ? (
+        <div className="buy-now-header-container">
+          <Image
+            src={lightningIcon}
+            className="buy-now-lightning-black-img"
+            alt="lightning icon"
+          />
+          <p className="buy-now-modal-header">Buy Now</p>
+        </div>
+      ) : null}
+
+      {isBuyNow && clickedPlaceABid ? (
+        <div className="buy-now-header-container">
+          <p className="buy-now-modal-header">Place a Bid</p>
+        </div>
+      ) : null}
+
+      <div onClick={() => bsModalRef.hide()} className="fs-25px lh-20px close_btn cursor-pointer pr-15px">
         <svg
           width="10"
           height="10"

@@ -29,10 +29,8 @@ const MarketplaceSortBar = ({ flyout }) => {
     }
   };
   // Functions
-  // <!--<div class="marketplace-nav-width position-relative"> Commented out to make position sticky work-->
   return (
     <>
-      {/* *ngIf="!flyout" */}
       {!flyout ? (
         <div className={styles.global__nav__sticky__marketplace}>
           <div
@@ -47,18 +45,45 @@ const MarketplaceSortBar = ({ flyout }) => {
               Status
             </label>
             <div className={styles.mlb_status_grid}>
-              {/*  (click)="statusClick('all')"
-                [ngClass]="{ selected: this.statusAll }" */}
-              <button className="font-weight-semibold fs-14px">All</button>
-              {/* (click)="statusClick('for sale')"
-                [ngClass]="{ selected: this.statusForSale }" */}
-              <button className="font-weight-semibold fs-14px">For Sale</button>
-              {/* (click)="statusClick('has bids')"
-                [ngClass]="{ selected: this.statusHasBids }" */}
-              <button className="font-weight-semibold fs-14px">Has Bids</button>
-              {/* (click)="statusClick('sold')"
-                [ngClass]="{ selected: this.statusSold }" */}
-              <button className="font-weight-semibold fs-14px">Sold</button>
+              <button
+                onClick={() => statusClick("all")}
+                className={[
+                  "font-weight-semibold fs-14px",
+                  statusAll ? "selected" : "",
+                ].join(" ")}
+              >
+                All
+              </button>
+
+              <button
+                onClick={() => statusClick("for sale")}
+                className={[
+                  "font-weight-semibold fs-14px",
+                  statusForSale ? "selected" : "",
+                ].join(" ")}
+              >
+                For Sale
+              </button>
+
+              <button
+                onClick={() => statusClick("has bids")}
+                className={[
+                  "font-weight-semibold fs-14px",
+                  statusHasBids ? "selected" : "",
+                ].join(" ")}
+              >
+                Has Bids
+              </button>
+
+              <button
+                onClick={() => statusClick("sold")}
+                className={[
+                  "font-weight-semibold fs-14px",
+                  statusSold ? "selected" : "",
+                ].join(" ")}
+              >
+                Sold
+              </button>
             </div>
             <label
               className={styles.marketplace_label}
@@ -70,19 +95,28 @@ const MarketplaceSortBar = ({ flyout }) => {
             {marketplacePriceRangeSet ? (
               <div className={styles.mlb_price_set_box}>
                 <span>{showPriceRange()}</span>
-                {/* (click)="resetPriceRange()" */}
-                <button></button>
+                <button onClick={() => resetPriceRange()}></button>
               </div>
             ) : (
               <div>
                 <div className={styles.mlb_price_inputs_container}>
-                  {/* [ngClass]="{ incorrect: priceRangeIncorrect }" [(ngModel)]="lowPrice" */}
-                  <input type="number" placeholder="Min" />
-                  {/* [ngClass]="{ incorrect: priceRangeIncorrect }" [(ngModel)]="highPrice" */}
-                  <input type="number" placeholder="Max" />
+                  <input
+                    value={lowPrice}
+                    type="number"
+                    placeholder="Min"
+                    className={priceRangeIncorrect ? "incorrect" : ""}
+                  />
+
+                  <input
+                    value={highPrice}
+                    type="number"
+                    placeholder="Max"
+                    className={priceRangeIncorrect ? "incorrect" : ""}
+                  />
                 </div>
-                {/* (click)="checkPriceRange()" */}
+
                 <button
+                  onClick={() => checkPriceRange()}
                   className="w-100 mt-5px white-rounded-button font-weight-semibold fs-14px py-5px"
                   style={{ color: "#2c2c2c" }}
                 >
@@ -97,11 +131,16 @@ const MarketplaceSortBar = ({ flyout }) => {
             >
               Market
             </label>
-            {/* [ngClass]="marketPrimary ? 'market-button-checked' : ''"
-            (click)="marketClick('primary')" */}
-            <button className={styles.marketplace_filter_button}>
-              {/* [checked]="marketPrimary" */}
+
+            <button
+              onClick={() => marketClick("primary")}
+              className={[
+                styles.marketplace_filter_button,
+                marketPrimary ? "market-button-checked" : "",
+              ].join(" ")}
+            >
               <input
+                checked={marketPrimary}
                 type="checkbox"
                 className={styles.marketplace_button_checkbox}
               />
@@ -109,11 +148,16 @@ const MarketplaceSortBar = ({ flyout }) => {
                 Primary
               </label>
             </button>
-            {/* [ngClass]="marketSecondary ? 'market-button-checked' : ''"
-            (click)="marketClick('secondary')" */}
-            <button className={styles.marketplace_filter_button + " mt-10px"}>
-              {/* [checked]="marketSecondary" */}
+            <button
+              onClick={() => marketClick("secondary")}
+              className={[
+                styles.marketplace_filter_button,
+                "mt-10px",
+                marketSecondary ? "market-button-checked" : "",
+              ].join(" ")}
+            >
               <input
+                checked={marketSecondary}
                 type="checkbox"
                 className={styles.marketplace_button_checkbox}
               />
@@ -128,9 +172,13 @@ const MarketplaceSortBar = ({ flyout }) => {
               Creators
             </label>
             <div className={styles.mrk_lb_selector}>
-              {/* (click)="creatorsClick('verified')"
-                [ngClass]="{ selected: creatorTypeVerified }" */}
-              <button className="fs-12px d-flex flex-row flex-center">
+              <button
+                onClick={() => creatorsClick("verified")}
+                className={[
+                  "fs-12px d-flex flex-row flex-center",
+                  creatorTypeVerified ? "selected" : "",
+                ].join(" ")}
+              >
                 <Image
                   src={checkmarkIcon}
                   className="mr-5px"
@@ -138,9 +186,14 @@ const MarketplaceSortBar = ({ flyout }) => {
                 />
                 Verified
               </button>
-              {/* (click)="creatorsClick('all')"
-                [ngClass]="{ selected: !creatorTypeVerified }" */}
-              <button className="fs-12px d-flex flex-row flex-center">
+
+              <button
+                onClick={() => creatorsClick("all")}
+                className={[
+                  "fs-12px d-flex flex-row flex-center",
+                  !creatorTypeVerified ? "selected" : "",
+                ].join(" ")}
+              >
                 <Image
                   src={marketGlobeIcon}
                   className="mr-5px"
@@ -149,17 +202,22 @@ const MarketplaceSortBar = ({ flyout }) => {
                 All
               </button>
             </div>
-            {/* [ngClass]="{ expanded: this.creatorTypeVerified }" */}
-            <div className={styles.verifiedAccordion + " disable-scrollbars"}>
+            <div
+              className={[
+                styles.verifiedAccordion,
+                "disable-scrollbars",
+                creatorTypeVerified ? "expanded" : "",
+              ].join(" ")}
+            >
               <label
                 className={styles.marketplace_label}
                 style={{ marginTop: "20px", paddingLeft: "10px" }}
               >
                 Category
               </label>
-              {/* (ngModelChange)="categorySelectChange($event)"
-                [ngModel]="NFTCategory" */}
               <select
+                value={NFTCategory}
+                onChange={(e) => categorySelectChange(e)}
                 className={styles.mrk_select + " " + styles.mrk_select_height}
               >
                 <option value="all">All</option>
@@ -179,9 +237,13 @@ const MarketplaceSortBar = ({ flyout }) => {
               >
                 Content format
               </label>
-              {/* [ngClass]="{ selected: formatAll }"
-                (click)="formatClick('all')" */}
-              <button className={styles.mlb_content_format_button}>
+              <button
+                onClick={() => formatClick("all")}
+                className={[
+                  styles.mlb_content_format_button,
+                  formatAll ? "selected" : "",
+                ].join(" ")}
+              >
                 <Image
                   src={marketGlobeIcon}
                   className="mr-5px"
@@ -193,8 +255,10 @@ const MarketplaceSortBar = ({ flyout }) => {
                 className={styles.mlb_status_grid}
                 style={{ paddingTop: "10px" }}
               >
-                {/* (click)="formatClick('images')" [ngClass]="{ selected: formatImages }" */}
-                <button>
+                <button
+                  onClick={() => formatClick("images")}
+                  className={formatImages ? "selected" : ""}
+                >
                   <Image
                     src={marketImagesIcon}
                     className="mb-5px"
@@ -202,8 +266,11 @@ const MarketplaceSortBar = ({ flyout }) => {
                   />
                   Images
                 </button>
-                {/* (click)="formatClick('video')" [ngClass]="{ selected: formatVideo }" */}
-                <button>
+
+                <button
+                  onClick={() => formatClick("video")}
+                  className={formatVideo ? "selected" : ""}
+                >
                   <Image
                     src={marketVideoIcon}
                     className="mb-5px"
@@ -211,8 +278,11 @@ const MarketplaceSortBar = ({ flyout }) => {
                   />
                   Video
                 </button>
-                {/* (click)="formatClick('music')" [ngClass]="{ selected: formatMusic }" */}
-                <button>
+
+                <button
+                  onClick={() => formatClick("music")}
+                  className={formatMusic ? "selected" : ""}
+                >
                   <Image
                     src={marketMusicIcon}
                     className="mb-5px"
@@ -220,8 +290,10 @@ const MarketplaceSortBar = ({ flyout }) => {
                   />
                   Music
                 </button>
-                {/* (click)="formatClick('3d')" [ngClass]="{ selected: format3D }" */}
-                <button>
+                <button
+                  onClick={() => formatClick("3d")}
+                  className={format3D ? "selected" : ""}
+                >
                   <Image
                     src={market3DIcon}
                     className="mb-5px"
@@ -233,8 +305,11 @@ const MarketplaceSortBar = ({ flyout }) => {
             </div>
           </div>
           <div className={styles.mlb_apply_button_container}>
-            {/* [disabled]="!canUserSort || priceRangeIncorrect" (click)="apply()" */}
-            <button className={styles.marketplace_apply_button}>
+            <button
+              disabled={!canUserSort || priceRangeIncorrect}
+              onClick={() => apply()}
+              className={styles.marketplace_apply_button}
+            >
               <Image
                 src={marketApplyIcon}
                 className="mr-5px"
@@ -248,229 +323,310 @@ const MarketplaceSortBar = ({ flyout }) => {
         <>
           {/*<!-- Style way aspect ration differently for mobile -->
         <!-- disable-scrollbars -->*/}
-          {/**ngIf="flyout"*/}
-          <div className={styles.flyout__nav__inner__marketplace}>
-            <div className={styles.nav_close_marketplace}>
-              {/* (click)="closeMenu()" */}
-              <Image src={closeSquare} className="cursor-pointer" alt="" />
-            </div>
-            <label className={styles.marketplace_flyout_label}>Status</label>
-            <div className={styles.mlb_flyout_status_grid}>
-              {/* (click)="statusClick('all')" [ngClass]="{ selected: this.statusAll }" */}
-              <button className="font-weight-semibold">
-                <p className={styles.center_absolute}>All</p>
-              </button>
-              {/* (click)="statusClick('for sale')" [ngClass]="{ selected: this.statusForSale }" */}
-              <button className="font-weight-semibold">
-                <p className={styles.center_absolute}>For Sale</p>
-              </button>
-              {/* (click)="statusClick('has bids')" [ngClass]="{ selected: this.statusHasBids }" */}
-              <button className="font-weight-semibold">
-                <p className={styles.center_absolute}>Has bids</p>
-              </button>
-              {/* (click)="statusClick('sold')" [ngClass]="{ selected: this.statusSold }" */}
-              <button className="font-weight-semibold">
-                <p className={styles.center_absolute}>Sold</p>
-              </button>
-            </div>
-            <label className={styles.marketplace_flyout_label}>
-              Price range
-            </label>
-            {marketplacePriceRangeSet ? (
-              <div>
-                <div className={styles.mlb_flyout_price_inputs_container}>
-                  {/* [ngClass]="{ incorrect: priceRangeIncorrect }" [(ngModel)]="lowPrice" */}
-                  <input type="number" placeholder="Min" />
-                  {/* [ngClass]="{ incorrect: priceRangeIncorrect }" [(ngModel)]="highPrice" */}
-                  <input type="number" placeholder="Max" />
-                </div>
-                {/* (click)="checkPriceRange()" */}
-                <button
-                  className={
-                    styles.flyout_set_price_button + " white-rounded-button"
-                  }
-                >
-                  Set Price
-                </button>
-              </div>
-            ) : (
-              <div className={styles.mlb_flyout_price_set_box}>
-                <span>{showPriceRange()}</span>
-                {/* (click)="resetPriceRange()" */}
-                <button></button>
-              </div>
-            )}
-
-            <label className={styles.marketplace_flyout_label}>Market</label>
-            {/* [ngClass]="marketPrimary ? 'market-button-checked' : ''"
-        (click)="marketClick('primary')" */}
-            <button className={styles.marketplace_flyout_filter_button}>
-              {/* [checked]="marketPrimary" */}
-              <input
-                type="checkbox"
-                className={styles.marketplace_button_checkbox}
-              />
-              <label className={styles.marketplace_flyout_checkbox_label}>
-                Primary
-              </label>
-            </button>
-            {/* [ngClass]="marketSecondary ? 'market-button-checked' : ''"
-        (click)="marketClick('secondary')" */}
-            <button
-              className={styles.marketplace_flyout_filter_button}
-              style={{ marginTop: "10px" }}
-            >
-              {/* [checked]="marketSecondary" */}
-              <input
-                type="checkbox"
-                className={styles.marketplace_button_checkbox}
-              />
-              <label className={styles.marketplace_flyout_checkbox_label}>
-                Secondary
-              </label>
-            </button>
-            <label className={styles.marketplace_flyout_label}>Creators</label>
-            <div className={styles.mrk_flyout_lb_selector}>
-              {/* (click)="creatorsClick('verified')"
-        [ngClass]="{ selected: creatorTypeVerified }" */}
-              <button className="d-flex flex-row flex-center">
-                <span className={styles.center_absolute}>
-                  <Image
-                    src={checkmarkIcon}
-                    className="mr-5px"
-                    alt="image-icon"
-                  />
-                  Verified
-                </span>
-              </button>
-              {/* (click)="creatorsClick('all')"
-        [ngClass]="{ selected: !creatorTypeVerified }" */}
-              <button className="d-flex flex-row flex-center">
-                <span className={styles.center_absolute}>
-                  <Image
-                    src={marketGlobeIcon}
-                    className="mr-5px"
-                    alt="image-icon"
-                  />
-                  All
-                </span>
-              </button>
-            </div>
-            {/* <!-- disable-scrollbars --> */}
-            {/* [ngClass]="{ expanded: this.creatorTypeVerified }" */}
-            <div className={styles.verifiedFlyoutAccordion}>
-              <label className={styles.marketplace_flyout_label}>
-                Category
-              </label>
-              {/* (ngModelChange)="categorySelectChange($event)"
-        [ngModel]="NFTCategory" */}
-              <select className={styles.mrk_select_flyout}>
-                <option value="all" className="target">
-                  All
-                </option>
-                <option value="photography">Photography</option>
-                <option value="art">Art</option>
-                <option value="collectibles">Collectibles</option>
-                <option value="generative art">Generative Art</option>
-                <option value="metaverse">Metaverse & Gaming</option>
-                <option value="music">Music</option>
-                <option value="profile picture">
-                  Profile Picture Collection
-                </option>
-              </select>
-              <label className={styles.marketplace_flyout_label}>
-                Content format
-              </label>
-              {/* [ngClass]="{ selected: formatAll }"
-        (click)="formatClick('All')" */}
-              <button className={styles.mlb_flyout_content_format_button}>
-                <span className={styles.left_center_absolute}>
-                  <Image
-                    src={marketGlobeIcon}
-                    className="mr-5px"
-                    alt="image-icon"
-                  />
-                  All
-                </span>
-              </button>
-              <div
-                className={styles.mlb_flyout_status_grid}
-                style={{ paddingTop: "10px" }}
-              >
-                {/* (click)="formatClick('images')" [ngClass]="{ selected: formatImages }" */}
-                <button>
-                  <span
-                    className={styles.center_absolute}
-                    style={{ display: "flex", flexDirection: "column" }}
-                  >
-                    <Image
-                      src={marketImagesIcon}
-                      className="mb-5px"
-                      alt="image-icon"
-                    />
-                    Images
-                  </span>
-                </button>
-                {/* (click)="formatClick('video')" [ngClass]="{ selected: formatVideo }" */}
-                <button>
-                  <span
-                    className={styles.center_absolute}
-                    style={{ display: "flex", flexDirection: "column" }}
-                  >
-                    <Image
-                      src={marketVideoIcon}
-                      className="mb-5px"
-                      alt="image-icon"
-                    />
-                    Video
-                  </span>
-                </button>
-                {/* (click)="formatClick('music')" [ngClass]="{ selected: formatMusic }" */}
-                <button>
-                  <span
-                    className={styles.center_absolute}
-                    style={{ display: "flex", flexDirection: "column" }}
-                  >
-                    <Image
-                      src={marketMusicIcon}
-                      className="mb-5px"
-                      alt="image-icon"
-                    />
-                    Music
-                  </span>
-                </button>
-                {/* (click)="formatClick('3d')" [ngClass]="{ selected: format3D }" */}
-                <button>
-                  <span
-                    className={styles.center_absolute}
-                    style={{ display: "flex", flexDirection: "column" }}
-                  >
-                    <Image
-                      src={market3DIcon}
-                      className="mb-5px"
-                      alt="image-icon"
-                    />
-                    3D
-                  </span>
-                </button>
-              </div>
-            </div>
-          </div>
-          {/* *ngIf="flyout" */}
-          <div className="mlb-flyout-apply-button-container">
-            {/* [disabled]="!canUserSort || priceRangeIncorrect"
-        (click)="apply()" */}
-            <button className="marketplace-flyout-apply-button font-weight-bold">
-              <span className={styles.center_absolute}>
+          {flyout ? (
+            <div className={styles.flyout__nav__inner__marketplace}>
+              <div className={styles.nav_close_marketplace}>
                 <Image
-                  src={marketApplyIcon}
-                  className="mr-5px"
-                  alt="image-icon"
+                  onClick={() => closeMenu()}
+                  src={closeSquare}
+                  className="cursor-pointer"
+                  alt=""
                 />
-                Apply
-              </span>
-            </button>
-          </div>
+              </div>
+              <label className={styles.marketplace_flyout_label}>Status</label>
+              <div className={styles.mlb_flyout_status_grid}>
+                <button
+                  onClick={() => statusClick("all")}
+                  className={[
+                    "font-weight-semibold",
+                    statusAll ? "selected" : "",
+                  ].join(" ")}
+                >
+                  <p className={styles.center_absolute}>All</p>
+                </button>
+
+                <button
+                  onClick={() => statusClick("for sale")}
+                  className={[
+                    "font-weight-semibold",
+                    statusForSale ? "selected" : "",
+                  ].join(" ")}
+                >
+                  <p className={styles.center_absolute}>For Sale</p>
+                </button>
+
+                <button
+                  onClick={() => statusClick("has bids")}
+                  className={[
+                    "font-weight-semibold",
+                    statusHasBids ? "selected" : "",
+                  ].join(" ")}
+                >
+                  <p className={styles.center_absolute}>Has bids</p>
+                </button>
+                <button
+                  onClick={() => statusClick("sold")}
+                  className={[
+                    "font-weight-semibold",
+                    statusSold ? "selected" : "",
+                  ].join(" ")}
+                >
+                  <p className={styles.center_absolute}>Sold</p>
+                </button>
+              </div>
+              <label className={styles.marketplace_flyout_label}>
+                Price range
+              </label>
+              {marketplacePriceRangeSet ? (
+                <div>
+                  <div className={styles.mlb_flyout_price_inputs_container}>
+                    <input
+                      value={lowPrice}
+                      className={priceRangeIncorrect ? "incorrect" : ""}
+                      type="number"
+                      placeholder="Min"
+                    />
+
+                    <input
+                      value={highPrice}
+                      className={priceRangeIncorrect ? "incorrect" : ""}
+                      type="number"
+                      placeholder="Max"
+                    />
+                  </div>
+
+                  <button
+                    onClick={() => checkPriceRange()}
+                    className={
+                      styles.flyout_set_price_button + " white-rounded-button"
+                    }
+                  >
+                    Set Price
+                  </button>
+                </div>
+              ) : (
+                <div className={styles.mlb_flyout_price_set_box}>
+                  <span>{showPriceRange()}</span>
+                  <button onClick={() => resetPriceRange()}></button>
+                </div>
+              )}
+
+              <label className={styles.marketplace_flyout_label}>Market</label>
+
+              <button
+                onClick={() => marketClick("primary")}
+                className={[
+                  styles.marketplace_flyout_filter_button,
+                  marketPrimary ? "market-button-checked" : "",
+                ].join(" ")}
+              >
+                <input
+                  checked={marketPrimary}
+                  type="checkbox"
+                  className={styles.marketplace_button_checkbox}
+                />
+                <label className={styles.marketplace_flyout_checkbox_label}>
+                  Primary
+                </label>
+              </button>
+
+              <button
+                onClick={() => marketClick("secondary")}
+                className={[
+                  styles.marketplace_flyout_filter_button,
+                  marketSecondary ? "market-button-checked" : "",
+                ].join(" ")}
+                style={{ marginTop: "10px" }}
+              >
+                <input
+                  checked={marketSecondary}
+                  type="checkbox"
+                  className={styles.marketplace_button_checkbox}
+                />
+                <label className={styles.marketplace_flyout_checkbox_label}>
+                  Secondary
+                </label>
+              </button>
+              <label className={styles.marketplace_flyout_label}>
+                Creators
+              </label>
+              <div className={styles.mrk_flyout_lb_selector}>
+                <button
+                  onClick={() => creatorsClick("verified")}
+                  className={[
+                    "d-flex flex-row flex-center",
+                    creatorTypeVerified ? "selected" : "",
+                  ].join(" ")}
+                >
+                  <span className={styles.center_absolute}>
+                    <Image
+                      src={checkmarkIcon}
+                      className="mr-5px"
+                      alt="image-icon"
+                    />
+                    Verified
+                  </span>
+                </button>
+
+                <button
+                  onClick={() => creatorsClick("all")}
+                  className={[
+                    "d-flex flex-row flex-center",
+                    !creatorTypeVerified ? "selected" : "",
+                  ].join(" ")}
+                >
+                  <span className={styles.center_absolute}>
+                    <Image
+                      src={marketGlobeIcon}
+                      className="mr-5px"
+                      alt="image-icon"
+                    />
+                    All
+                  </span>
+                </button>
+              </div>
+
+              <div
+                className={[
+                  styles.verifiedFlyoutAccordion,
+                  creatorTypeVerified ? "expanded" : "",
+                ].join(" ")}
+              >
+                <label className={styles.marketplace_flyout_label}>
+                  Category
+                </label>
+
+                <select
+                  value={NFTCategory}
+                  onChange={(e) => categorySelectChange(e)}
+                  className={styles.mrk_select_flyout}
+                >
+                  <option value="all" className="target">
+                    All
+                  </option>
+                  <option value="photography">Photography</option>
+                  <option value="art">Art</option>
+                  <option value="collectibles">Collectibles</option>
+                  <option value="generative art">Generative Art</option>
+                  <option value="metaverse">Metaverse & Gaming</option>
+                  <option value="music">Music</option>
+                  <option value="profile picture">
+                    Profile Picture Collection
+                  </option>
+                </select>
+                <label className={styles.marketplace_flyout_label}>
+                  Content format
+                </label>
+
+                <button
+                  onClick={() => formatClick("All")}
+                  className={[
+                    styles.mlb_flyout_content_format_button,
+                    formatAll ? styles.selected : "",
+                  ].join(" ")}
+                >
+                  <span className={styles.left_center_absolute}>
+                    <Image
+                      src={marketGlobeIcon}
+                      className="mr-5px"
+                      alt="image-icon"
+                    />
+                    All
+                  </span>
+                </button>
+                <div
+                  className={styles.mlb_flyout_status_grid}
+                  style={{ paddingTop: "10px" }}
+                >
+                  <button
+                    onClick={() => formatClick("images")}
+                    className={formatImages ? styles.selected : ""}
+                  >
+                    <span
+                      className={styles.center_absolute}
+                      style={{ display: "flex", flexDirection: "column" }}
+                    >
+                      <Image
+                        src={marketImagesIcon}
+                        className="mb-5px"
+                        alt="image-icon"
+                      />
+                      Images
+                    </span>
+                  </button>
+
+                  <button
+                    onClick={() => formatClick("video")}
+                    className={formatVideo ? styles.selected : ""}
+                  >
+                    <span
+                      className={styles.center_absolute}
+                      style={{ display: "flex", flexDirection: "column" }}
+                    >
+                      <Image
+                        src={marketVideoIcon}
+                        className="mb-5px"
+                        alt="image-icon"
+                      />
+                      Video
+                    </span>
+                  </button>
+
+                  <button
+                    onClick={() => formatClick("music")}
+                    className={formatMusic ? styles.selected : ""}
+                  >
+                    <span
+                      className={styles.center_absolute}
+                      style={{ display: "flex", flexDirection: "column" }}
+                    >
+                      <Image
+                        src={marketMusicIcon}
+                        className="mb-5px"
+                        alt="image-icon"
+                      />
+                      Music
+                    </span>
+                  </button>
+
+                  <button
+                    onClick={() => formatClick("3d")}
+                    className={format3D ? styles.selected : ""}
+                  >
+                    <span
+                      className={styles.center_absolute}
+                      style={{ display: "flex", flexDirection: "column" }}
+                    >
+                      <Image
+                        src={market3DIcon}
+                        className="mb-5px"
+                        alt="image-icon"
+                      />
+                      3D
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          ) : null}
+          {flyout ? (
+            <div className="mlb-flyout-apply-button-container">
+              <button
+                onClick={() => apply()}
+                disabled={!canUserSort || priceRangeIncorrect}
+                className="marketplace-flyout-apply-button font-weight-bold"
+              >
+                <span className={styles.center_absolute}>
+                  <Image
+                    src={marketApplyIcon}
+                    className="mr-5px"
+                    alt="image-icon"
+                  />
+                  Apply
+                </span>
+              </button>
+            </div>
+          ) : null}
         </>
       )}
     </>

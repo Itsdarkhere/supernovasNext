@@ -1,4 +1,5 @@
 import styles from "../../../styles/Messages/messagesThread.module.scss";
+import Avatar from "../../Reusables/avatar";
 
 const MessagesThread = () => {
   //     (mouseover)="isHovered = true"
@@ -13,17 +14,22 @@ const MessagesThread = () => {
   //   }"
   return (
     <div className="d-flex align-items-center px-15px pb-15px pt-10px cursor-pointer border-bottom border-color-grey position-relative">
-      {/* [avatar]="thread.PublicKeyBase58Check" */}
-      <div className="messages-thread__avatar"></div>
+      <Avatar
+        classN="messages-thread__avatar"
+        avatar={thread.PublicKeyBase58Check}
+      ></Avatar>
       {/* <!-- The CSS styles / classes get pretty dense here. Sorry! --> */}
-      <div className="flex-grow-1 fs-15px ml-15px" style="overflow: hidden">
+      <div
+        className="flex-grow-1 fs-15px ml-15px"
+        style={{ overflow: "hidden" }}
+      >
         <div
           className="d-flex align-items-center"
-          style="overflow: hidden; white-space: pre"
+          style={{ overflow: "hidden", whiteSpace: "pre" }}
         >
           <div
             className="flex-grow-1 d-flex align-items-center"
-            style="overflow: hidden"
+            style={{ overflow: "hidden" }}
           >
             <div className="messages-thread__ellipsis-restriction-username">
               @
@@ -32,43 +38,46 @@ const MessagesThread = () => {
                 ? thread.ProfileEntryResponse.Username
                 : thread.PublicKeyBase58Check}
             </div>
-            {/* *ngIf="thread.ProfileEntryResponse?.IsVerified" */}
-            <span className="ml-1 text-primary">
-              <i className="fas fa-check-circle fa-md align-middle"></i>
-            </span>
+            {thread.ProfileEntryResponse?.IsVerified ? (
+              <span className="ml-1 text-primary">
+                <i className="fas fa-check-circle fa-md align-middle"></i>
+              </span>
+            ) : null}
           </div>
-          {/* *ngIf="thread.Messages.length > 0" class="fc-muted" */}
-          <div>
-            {globalVars.convertTstampToDateOrTime(
-              thread.Messages[thread.Messages.length - 1].TstampNanos
-            )}
-          </div>
-        </div>
-        {/* *ngIf="thread.Messages.length > 0" */}
-        <div>
-          {/* <!-- If we are the sender, we need to bank on the decryptedMessageMap having the decrypted text. --> */}
-          {/* *ngIf="thread.Messages[thread.Messages.length - 1].IsSender" */}
-          <div className="messages-thread__ellipsis-restriction w-90">
-            {globalVars.messageMeta.decryptedMessgesMap[
-              thread.Messages[thread.Messages.length - 1]
-                .SenderPublicKeyBase58Check +
-                "" +
+          {thread.Messages.length > 0 ? (
+            <div className="fc-muted">
+              {globalVars.convertTstampToDateOrTime(
                 thread.Messages[thread.Messages.length - 1].TstampNanos
-            ]
-              ? globalVars.messageMeta.decryptedMessgesMap[
+              )}
+            </div>
+          ) : null}
+        </div>
+        {thread.Messages.length > 0 ? (
+          <div>
+            {/* <!-- If we are the sender, we need to bank on the decryptedMessageMap having the decrypted text. --> */}
+            {thread.Messages[thread.Messages.length - 1].IsSender ? (
+              <div className="messages-thread__ellipsis-restriction w-90">
+                {globalVars.messageMeta.decryptedMessgesMap[
                   thread.Messages[thread.Messages.length - 1]
                     .SenderPublicKeyBase58Check +
                     "" +
                     thread.Messages[thread.Messages.length - 1].TstampNanos
-                ].DecryptedText
-              : thread.Messages[thread.Messages.length - 1].DecryptedText}
+                ]
+                  ? globalVars.messageMeta.decryptedMessgesMap[
+                      thread.Messages[thread.Messages.length - 1]
+                        .SenderPublicKeyBase58Check +
+                        "" +
+                        thread.Messages[thread.Messages.length - 1].TstampNanos
+                    ].DecryptedText
+                  : thread.Messages[thread.Messages.length - 1].DecryptedText}
+              </div>
+            ) : (
+              <div className="messages-thread__ellipsis-restriction w-90">
+                {thread.Messages[thread.Messages.length - 1].DecryptedText}
+              </div>
+            )}
           </div>
-          {/* <!-- If we are not the sender, we have the decrypted text so we show that. --> */}
-          {/* *ngIf="!thread.Messages[thread.Messages.length - 1].IsSender" */}
-          <div className="messages-thread__ellipsis-restriction w-90">
-            {thread.Messages[thread.Messages.length - 1].DecryptedText}
-          </div>
-        </div>
+        ) : null}
       </div>
     </div>
   );

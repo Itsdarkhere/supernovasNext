@@ -19,12 +19,10 @@ const BidPlacedModal = () => {
           the creator sells this NFT.
         </p>
         <div className="btn-group">
-          {/* (click)="viewBids()" */}
-          <button type="button" className="view-your-bid">
+          <button onClick={() => viewBids()} type="button" className="view-your-bid">
             View your bids
           </button>
-          {/* (click)="hideAndRefresh()" */}
-          <button type="button" className="close-popup">
+          <button onClick={() => hideAndRefresh()} type="button" className="close-popup">
             Close this window
           </button>
         </div>

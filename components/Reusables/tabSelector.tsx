@@ -27,7 +27,6 @@ const TabSelector = ({ tabClick, tabs, icons, extraTab, activeTab }) => {
                   : styles.tab_selector_box_inactive,
               ].join(" ")}
             >
-              {/* *ngIf="icons" */}
               {getIcon(i)}
               {tab}
             </div>

@@ -97,10 +97,10 @@ const AudioPlayer = ({ songName, creator, audioSrc }) => {
             className="mr-5px"
             alt="volume icon"
           />
-          {/*
-        (input)="volumeColor()"
-        (change)="setVolume($event)" */}
+
           <input
+          onInput={() => volumeColor()}
+          onChange={(e) => setVolume(e)}
             type="range"
             id="volume-slider"
             className={styles.amplitude_volume_slider + " p-0px border-none"}

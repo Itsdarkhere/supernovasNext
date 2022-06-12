@@ -29,7 +29,9 @@ const BidBox = (props) => {
   // Redux
   const loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
   const localNode = useAppSelector((state) => state.node.localNode);
-  const isEthQuoteRepost = useAppSelector((state) => state.imx.isEthQuoteRepost);
+  const isEthQuoteRepost = useAppSelector(
+    (state) => state.imx.isEthQuoteRepost
+  );
   // Redux end
 
   // Vars
@@ -58,9 +60,12 @@ const BidBox = (props) => {
   // Statefull object arrays
   const [decryptableNFTEntryResponses, setDecryptableNFTEntryResponses] =
     useState<NFTEntryResponse[]>([]);
-  const [mySerialNumbersNotForSale, setMySerialNumbersNotForSale] =
-    useState<NFTEntryResponse[]>([]);
-  const [availableSerialNumbers, setAvailableSerialNumbers] = useState<NFTEntryResponse[]>([]);
+  const [mySerialNumbersNotForSale, setMySerialNumbersNotForSale] = useState<
+    NFTEntryResponse[]
+  >([]);
+  const [availableSerialNumbers, setAvailableSerialNumbers] = useState<
+    NFTEntryResponse[]
+  >([]);
   // State end
 
   // Lifecycle methods
@@ -217,7 +222,9 @@ const BidBox = (props) => {
     }
     // Check if edition has unlockable
     if (!editionIsBuyNow) {
-      setEditionHasUnlockable(nftEntryResponse?.DecryptedUnlockableText != null);
+      setEditionHasUnlockable(
+        nftEntryResponse?.DecryptedUnlockableText != null
+      );
     }
     // Check if user has made a bid on this edition
     if (!ownsEdition && props.nftBidData?.BidEntryResponses) {
@@ -251,7 +258,10 @@ const BidBox = (props) => {
           editionHasBidByUser={editionHasBidByUser}
         ></DesoDetails>
       );
-    } else if (!props.isNFTDetail && !props.postContent?.PostExtraData?.isEthereumNFT) {
+    } else if (
+      !props.isNFTDetail &&
+      !props.postContent?.PostExtraData?.isEthereumNFT
+    ) {
       return (
         <DiscoveryDetails
           buyNowPriceNanos={buyNowPriceNanos}
@@ -272,7 +282,10 @@ const BidBox = (props) => {
           editionHasBeenSold={editionHasBeenSold}
         ></DiscoveryDetails>
       );
-    } else if (props.postContent?.PostExtraData?.isEthereumNFT && !isEthQuoteRepost) {
+    } else if (
+      props.postContent?.PostExtraData?.isEthereumNFT &&
+      !isEthQuoteRepost
+    ) {
       return (
         <ETHDetails
           ethNFTOwnerWalletAddress={props.ethNFTOwnerWalletAddress}

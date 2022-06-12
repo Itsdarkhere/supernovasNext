@@ -73,10 +73,10 @@ const AudioComponent = ({ imageSrc, songName, creator, audioSrc }) => {
         ].join(" ")}
       >
         <div className="w-100 d-flex flex-center">
-          {/* (click)="openImgModal($event, imageSrc)"
-            (error)="useNormalImage(imageSrc)"
-            (load)="loaded()" */}
           <Image
+            onClick={(e) => openImgModal(e, imageSrc)}
+            onError={() => useNormalImage(imageSrc)}
+            onLoad={() => loaded()}
             height={"100%"}
             alt="Audio banner image"
             id="audio-image"

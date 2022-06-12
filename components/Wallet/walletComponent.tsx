@@ -12,9 +12,11 @@ import {
   isMobile,
   nanosToDeSo,
   nanosToUSD,
+  usdYouWouldGetIfYouSoldDisplay,
   _copyText,
 } from "../../utils/global-context";
 import { useAppSelector } from "../../utils/Redux/hooks";
+import Avatar from "../Reusables/avatar";
 
 const WalletComponent = () => {
   // Redux
@@ -23,7 +25,7 @@ const WalletComponent = () => {
   );
   const loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
   // Redux end
-  
+
   const [showYouDontOwnCreatorCoins, setShowYouDontOwnCreatorCoins] =
     useState(false);
   const [mobile, setMobile] = useState(false);
@@ -106,52 +108,63 @@ const WalletComponent = () => {
             ].join(" ")}
           >
             {/* <!-- IF NO COINS ARE OWNED --> */}
-            {/* (click)="routeToSellCoin(creator)" *ngFor="let creator of usersYouPurchased" */}
-            <button className="position-relative">
-              <div
-                className={
-                  styles.cc_button_value +
-                  " d-flex flex-row flex-center-start pl-10px"
-                }
+            {usersYouPurchased.map((creator, i) => (
+              <button
+                key={i}
+                onClick={() => routeToSellCoin(creator)}
+                className="position-relative"
               >
-                {/* [avatar]="creator.ProfileEntryResponse.PublicKeyBase58Check" */}
-                <div className={styles.wallet_cc_avatar + " mr-5px"}></div>
-                <label
-                  className="font-weight-bold fs-12px mb-0px"
-                  style={{ color: "#000000" }}
+                <div
+                  className={
+                    styles.cc_button_value +
+                    " d-flex flex-row flex-center-start pl-10px"
+                  }
                 >
-                  {/* {{ creator.ProfileEntryResponse?.Username }} */}
+                  <Avatar
+                    avatar={creator.ProfileEntryResponse.PublicKeyBase58Check}
+                    classN={styles.wallet_cc_avatar + " mr-5px"}
+                  ></Avatar>
+                  <label
+                    className="font-weight-bold fs-12px mb-0px"
+                    style={{ color: "#000000" }}
+                  >
+                    {creator.ProfileEntryResponse?.Username}
+                  </label>
+                </div>
+                <label
+                  className={
+                    styles.cc_button_value +
+                    " text-align-center padding-left-10-perc fs-18px mb-0px hide_on_mobile"
+                  }
+                  style={{ color: "#2d2d2d" }}
+                >
+                  {nanosToUSD(
+                    creator.ProfileEntryResponse.CoinPriceDeSoNanos,
+                    2
+                  )}
                 </label>
-              </div>
-              <label
-                className={
-                  styles.cc_button_value +
-                  " text-align-center padding-left-10-perc fs-18px mb-0px hide_on_mobile"
-                }
-                style={{ color: "#2d2d2d" }}
-              >
-                {/* { nanosToUSD(creator.ProfileEntryResponse.CoinPriceDeSoNanos, 2) } */}
-              </label>
-              <span
-                className={
-                  styles.c_button_value +
-                  " " +
-                  styles.padding_left_10_perc +
-                  " font-weight-semiboldn fs-18px mb-0px d-flex flex-center-start flex-row"
-                }
-                style={{ color: "#2d2d2d" }}
-              >
-                {/* {
-          globalVars.usdYouWouldGetIfYouSoldDisplay(creator.BalanceNanos, creator.ProfileEntryResponse.CoinEntry)
-        } */}
-              </span>
-              <Image
-                height={"50px"}
-                className={styles.creator_coin_arrow}
-                src={chevronRightIcon}
-                alt="arrow right"
-              />
-            </button>
+                <span
+                  className={
+                    styles.c_button_value +
+                    " " +
+                    styles.padding_left_10_perc +
+                    " font-weight-semiboldn fs-18px mb-0px d-flex flex-center-start flex-row"
+                  }
+                  style={{ color: "#2d2d2d" }}
+                >
+                  {usdYouWouldGetIfYouSoldDisplay(
+                    creator.BalanceNanos,
+                    creator.ProfileEntryResponse.CoinEntry
+                  )}
+                </span>
+                <Image
+                  height={"50px"}
+                  className={styles.creator_coin_arrow}
+                  src={chevronRightIcon}
+                  alt="arrow right"
+                />
+              </button>
+            ))}
           </div>
         </>
       );
@@ -200,8 +213,8 @@ const WalletComponent = () => {
             </label>
           </div>
           <div className="h-100 d-flex flex-row flex-center">
-            {/* (click)="openGeneralSuccessModal()" */}
             <button
+              onClick={() => openGeneralSuccessModal()}
               className={
                 styles.connect_wallet_button +
                 " black-rounded-button d-flex flex-center font-weight-bold fs-15px mt-5px"
@@ -213,9 +226,9 @@ const WalletComponent = () => {
         </div>
       );
     } else {
-      // (click)="routeToImxPage()"
       return (
         <button
+          onClick={() => routeToImxPage()}
           className={
             styles.wallet_coin_button +
             " " +
@@ -269,7 +282,6 @@ const WalletComponent = () => {
   };
 
   const getDesoTab = () => {
-  
     if (tabDeso) {
       {
         /* ANIMATE [@tabChangeAnimation] */
@@ -277,8 +289,8 @@ const WalletComponent = () => {
       return (
         <div className={styles.wallet_bottom_container}>
           <div className={styles.wallet_crypto_container}>
-            {/* (click)="routeToBuyDeso()" */}
             <button
+              onClick={() => routeToBuyDeso()}
               className={
                 styles.wallet_coin_button +
                 " " +
@@ -344,7 +356,7 @@ const WalletComponent = () => {
   const getUsername = () => {
     // Redux
     const loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
-  
+
     if (loggedInUser?.ProfileEntryResponse?.Username) {
       return (
         <span className="pl-5px">
@@ -389,8 +401,10 @@ const WalletComponent = () => {
             className="font-weight-bold d-flex flex-row fs-24px mt-20px"
             style={{ color: "#0d0d0d" }}
           >
-            {/* [avatar]="globalVars.loggedInUser.PublicKeyBase58Check" */}
-            <div className={styles.wallet_avatar}></div>
+            <Avatar
+              classN={styles.wallet_avatar}
+              avatar={loggedInUser.PublicKeyBase58Check}
+            ></Avatar>
             {getUsername()}
           </div>
         </div>
@@ -436,13 +450,13 @@ const WalletComponent = () => {
             className="fs-40px mb-0px font-weight-semiboldn mt-10px"
             style={{ color: "#ffffff" }}
           >
-            {/* { globalVars.nanosToDeSo(globalVars.loggedInUser.BalanceNanos + totalValue(), 2) } $DESO */}
+            {nanosToDeSo(loggedInUser.BalanceNanos + totalValue(), 2)} $DESO
           </label>
           <label
             className={styles.mtm_5px + " fs-32px"}
             style={{ color: "#eaeaea" }}
           >
-            {/* { globalVars.nanosToUSD(globalVars.loggedInUser.BalanceNanos + totalValue(), 2) } */}
+            {nanosToUSD(loggedInUser.BalanceNanos + totalValue(), 2)}
           </label>
         </div>
         <div className={styles.wallet_tab_selector}>

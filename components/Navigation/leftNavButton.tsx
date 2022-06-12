@@ -26,7 +26,7 @@ const LeftNavButton = ({ hasNotifications, link, imgSrc, label }) => {
     return null;
   };
   return (
-    // [routerLink]="[link]" [routerLinkActive]="['active'] rewrite in react"
+    // [routerLinkActive]="['active'] rewrite in react"
     <Link href={link}>
       <button className={styles.icon + " position-relative"}>
         <Image src={imgSrc} layout="fixed" alt="left bar icon" />

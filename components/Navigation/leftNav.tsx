@@ -11,6 +11,7 @@ import walletIcon from "../../public/icons/lb_wallet_icon.svg";
 import onBoardingIcon from "../../public/icons/profile-icon.svg";
 import daoIcon from "../../public/icons/feed_sn_icon.png";
 import Link from "next/link";
+import { RouteNames } from "../../utils/backendapi-context";
 
 const LeftNav = () => {
   return (
@@ -20,19 +21,19 @@ const LeftNav = () => {
         id="navigation"
       >
         <LeftNavButton
-          hasNotifications="false"
+          hasNotifications={false}
           link="/discovery"
           imgSrc={discoveryIcon}
           label="Discovery"
         ></LeftNavButton>
         <LeftNavButton
-          hasNotifications="false"
+          hasNotifications={false}
           link="/"
           imgSrc={feedIcon}
           label="Feed"
         ></LeftNavButton>
         <LeftNavButton
-          hasNotifications="false"
+          hasNotifications={false}
           link="/marketplace"
           imgSrc={marketplaceIcon}
           label="Marketplace"
@@ -44,59 +45,74 @@ const LeftNav = () => {
                 ></LeftNavButton> */}
         {/* *ngIf="globalVars.loggedInUser" */}
         <hr />
-        {/* *ngIf="globalVars.loggedInUser && this.globalVars.isOnboardingComplete" */}
-        <LeftNavButton
-          hasNotifications="false"
-          link="/activity"
-          imgSrc={activityIcon}
-          label="Activity"
-        ></LeftNavButton>
-        {/* *ngIf="this.globalVars?.loggedInUser?.ProfileEntryResponse?.Username" */}
-        <LeftNavButton
-          hasNotifications="false"
-          link="'/u/' + this.globalVars?.loggedInUser?.ProfileEntryResponse.Username"
-          imgSrc={profileIcon}
-          label="Profile"
-        ></LeftNavButton>
-        {/* *ngIf="this.globalVars?.loggedInUser && !this.globalVars?.loggedInUser?.ProfileEntryResponse?.Username" */}
-        <LeftNavButton
-          hasNotifications="false"
-          link="'/update-profile'"
-          imgSrc={profileIcon}
-          label="Profile"
-        ></LeftNavButton>
-        {/* *ngIf="globalVars.loggedInUser" */}
-        <LeftNavButton
-          link="'/' + this.globalVars.RouteNames.INBOX_PREFIX"
-          hasNotifications="true"
-          imgSrc={messagesIcon}
-          label="Messages"
-        ></LeftNavButton>
-        {/* *ngIf="globalVars.loggedInUser" */}
-        <LeftNavButton
-          hasNotifications="false"
-          link="/wallet"
-          imgSrc={walletIcon}
-          label="Wallet"
-        ></LeftNavButton>
-        {/* *ngIf="!this.globalVars.isOnboardingComplete && this.globalVars?.loggedInUser?.PublicKeyBase58Check" */}
-        <LeftNavButton
-          hasNotifications="false"
-          link="'/' + this.globalVars.RouteNames.COMPLETE_PROFILE"
-          imgSrc={onBoardingIcon}
-          label="Onboarding"
-        ></LeftNavButton>
-        {/* [routerLink]="'/' + this.globalVars.RouteNames.DAO_PAGE"
-                [routerLinkActive]="['active']" */}
-        <Link href="/dao">
+        {loggedInUser && isOnboardingComplete ? (
+          <LeftNavButton
+            hasNotifications={false}
+            link="/activity"
+            imgSrc={activityIcon}
+            label="Activity"
+          ></LeftNavButton>
+        ) : null}
+
+        {loggedInUser?.ProfileEntryResponse?.Username ? (
+          <LeftNavButton
+            hasNotifications={false}
+            link={"/u/" + loggedInUser?.ProfileEntryResponse.Username}
+            imgSrc={profileIcon}
+            label="Profile"
+          ></LeftNavButton>
+        ) : null}
+
+        {loggedInUser && !loggedInUser?.ProfileEntryResponse?.Username ? (
+          <LeftNavButton
+            hasNotifications={false}
+            link="'/update-profile'"
+            imgSrc={profileIcon}
+            label="Profile"
+          ></LeftNavButton>
+        ) : null}
+
+        {loggedInUser ? (
+          <LeftNavButton
+            link={"/" + RouteNames.INBOX_PREFIX}
+            hasNotifications={true}
+            imgSrc={messagesIcon}
+            label="Messages"
+          ></LeftNavButton>
+        ) : null}
+
+        {loggedInUser ? (
+          <LeftNavButton
+            hasNotifications={false}
+            link="/wallet"
+            imgSrc={walletIcon}
+            label="Wallet"
+          ></LeftNavButton>
+        ) : null}
+
+        {!isOnboardingComplete && loggedInUser?.PublicKeyBase58Check ? (
+          <LeftNavButton
+            hasNotifications={false}
+            link={"/" + RouteNames.COMPLETE_PROFILE}
+            imgSrc={onBoardingIcon}
+            label="Onboarding"
+          ></LeftNavButton>
+        ) : null}
+
+        {/*[routerLinkActive]="['active']" */}
+        <Link href={"/" + RouteNames.DAO_PAGE}>
           <button className={styles.icon + " position-relative"}>
             <Image src={daoIcon} layout="fill" alt="left bar icon" />
             <label className={styles.lb_button_label}>Dao</label>
             <label className={styles.lb_button_label_new}>LIVE</label>
           </button>
         </Link>
-        {/*  *ngIf="globalVars.showAdminTools()" [routerLink]="'/' + globalVars.RouteNames.ADMIN" */}
-        <button className={styles.lb_admin}>A</button>
+
+        {showAdminTools() ? (
+          <Link href={"/" + RouteNames.ADMIN}>
+            <button className={styles.lb_admin}>A</button>
+          </Link>
+        ) : null}
       </div>
     </div>
   );

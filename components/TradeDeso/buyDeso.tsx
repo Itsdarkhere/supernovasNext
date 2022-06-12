@@ -4,16 +4,19 @@ const BuyDeso = () => {
   return (
     <div className="buy-deso-wrapper d-flex flex-column flex-center-start h-100">
       <div className="deso-buy-subheading mt-20px">BUY FROM EXCHANGE</div>
-      {/* (click)="openLink('https://www.coinbase.com/price/decentralized-social')" */}
-      <button className="deso-buy-exchange-container">
+      <button
+        onClick={() =>
+          openLink("https://www.coinbase.com/price/decentralized-social")
+        }
+        className="deso-buy-exchange-container"
+      >
         <label>Coinbase</label>
         <p>Buy $DESO from Coinbase</p>
       </button>
       <div className="buy-deso-spacer"></div>
       <div className="deso-buy-subheading">BUY FROM DESO.ORG</div>
       <div className="deso-buy-deso-org-container">
-        {/* (click)="openLink('https://buy.deso.org/')" */}
-        <button>
+        <button onClick={() => openLink("https://buy.deso.org/")}>
           <div className="buy-deso-type-icon-container">
             <img
               src="assets/icons/deso_page_bitcoin.svg"
@@ -29,8 +32,10 @@ const BuyDeso = () => {
             />
           </div>
         </button>
-        {/* (click)="openLink('https://buy.deso.org/')" */}
-        <button className="custom-border-top-bottom">
+        <button
+          onClick={() => openLink("https://buy.deso.org/")}
+          className="custom-border-top-bottom"
+        >
           <div className="buy-deso-type-icon-container">
             <img
               src="assets/icons/deso_page_eth.svg"
@@ -46,8 +51,7 @@ const BuyDeso = () => {
             />
           </div>
         </button>
-        {/* (click)="openLink('https://buy.deso.org/')" */}
-        <button>
+        <button onClick={() => openLink("https://buy.deso.org/")}>
           <div className="buy-deso-type-icon-container">
             <img
               src="assets/icons/deso_page_visa.svg"
@@ -64,8 +68,10 @@ const BuyDeso = () => {
           </div>
         </button>
       </div>
-      {/* (click)="openLink('https://support.supernovas.app/en/')" */}
-      <div className="buy-deso-help">
+      <div
+        onClick={() => openLink("https://support.supernovas.app/en/")}
+        className="buy-deso-help"
+      >
         <img src="/assets/icons/chevron_right.svg" alt="arrow" />
         Need help? Contact our support.
       </div>

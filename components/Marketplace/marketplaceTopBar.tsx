@@ -41,8 +41,8 @@ const MarketplaceTopBar = () => {
             styles.blockchain_selection_container + " " + styles.mrk_grid_one
           }
         >
-          {/* (click)="updateDesoMarketplaceStatus()" */}
           <button
+            onClick={() => updateDesoMarketplaceStatus()}
             className={[
               styles.deso_marketplace_selector_container,
               desoMarketplace ? styles.marketplace_active : null,
@@ -57,8 +57,9 @@ const MarketplaceTopBar = () => {
             />
             <p className={styles.deso_marketplace_text}>Deso</p>
           </button>
-          {/*(click)="updateEthMarketplaceStatus()" */}
+
           <button
+            onClick={() => updateEthMarketplaceStatus()}
             className={[
               styles.eth_marketplace_selector_container,
               desoMarketplace ? null : styles.marketplace_active,
@@ -82,34 +83,47 @@ const MarketplaceTopBar = () => {
           }
         >
           <label>Blockchain</label>
-          {/* (ngModelChange)="blockchainSelectChange($event)"
-                    [ngModel]="globalVars.desoMarketplace" */}
-          <select className={styles.blockchain_select}>
+          <select
+            value={desoMarketplace}
+            onChange={(e) => blockchainSelectChange(e)}
+            className={styles.blockchain_select}
+          >
             <option value="true">Deso</option>
             <option value="false">Ethereum</option>
           </select>
         </div>
         {desoMarketplace ? (
           <div className={styles.mrk_top_selector_two}>
-            {/* (click)="setDisplayType('Card')"
-                    [ngClass]="{ selected: globalVars.marketplaceViewTypeCard }" */}
-            <button className="selected">
+            <button
+              onClick={() => setDisplayType("Card")}
+              className={[
+                "selected",
+                marketplaceViewTypeCard ? styles.selected : "",
+              ].join(" ")}
+            >
               <Image width={20} src={marketCardIcon} alt="card icon" />
             </button>
-            {/* (click)="setDisplayType('Grid')" [ngClass]="{ selected: !globalVars.marketplaceViewTypeCard }" */}
-            <button>
+            <button
+              onClick={() => setDisplayType("Grid")}
+              className={!marketplaceViewTypeCard ? styles.selected : ""}
+            >
               <Image width={20} src={marketGridIcon} alt="grid icon" />
             </button>
           </div>
         ) : (
           <div className={styles.mrk_top_selector_two}>
-            {/* (click)="setDisplayType('Card')"
-                    [ngClass]="{ selected: globalVars.marketplaceViewTypeCard }" */}
-            <button className={styles.selected}>
+            <button
+              onClick={() => setDisplayType("Card")}
+              className={[marketplaceViewTypeCard ? styles.selected : ""].join(
+                " "
+              )}
+            >
               <img src={marketCardIcon} alt="card icon" />
             </button>
-            {/* (click)="setDisplayType('Grid')" [ngClass]="{ selected: !globalVars.marketplaceViewTypeCard }" */}
-            <button>
+            <button
+              onClick={() => setDisplayType("Grid")}
+              className={!marketplaceViewTypeCard ? styles.selected : ""}
+            >
               <img src={marketGridIcon} alt="grid icon" />
             </button>
           </div>
@@ -118,9 +132,10 @@ const MarketplaceTopBar = () => {
         {desoMarketplace ? (
           <div className={styles.mrk_grid_three}>
             <label>Sort by</label>
-            {/* (ngModelChange)="sortSelectChange($event)"
-                    [ngModel]="globalVars.marketplaceSortType" */}
+
             <select
+              value={marketplaceSortType}
+              onChange={(e) => sortSelectChange(e)}
               className={styles.mrk_select + " " + styles.mrk_top_select_height}
             >
               {marketplaceSortTypeOptions.map((option, i) => (
@@ -133,9 +148,9 @@ const MarketplaceTopBar = () => {
         ) : (
           <div className={styles.mrk_grid_three}>
             <label>Sort by</label>
-            {/* (ngModelChange)="sortSelectChange($event)"
-                    [ngModel]="globalVars.marketplaceSortType" */}
             <select
+              value={marketplaceSortType}
+              onChange={(e) => sortSelectChange(e)}
               className={styles.mrk_select + " " + styles.mrk_top_select_height}
             >
               {ethMarketplaceSortTypeOptions.map((option, i) => (

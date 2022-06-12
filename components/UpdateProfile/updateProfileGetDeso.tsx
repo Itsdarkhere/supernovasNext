@@ -1,40 +1,48 @@
 import styles from "../../styles/UpdateProfile/updateProfileGetDeso.module.scss";
+import {
+  createProfileFeeInDeSo,
+  createProfileFeeInUsd,
+} from "../../utils/global-context";
 
 const UpdateProfileGetDeso = () => {
   return (
     <>
-      {/* *ngIf="globalVars.isMobile()" */}
-      <div className="fs-15px mt-15px finalize-profile-box">
-        <div>
-          <p className="finalize-profile-title">You're almost there!</p>
-          <p className="finalize-profile-title">You just need some $DESO</p>
+      {!isMobile() ? (
+        <div className="fs-15px mt-15px finalize-profile-box">
+          <div>
+            <p className="finalize-profile-title">You're almost there!</p>
+            <p className="finalize-profile-title">You just need some $DESO</p>
+          </div>
+          {createProfileFeeNanos > 0 ? (
+            <span className="current-cost-container">
+              Creating a profile currently costs
+              <b>
+                {createProfileFeeInDeSo()} DeSo (≈ {createProfileFeeInUsd()}{" "}
+                USD)
+              </b>
+            </span>
+          ) : (
+            <div className="fs-15px mt-15px finalize-profile-box">
+              <div>
+                <p className="finalize-profile-title">You're almost there!</p>
+                <p className="finalize-profile-title">
+                  You just need some $DESO
+                </p>
+              </div>
+              {createProfileFeeNanos > 0 ? (
+                <span className="current-cost-container">
+                  Creating a profile currently costs
+                  <b>
+                    {createProfileFeeInDeSo()} DeSo (≈ {createProfileFeeInUsd()}{" "}
+                    USD)
+                  </b>
+                </span>
+              ) : null}
+            </div>
+          )}
         </div>
-        {/* *ngIf="globalVars.createProfileFeeNanos > 0"  */}
-        <span className="current-cost-container">
-          Creating a profile currently costs
-          <b>
-            {globalVars.createProfileFeeInDeSo()} DeSo (≈{" "}
-            {globalVars.createProfileFeeInUsd()} USD)
-          </b>
-        </span>
-      </div>
+      ) : null}
 
-      {/* <!-- DESKTOP --> */}
-      {/* *ngIf="!globalVars.isMobile()" */}
-      <div className="fs-15px mt-15px finalize-profile-box">
-        <div>
-          <p className="finalize-profile-title">You're almost there!</p>
-          <p className="finalize-profile-title">You just need some $DESO</p>
-        </div>
-        {/* *ngIf="globalVars.createProfileFeeNanos > 0" */}
-        <span className="current-cost-container">
-          Creating a profile currently costs
-          <b>
-            {globalVars.createProfileFeeInDeSo()} DeSo (≈{" "}
-            {globalVars.createProfileFeeInUsd()} USD)
-          </b>
-        </span>
-      </div>
       <div className="get-deso-container">
         <span>Get $DESO by using any of the methods below 👇</span>
       </div>

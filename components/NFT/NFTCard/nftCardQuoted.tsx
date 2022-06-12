@@ -29,6 +29,10 @@ const NFTCardQuoted = ({
           isQuotedCard={false}
           profileFeed={false}
           loadProfile={false}
+          nftPost={false}
+          showThreadConnectionLine={undefined}
+          userBlocked={undefined}
+          postDeleted={undefined}
         ></NFTCard>
       ) : null}
     </div>

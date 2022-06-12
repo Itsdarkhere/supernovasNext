@@ -43,8 +43,7 @@ const DepositEth = () => {
           </button>
         </div>
       </div>
-      {/* (click)="depositButtonClicked()" */}
-      <button className="imx-deposit-button">
+      <button onClick={() => depositButtonClicked()} className="imx-deposit-button">
         <div className="deposit-eth-text">Deposit ETH to Immutable X</div>
       </button>
       <a className="support-container">

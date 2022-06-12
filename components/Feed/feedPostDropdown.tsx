@@ -149,17 +149,17 @@ const FeedPostDropdown = ({
         renderToggle={renderDropdownButton}
         className={styles.dropdown}
       >
-        {/* (click)="copyPostLinkToClipboard($event)" */}
         <Dropdown.Item
+          onClick={(e) => copyPostLinkToClipboard(e)}
           icon={<Image src={linkIcon} height={15} alt="link icon" />}
           className="dropdown-menu-item fs-12px font-weight-semiboldn"
         >
           Link to Post
         </Dropdown.Item>
         {/* <!-- put on sale deso --> */}
-        {/* (click)="openCreateNFTAuctionModal($event)" */}
         {showCreateNFTAuction() ? (
           <Dropdown.Item
+            onClick={(e) => openCreateNFTAuctionModal(e)}
             icon={
               <Image src={putForSaleIcon} height={15} alt="put for sale icon" />
             }
@@ -170,9 +170,9 @@ const FeedPostDropdown = ({
         ) : null}
 
         {/* <!-- put on sale eth --> */}
-        {/* (click)="openCreateETHNFTAuctionModal($event)" */}
         {showCreateETHNFTAuction() ? (
           <Dropdown.Item
+            onClick={(e) => openCreateETHNFTAuctionModal(e)}
             icon={
               <Image src={putForSaleIcon} height={15} alt="put for sale icon" />
             }
@@ -182,9 +182,9 @@ const FeedPostDropdown = ({
           </Dropdown.Item>
         ) : null}
 
-        {/* (click)="openTransferModal($event)" */}
         {showCreateNFTAuction() ? (
           <Dropdown.Item
+            onClick={(e) => openTransferModal(e)}
             icon={<Image src={transferIcon} height={15} alt="transfer icon" />}
             className="dropdown-menu-item fs-12px font-weight-semiboldn"
           >
@@ -192,9 +192,9 @@ const FeedPostDropdown = ({
           </Dropdown.Item>
         ) : null}
 
-        {/* (click)="openBurnModal($event)" */}
         {showCreateNFTAuction() ? (
           <Dropdown.Item
+            onClick={(e) => openBurnModal(e)}
             icon={<Image src={hideIcon} height={15} alt="burn icon" />}
             className="dropdown-menu-item fs-12px d-block link--unstyled p-10px feed-post__dropdown-menu-item font-weight-semiboldn"
           >
@@ -202,9 +202,9 @@ const FeedPostDropdown = ({
           </Dropdown.Item>
         ) : null}
 
-        {/* (click)="dropNFT()" */}
         {post.IsNFT && showAdminTools() ? (
           <Dropdown.Item
+            onClick={() => dropNFT()}
             icon={<i className="fas fa-tint"></i>}
             className="dropdown-menu-item fs-12px d-block link--unstyled p-10px feed-post__dropdown-menu-item font-weight-semiboldn"
           >
@@ -222,25 +222,25 @@ const FeedPostDropdown = ({
           </Dropdown.Item>
         ) : null}
 
-        {/* (click)="reportPost()" */}
         <Dropdown.Item
+          onClick={() => reportPost()}
           icon={<Image src={reportIcon} height={15} alt="report icon" />}
           className="dropdown-menu-item border-top fs-12px font-weight-semiboldn"
         >
           Report Content
         </Dropdown.Item>
 
-        {/*(click)="hidePost()" */}
         <Dropdown.Item
+          onClick={() => hidePost()}
           icon={<Image src={hideIcon} height={15} alt="hide icon" />}
           className="dropdown-menu-item fs-12px d-block link--unstyled p-10px feed-post__dropdown-menu-item font-weight-semiboldn feed-post__dropdown-menu-item-color-light"
         >
           Hide
         </Dropdown.Item>
 
-        {/* (click)="blockUser()" */}
         {showBlockUserDropdownItem() ? (
           <Dropdown.Item
+            onClick={() => blockUser()}
             icon={<Image src={blockIcon} height={15} alt="block icon" />}
             className="dropdown-menu-item fs-12px d-block link--unstyled p-10px feed-post__dropdown-menu-item font-weight-semiboldn feed-post__dropdown-menu-item-color-light"
           >
@@ -248,9 +248,9 @@ const FeedPostDropdown = ({
           </Dropdown.Item>
         ) : null}
 
-        {/*(click)="_addPostToGlobalFeed($event)" */}
         {showAddToGlobalFeedDropdownItem() ? (
           <Dropdown.Item
+            onClick={(e) => _addPostToGlobalFeed(e)}
             icon={<i className="fas fa-folder-plus"></i>}
             className="dropdown-menu-item d-block link--unstyled p-10px feed-post__dropdown-menu-item font-weight-semiboldn fs-12px"
           >
@@ -258,10 +258,9 @@ const FeedPostDropdown = ({
           </Dropdown.Item>
         ) : null}
 
-        {/*
-      (click)="_addPostToGlobalFeed($event)" */}
         {showRemoveFromGlobalFeedDropdownItem() ? (
           <Dropdown.Item
+            onClick={(e) => _addPostToGlobalFeed(e)}
             icon={<i className="fas fa-folder-minus"></i>}
             className="dropdown-menu-item d-block link--unstyled p-10px feed-post__dropdown-menu-item font-weight-semiboldn fs-12px"
           >
@@ -269,9 +268,9 @@ const FeedPostDropdown = ({
           </Dropdown.Item>
         ) : null}
 
-        {/* (click)="_pinPostToGlobalFeed($event)" */}
         {showPinPostToGlobalFeedDropdownItem() ? (
           <Dropdown.Item
+            onClick={(e) => _pinPostToGlobalFeed(e)}
             icon={<i className="fas fa-thumbtack"></i>}
             className="dropdown-menu-item d-block link--unstyled p-10px feed-post__dropdown-menu-item font-weight-semiboldn fs-12px"
           >
@@ -279,9 +278,9 @@ const FeedPostDropdown = ({
           </Dropdown.Item>
         ) : null}
 
-        {/*(click)="_pinPostToGlobalFeed($event)" */}
         {showUnpinPostFromGlobalFeedDropdownItem() ? (
           <Dropdown.Item
+            onClick={(e) => _pinPostToGlobalFeed(e)}
             icon={<i className="fas fa-undo"></i>}
             className="dropdown-menu-item d-block link--unstyled p-10px feed-post__dropdown-menu-item font-weight-semiboldn fs-12px"
           >

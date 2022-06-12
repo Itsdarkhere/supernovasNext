@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { MAX_POST_LENGTH, _alertError } from "../../utils/global-context";
 import closeRoundIcon from "../../public/icons/close_round.svg";
@@ -8,7 +8,7 @@ import createPostImageicon from "../../public/icons/create_post_image.svg";
 import createPostIcon from "../../public/icons/create_post_icon.svg";
 import Avatar from "../Reusables/avatar";
 import { useAppSelector } from "../../utils/Redux/hooks";
-import { isValidTiktokEmbedURL } from "../../utils/staticServices/embedURLParser";
+import { getEmbedHeight, isValidTiktokEmbedURL } from "../../utils/staticServices/embedURLParser";
 import {
   BackendRoutes,
   UploadImage,
@@ -17,6 +17,7 @@ import {
 import * as tus from "tus-js-client";
 import { checkVideoStatusByURL } from "../../utils/cloudflareStreamFunctions";
 import Timer = NodeJS.Timer;
+import { transform } from "../../utils/sanitizeEmbed";
 
 const CreatePost = ({
   parentPost,
@@ -25,6 +26,8 @@ const CreatePost = ({
   numberOfRowsInTextArea,
 }) => {
   const SHOW_POST_LENGTH_WARNING_THRESHOLD = 515; // show warning at 515 characters
+  const videoRef = useRef();
+  const imageRef = useRef();
   let videoStreamInterval: Timer = null;
 
   const [postImageSrc, setPostImageSrc] = useState("");
@@ -336,12 +339,12 @@ const CreatePost = ({
               {/* <!-- Embedded Content --> */}
               {constructedEmbedURL ? (
                 <div className="feed-post__embed-container">
-                  {/* (click)="embedURL = ''; showEmbedURL = false; constructedEmbedURL = ''" */}
-                  <i className="icon-close feed-post__image-delete"></i>
-                  {/* [height]="EmbedUrlParserService.getEmbedHeight(constructedEmbedURL)" */}
-                  {/* [src]="constructedEmbedURL | sanitizeEmbed" */}
-                  {/* frameborder="0" allowfullscreen */}
+                  <i onClick={() => setEmbedURL("") setShowEmbedURL(false) setConstructedEmbedURL("")} className="icon-close feed-post__image-delete"></i>
+                  {/* frameborder="0"  */}
                   <iframe
+                    allowFullScreen
+                    height={getEmbedHeight(constructedEmbedURL)}
+                    src={transform(constructedEmbedURL)}
                     style={{
                       maxWidth: isValidTiktokEmbedURL(constructedEmbedURL)
                         ? "325px"
@@ -356,8 +359,7 @@ const CreatePost = ({
             {/* <!-- Post image --> */}
             {postImageSrc ? (
               <div className="feed-post__image-container">
-                {/* (click)="postImageSrc = null" */}
-                <i className="icon-close feed-post__image-delete"></i>
+                <i onClick={() => setPostImageSrc=(null)} className="icon-close feed-post__image-delete"></i>
                 <Image
                   className="feed-post__image"
                   src={postImageSrc}
@@ -386,7 +388,6 @@ const CreatePost = ({
             ) : null}
 
             {/* <!-- Video Upload Progress bar --> */}
-            {/* *ngIf="videoUploadPercentage !== null" */}
             {videoUploadPercentage !== null ? (
               <div className="d-flex flex-column align-items-center">
                 <div>Uploading: {videoUploadPercentage}% Complete</div>
@@ -402,12 +403,11 @@ const CreatePost = ({
                 parentPost ? "pt-10px" : "",
               ].join(" ")}
             >
-              {/* (click)="showImageLink = !showImageLink" */}
-              <i className="feed-post_delete">
+              <i onClick={() => setShowImageLink(!showImageLink)} className="feed-post_delete">
                 <Image src={closeRoundIcon} alt="round close icon" />
               </i>
-              {/* [(ngModel)]="postImageSrc" */}
               <input
+                value={postImageSrc}
                 className="br-3px"
                 type="url"
                 placeholder="Link to Arweave image"
@@ -436,38 +436,31 @@ const CreatePost = ({
               parentPost ? "pt-10px" : "",
             ].join(" ")}
           >
-            {/* (click)="showEmbedURL = !showEmbedURL" */}
-            <i className="feed-post_delete">
+            <i onClick={() => setShowEmbedURL(!showEmbedURL)} className="feed-post_delete">
               <Image src={closeRoundIcon} alt="round close icon" />
             </i>
-            {/* [(ngModel)]="embedURL"
-          (ngModelChange)="setEmbedURL()" */}
             <input
+              value={embedURL}
+              onChange={() => setEmbedURL()}
               type="url"
               placeholder="Embed Youtube, Vimeo, TikTok, Giphy, Spotify, SoundCloud or Twitch"
             />
           </div>
         ) : null}
 
-        {/* (click)="showEmbedURL = !showEmbedURL" */}
-        <i className="text-grey8A cursor-pointer fs-18px pr-15px">
+        <i onClick={() => setShowEmbedURL(!showEmbedURL)} className="text-grey8A cursor-pointer fs-18px pr-15px">
           <Image src={createPostEmbedIcon} alt="embed icon" />
         </i>
-        {/* (change)="_handleFilesInput($event.target.files)" #videoInput */}
-        <input className="d-none" type="file" accept="video/*" />
-        {/* (click)="videoInput.click()" */}
-        <i className="text-grey8A cursor-pointer pr-15px feed-create-post__image-icon">
+        <input onChange={(e) => _handleFilesInput(e.target.files)} ref={videoRef} className="d-none" type="file" accept="video/*" />
+        <i onClick={() => videoRef.current.click()} className="text-grey8A cursor-pointer pr-15px feed-create-post__image-icon">
           <Image src={createPostVideoIcon} alt="video icon" />
         </i>
-        {/* #imageInput (change)="_handleFilesInput($event.target.files)" */}
-        <input className="d-none" type="file" accept="image/*" />
-        {/* (click)="imageInput.click()" */}
-        <i className="text-grey8A cursor-pointer feed-create-post__image-icon">
+        <input onChange={(e) => _handleFilesInput(e.target.files)} ref={imageRef} className="d-none" type="file" accept="image/*" />
+        <i onClick={() => imageRef.current.click()} className="text-grey8A cursor-pointer feed-create-post__image-icon">
           <Image src={createPostImageicon} alt="image icon" />
         </i>
-        {/*
-        (click)="_createPost()" */}
         <button
+        onClick={() => _createPost()}
           className={[
             "btn-primary post_btn ml-15px",
             canPost() || submittingPost ? "disabled" : "",

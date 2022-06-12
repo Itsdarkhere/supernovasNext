@@ -345,7 +345,7 @@ const Discovery = () => {
           whatAllToShow={undefined}
           routeViewAll={undefined}
         ></SectionTitle>
-        <FormatSection></FormatSection>
+        <FormatSection routeViewAll={routeViewAll}></FormatSection>
         <BottomButtons></BottomButtons>
       </div>
     </Page>

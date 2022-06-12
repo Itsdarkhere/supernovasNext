@@ -3,10 +3,10 @@ import styles from "../../styles/Reusables/blueInputComponent.module.scss";
 const BlueInputComponent = () => {
   return (
     <div className="blue-input">
-      {/* [(ngModel)]="model"
-    [disabled]="disabled"
-    (ngModelChange)="onModelChange($event)" */}
       <input
+        value={model}
+        disabled={disabled}
+        onChange={(e) => onModelChange(e)}
         matInput
         type="number"
         min="0"

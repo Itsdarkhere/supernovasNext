@@ -13,6 +13,7 @@ import {
   BlockPublicKey,
   SubmitPost,
   GetSingleProfile,
+  RouteNames,
 } from "../../../utils/backendapi-context";
 import {
   getTargetComponentSelector,
@@ -31,6 +32,7 @@ import { setIMXWalletAddress } from "../../../utils/Redux/Slices/imxSlice";
 import Avatar from "../../Reusables/avatar";
 import FeedPostDropdown from "../../Feed/feedPostDropdown";
 import { SwalHelper } from "../../../utils/helpers/swal-helper";
+import Link from "next/link";
 // Missing top bar from the angular version
 const NFTCard = ({
   hoverable,
@@ -464,24 +466,39 @@ const NFTCard = ({
       {!postContent?.IsHidden && nftPost ? (
         <div className={styles.card_header + " " + styles.nft_post_top}>
           <div className={styles.profile_img}>
-            {/* [routerLink]="['/' + globalVars.RouteNames.USER_PREFIX, postContent.ProfileEntryResponse.Username]"
-        queryParamsHandling="merge" */}
-            <Avatar
-              avatar={postContent?.ProfileEntryResponse.PublicKeyBase58Check}
-              classN={styles.avatar}
-            ></Avatar>
+            <Link
+              href={
+                "/" +
+                RouteNames.USER_PREFIX +
+                "/" +
+                postContent.ProfileEntryResponse.Username
+              }
+            >
+              <Avatar
+                avatar={postContent?.ProfileEntryResponse.PublicKeyBase58Check}
+                classN={styles.avatar}
+              ></Avatar>
+            </Link>
             {showThreadConnectionLine ? (
               <div className="feed-post__parent-thread-connector"></div>
             ) : null}
           </div>
-          {/* [routerLink]="['/' + globalVars.RouteNames.USER_PREFIX, postContent.ProfileEntryResponse.Username]"
-      queryParamsHandling="merge" */}
-          <h6 className="cursor-pointer">
-            {postContent?.ProfileEntryResponse.Username}
-            {postContent?.ProfileEntryResponse.IsVerified ? (
-              <i className="fas fa-check-circle fa-md text-primary"></i>
-            ) : null}
-          </h6>
+          <Link
+            href={
+              "/" +
+              RouteNames.USER_PREFIX +
+              "/" +
+              postContent.ProfileEntryResponse.Username
+            }
+          >
+            <h6 className="cursor-pointer">
+              {postContent?.ProfileEntryResponse.Username}
+              {postContent?.ProfileEntryResponse.IsVerified ? (
+                <i className="fas fa-check-circle fa-md text-primary"></i>
+              ) : null}
+            </h6>
+          </Link>
+
           <div className={styles.value_buy_cover}></div>
           {/*     className="ml-auto" */}
           <FeedPostDropdown
@@ -512,8 +529,8 @@ const NFTCard = ({
           {/* If Unavailable show one of the unavailable options, otherwise the card */}
           {showCardOrUnavailable() ? (
             <div className="d-flex flex-column js-feed-post position-relative">
-              {/* (click)="onPostClicked($event)" */}
               <a
+                onClick={(e) => onPostClicked(e)}
                 className={[
                   "link--unstyled",
                   contentShouldLinkToThread ? "cursor-inherit" : "",

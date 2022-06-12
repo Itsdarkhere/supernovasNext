@@ -1,17 +1,16 @@
 import styles from "../../styles/Navigation/bottomBarMobileTab.module.scss";
+import Link from "next/link";
 
-const BottomBarMobileTab = ({children}) => {
+const BottomBarMobileTab = ({ children, link }) => {
   return (
-    <button
-      className="cursor-pointer"
-      click="clearNavigationHistory()"
-      routerLink="[link]"
-      queryParams="{ stepNum: null }"
-      routerLinkActive="['fc-blue']"
-      queryParamsHandling="merge"
-    >
-      {children}
-    </button>
+    <Link href={link}>
+      <button
+        className="cursor-pointer"
+        onClick={() => clearNavigationHistory()}
+      >
+        {children}
+      </button>
+    </Link>
   );
 };
 export default BottomBarMobileTab;

@@ -29,14 +29,16 @@ const MarketplaceContent = ({
 
   return (
     <div className="w-100 d-flex flex-row" id="market">
-      {/* *ngIf="!mobile && this.globalVars.desoMarketplace" */}
-      <div>
-        <MarketplaceSortBar flyout={false}></MarketplaceSortBar>
-        {/* *ngIf="!mobile && !this.globalVars.desoMarketplace" */}
-        {/* <MarketplaceEthSortBar
-            flyout="false"
-            ></MarketplaceEthSortBar> */}
-      </div>
+      {!mobile && desoMarketplace ? (
+        <div>
+          {desoMarketplace ? (
+            <MarketplaceSortBar flyout={false}></MarketplaceSortBar>
+          ) : (
+            <MarketplaceEthSortBar flyout="false"></MarketplaceEthSortBar>
+          )}
+        </div>
+      ) : null}
+
       <div
         className={
           mobile
@@ -91,11 +93,15 @@ const MarketplaceContent = ({
                           showIconRow={true}
                           showQuotedContent={false}
                           loadProfile={false}
+                          nftPost={false}
+                          showThreadConnectionLine={false}
+                          userBlocked={undefined}
+                          postDeleted={undefined}
                         ></NFTCard>
                       </div>
                     ) : (
                       <div>
-                        {/* <SmallNFTCard post="PostEntryResponse"></SmallNFTCard> */}
+                        <SmallNFTCard post={PostEntryResponse}></SmallNFTCard>
                       </div>
                     )}
                   </div>

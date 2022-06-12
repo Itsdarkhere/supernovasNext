@@ -6,6 +6,7 @@ import {
   GetNFTEntriesForNFTPost,
   NFTBidData,
   NFTBidEntryResponse,
+  RouteNames,
 } from "../../utils/backendapi-context";
 import { _alertError } from "../../utils/global-context";
 import { useAppSelector } from "../../utils/Redux/hooks";
@@ -14,6 +15,8 @@ import ImageComponent from "../Media/imageComponent";
 import AudioComponent from "../Media/audioComponent";
 import VideoComponent from "../Media/videoComponent";
 import BidBox from "../NFT/BidBox/bidBox";
+import Avatar from "../Reusables/avatar";
+import Link from "next/link";
 
 const PromotedNFT = ({ post, mobile }) => {
   // Redux
@@ -93,29 +96,41 @@ const PromotedNFT = ({ post, mobile }) => {
         <div className={styles.top_sc} id="discovery_top_sc">
           <div className={styles.dtails_wp}>
             <h3>{post?.PostExtraData?.name}</h3>
-            {/* *ngIf="!post?.PostExtraData?.name" */}
-            <p>{post?.Body}</p>
-            {/* *ngIf="post" */}
-            <div className={styles.art_details_nv}>
-              By
-              <div className={styles.user_detail}>
-                <div className={styles.profile_img}>
-                  {/* <a
-                [avatar]="post.ProfileEntryResponse?.PublicKeyBase58Check"
-                [routerLink]="['/' + globalVars.RouteNames.USER_PREFIX, post?.ProfileEntryResponse?.Username]"
-                queryParamsHandling="merge"
-              ></a> */}
+            {!post?.PostExtraData?.name ? <p>{post?.Body}</p> : null}
+
+            {post ? (
+              <div className={styles.art_details_nv}>
+                By
+                <div className={styles.user_detail}>
+                  <div className={styles.profile_img}>
+                    <Link
+                      href={
+                        ("/" + RouteNames.USER_PREFIX,
+                        post?.ProfileEntryResponse?.Username)
+                      }
+                    >
+                      <Avatar
+                        classN={styles.avatar}
+                        avatar={post.ProfileEntryResponse?.PublicKeyBase58Check}
+                      ></Avatar>
+                    </Link>
+                  </div>
+                  <Link
+                    href={
+                      ("/" + RouteNames.USER_PREFIX,
+                      post?.ProfileEntryResponse?.Username)
+                    }
+                  >
+                    <span className={styles.val}>
+                      {post?.ProfileEntryResponse?.Username}
+                    </span>
+                  </Link>
+                  {post?.ProfileEntryResponse?.IsVerified ? (
+                    <i className="fas pl-5px fa-check-circle fa-md text-primary"></i>
+                  ) : null}
                 </div>
-                {/* [routerLink]="['/' + globalVars.RouteNames.USER_PREFIX, post?.ProfileEntryResponse?.Username]"
-              queryParamsHandling="merge" */}
-                <span className={styles.val}>
-                  {post?.ProfileEntryResponse?.Username}
-                </span>
-                {post?.ProfileEntryResponse?.IsVerified ? (
-                  <i className="fas pl-5px fa-check-circle fa-md text-primary"></i>
-                ) : null}
               </div>
-            </div>
+            ) : null}
           </div>
         </div>
         <div className={styles.btm_sc}>
@@ -132,13 +147,13 @@ const PromotedNFT = ({ post, mobile }) => {
             ></BidBox>
           </div>
           <div className={styles.btn_grp}>
-            {/*(click)="openPlaceBidModal($event)" */}
             {loggedInUser?.PublicKeyBase58Check !=
               post?.PosterPublicKeyBase58Check &&
             post?.NumNFTCopiesForSale > 0 ? (
               isBuyNow ? (
                 <button
                   type="button"
+                  onClick={(e) => openBuyNowModal(e)}
                   className={
                     styles.fill_btn + " " + styles.discovery_button_movement
                   }
@@ -148,6 +163,7 @@ const PromotedNFT = ({ post, mobile }) => {
               ) : (
                 <button
                   type="button"
+                  onClick={(e) => openPlaceBidModal(e)}
                   className={
                     styles.fill_btn + " " + styles.discovery_button_movement
                   }
@@ -156,8 +172,6 @@ const PromotedNFT = ({ post, mobile }) => {
                 </button>
               )
             ) : null}
-            {/* THIS CLASS BELOW, IS FOR THE BUTTON ABOVE */}
-            {/*(click)="openBuyNowModal($event)" */}
 
             {loggedInUser?.PublicKeyBase58Check &&
             loggedInUser?.PublicKeyBase58Check !==
@@ -172,8 +186,11 @@ const PromotedNFT = ({ post, mobile }) => {
               </div>
             ) : null}
 
-            {/* (click)="viewNFT()" */}
-            <button type="button" className={styles.line_btn}>
+            <button
+              onClick={() => viewNFT()}
+              type="button"
+              className={styles.line_btn}
+            >
               View
             </button>
           </div>
@@ -207,18 +224,17 @@ const PromotedNFT = ({ post, mobile }) => {
         ) : null}
 
         {/* <!-- Reqular deso video --> */}
-        {/* allowfullscreen put back / check works */}
         {post?.VideoURLs &&
         post?.VideoURLs[0] &&
         !post?.ParentStakeID &&
         !post?.PostExtraData["arweaveVideoSrc"] ? (
           <div className={styles.iframe_container}>
             <iframe
+              allowFullScreen
               src="post.VideoURLs[0] | sanitizeVideoUrl"
               allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
               className="w-100 br-10px"
             ></iframe>
-            {/* <!--feed-post__video--> */}
           </div>
         ) : null}
 

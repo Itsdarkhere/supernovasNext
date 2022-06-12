@@ -126,8 +126,6 @@ const CategorySection = ({ viewAll }) => {
           />
         </div>
       </div>
-      {/* (click)="slider2.next() PUT BACK, Also fix all css to use stylesheet as intended"
-       *ngIf="!mobile" */}
       <button
         className={styles.discovery_arrow_box}
         onClick={(e) => {

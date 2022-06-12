@@ -7,8 +7,10 @@ import { setPostsToShow } from "../../../utils/Redux/Slices/feedSlice";
 import {
   PostEntryResponse,
   ProfileEntryResponse,
+  RouteNames,
 } from "../../../utils/backendapi-context";
 import Image from "next/image";
+import Link from "next/link";
 
 const NFTCardRepost = ({
   children,
@@ -56,8 +58,9 @@ const NFTCardRepost = ({
     <div className={styles.nft_repost_container + " position-relative"}>
       {reposterProfile ? (
         <div className="d-flex justify-content-left w-100 pb-5px px-15px pt-10px">
-          {/* queryParamsHandling="merge"
-      [routerLink]="['/' + globalVars.RouteNames.USER_PREFIX, reposterProfile.Username]" */}
+          <Link
+            href={"/" + RouteNames.USER_PREFIX + "/" + reposterProfile.Username}
+          ></Link>
           <a className="fc-muted font-weight-semibold align-items-center">
             <i
               className="icon-repost fs-20px"
@@ -101,6 +104,7 @@ const NFTCardRepost = ({
             parentPost={parentPost}
             afterCommentCreatedCallback={afterCommentCreatedCallback}
             afterRepostCreatedCallback={afterRepostCreatedCallback}
+            hideNumbers={undefined}
           ></PostIconRow>
         </div>
       </div>

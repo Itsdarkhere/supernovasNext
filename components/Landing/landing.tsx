@@ -43,12 +43,16 @@ const Landing = () => {
           </div>
 
           <div className="buttons-container">
-            {/* (click)="routeToSignUp()" */}
-            <a className="button-27 button-height-cp button-create">
+            <a
+              onClick={() => routeToSignUp()}
+              className="button-27 button-height-cp button-create"
+            >
               <div className="button-create-text">Create profile</div>
             </a>
-            {/* (click)="routeToSNFeed()" */}
-            <a className="browse-supernovas-cta">
+            <a
+              onClick={() => routeToSNFeed()}
+              className="browse-supernovas-cta"
+            >
               Browse Supernovas
               <i className="arrow-main" title="arrow icon"></i>
             </a>
@@ -92,7 +96,6 @@ const Landing = () => {
                     Enjoy one-click, gas-free NFT minting and instant
                     transactions on Ethereum, Solana, and DeSo.
                   </p>
-                  {/* <!-- <a href="#about" class="button-cards">start minting</a> --> */}
                 </li>
 
                 <li className="card">
@@ -102,7 +105,6 @@ const Landing = () => {
                     Supernovas DAO tokens, meaning that all active creators own
                     an ever-increasing, ever more valuable stake of Supernovas.
                   </p>
-                  {/* <!-- <a href="#about" class="button-cards">start minting</a> --> */}
                 </li>
 
                 <li className="card">
@@ -112,7 +114,6 @@ const Landing = () => {
                     advanced analytics, social features, our Discovery page, and
                     our Marketplace
                   </p>
-                  {/* <!-- <a href="#about" class="button-cards">start minting</a> --> */}
                 </li>
 
                 <li className="card">
@@ -121,7 +122,6 @@ const Landing = () => {
                     You get your own token that anyone can buy or sell. Earn a
                     percentage of each investment into your creator coin.
                   </p>
-                  {/* <!-- <a href="#about" class="button-cards">start minting</a> --> */}
                 </li>
 
                 <li className="card">
@@ -134,7 +134,6 @@ const Landing = () => {
                     – it’s you. No one can ever take your profile, content, or
                     community away from you.
                   </p>
-                  {/* <!-- <a href="#about" class="button-cards">start minting</a> --> */}
                 </li>
 
                 <li className="card">
@@ -143,7 +142,6 @@ const Landing = () => {
                     Receive “diamonds” on any of your posts and earn anywhere
                     from $0.01 - $200 as a tip – as you deserve.
                   </p>
-                  {/* <!-- <a href="#about" class="button-cards rainbow-button">Sign up as creator</a> --> */}
                 </li>
 
                 <li className="card">
@@ -153,8 +151,10 @@ const Landing = () => {
                     coins, multi-chain NFT royalties for creator coins, and
                     creator referral program coming soon!
                   </p>
-                  {/* (click)="routeToSignUp()"  */}
-                  <a className="button-27 button-height-cp button-create">
+                  <a
+                    onClick={() => routeToSignUp()}
+                    className="button-27 button-height-cp button-create"
+                  >
                     <div className="button-create-text">Create profile</div>
                   </a>
                 </li>
@@ -179,7 +179,6 @@ const Landing = () => {
                     shelling out large amounts of money for high gas fees.
                   </p>
                   <img className="sphere-1" src="assets/img/sphere.png" />
-                  {/* <!-- <a href="#about" class="button-cards button-cards__black">start minting</a> --> */}
                 </li>
 
                 <li className="card card__black">
@@ -192,7 +191,6 @@ const Landing = () => {
                     and the more valuable those tokens will be.
                   </p>
                   <img className="square-1" src="assets/img/square.png" />
-                  {/* <!-- <a href="#about" class="button-cards button-cards__black">start minting</a> --> */}
                 </li>
 
                 <li className="card card__black">
@@ -205,7 +203,6 @@ const Landing = () => {
                     decreased.
                   </p>
                   <img className="cone-1" src="assets/img/cone.png" />
-                  {/* <!-- <a href="#about" class="button-cards button-cards__black">start minting</a> --> */}
                 </li>
 
                 <li className="card card__black">
@@ -218,7 +215,6 @@ const Landing = () => {
                     rewards.
                   </p>
                   <img className="square-2" src="assets/img/square.png" />
-                  {/* <!-- <a href="#about" class="button-cards button-cards__black">start minting</a> --> */}
                 </li>
 
                 <li className="card card__black">
@@ -230,7 +226,6 @@ const Landing = () => {
                     community and your NFT’s under one platform.
                   </p>
                   <img className="cone-2" src="assets/img/cone.png" />
-                  {/* <!-- <a href="#about" class="button-cards button-cards__black">start minting</a> --> */}
                 </li>
 
                 <li className="card card__black">
@@ -241,7 +236,6 @@ const Landing = () => {
                     Receive “diamonds” on any of your posts and earn anywhere
                     from $0.01 - $200 as a tip – as you deserve.
                   </p>
-                  {/* <!-- <a href="#about" class="button-cards rainbow-button">Start collecting</a> --> */}
                 </li>
 
                 <li className="card card__black">
@@ -252,9 +246,11 @@ const Landing = () => {
                     soon!
                   </p>
                   <img className="sphere-3" src="assets/img/sphere.png" />
-                  {/* <!-- <a href="https://supernovas.app/signup" class="button-cards button-create">Sign up</a> --> */}
-                  {/* (click)="routeToSignUp()" */}
-                  <a className="button-27 button-height-cp button-create">
+
+                  <a
+                    onClick={() => routeToSignUp()}
+                    className="button-27 button-height-cp button-create"
+                  >
                     <div className="button-create-text">Create profile</div>
                   </a>
                 </li>
@@ -288,14 +284,10 @@ const Landing = () => {
                 Read the Investor Memorandum
               </a>
             </div>
-            <div className="lottie-animation-dao">
-              {/* <ng-lottie [options]="dao"></ng-lottie> */}
-            </div>
+            <div className="lottie-animation-dao"></div>
           </div>
         </div>
-        <div className="lottie-animation-shapes">
-          {/* <ng-lottie [options]="blueShapes" (animationCreated)="animationCreated($event)"></ng-lottie> */}
-        </div>
+        <div className="lottie-animation-shapes"></div>
       </section>
 
       <section className="testimonial-section" id="section-7">
@@ -419,12 +411,17 @@ const Landing = () => {
               Sign up and start earning today
             </div>
             <div className="statement-buttons">
-              {/* (click)="routeToSignUp()" */}
-              <a className="button-27 button-height-cp-2 button-create">
+              <a
+                onClick={() => routeToSignUp()}
+                className="button-27 button-height-cp-2 button-create"
+              >
                 <div className="button-create-text">Create profile</div>
               </a>
-              {/*  (click)="routeToSNFeed()" */}
-              <a className="browse-supernovas-cta-2 fs-24px">
+
+              <a
+                onClick={() => routeToSNFeed()}
+                className="browse-supernovas-cta-2 fs-24px"
+              >
                 Browse Supernovas
                 <i className="arrow-main" title="arrow icon"></i>
               </a>
@@ -436,27 +433,18 @@ const Landing = () => {
       {/* <!--            FOOTER            --> */}
 
       <footer>
-        {/* <!-- <div class="footer-links">
-          <a href="#home">Home</a>
-          <a href="#creators-section">Creators</a>
-          <a href="#collectors-sections">Collectors</a>
-          <a href="#search">Testimonials</a>
-          <a href="#dao">Dao</a>
-        </div> --> */}
         <div className="footer-logo-container">
           <img src="/assets/img/logo400.png" className="footer-logo-img" />
         </div>
         <div className="footer-separator"></div>
         <div className="footer-separator"></div>
         <div className="footer-social-links">
-          {/* <!-- <div class="footer-legal-links"> --> */}
           <a className="footer-title">SOCIAL</a>
           <a href="https://discord.gg/JHbhaFbPvN">Discord</a>
           <a href="https://twitter.com/supernovasdao">Twitter</a>
           <a href="https://instagram.com/supernovasdao">Instagram</a>
         </div>
         <div className="footer-social-links">
-          {/* <!-- <div class="footer-legal-links"> --> */}
           <a className="footer-title">RESOURCES</a>
           <a href="https://www.blog.supernovas.app/">Blog</a>
           <a href="https://support.supernovas.app/en/">Support</a>
@@ -466,19 +454,11 @@ const Landing = () => {
           <a href="https://careers.supernovas.app/">Careers</a>
         </div>
         <div className="footer-social-links">
-          {/* <!-- <div class="footer-legal-links"> --> */}
           <a className="footer-title">LEGAL</a>
           <a href="https://support.supernovas.app/en/">Terms of Service</a>
           <a href="https://support.supernovas.app/en/">Privacy Policy</a>
         </div>
-        {/* <!-- <div class="footer-buttons">
-          <a href="#search" class="button-27">Create profile</a>
-          <a href="#" class="button-28__white">Login</a>
-        </div> --> */}
       </footer>
-      {/* <!-- <script src="./scroll.js"></script>
-    <script src="./scroll-collectors.js"></script>
-    <script src="./bg-color.js"></script> --> */}
     </div>
   );
 };

@@ -12,8 +12,7 @@ const FeedPostImageModal = ({ imageURL }) => {
           style={{ maxHeight: "100%", maxWidth: "100%" }}
         />
       </figure>
-      {/* (click)="closeThisWindow()"> */}
-      <div className="img_pop_close">
+      <div onClick={() => closeThisWindow()} className="img_pop_close">
         <Image src={minimizeIcon} alt="Close icon" />
         Exit
       </div>

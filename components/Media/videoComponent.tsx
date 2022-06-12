@@ -25,12 +25,15 @@ const VideoComponent = ({ videoSrc }) => {
   // Dom manipulation end
   return (
     <>
-      {/* (loadeddata)="onVideoLoaded()"
-            [ngClass]="{ visible: loaded }"
-            [src]="videoSrc" */}
       <video
+        src={videoSrc}
+        onLoadedData={() => onVideoLoaded()}
         controls
-        className={styles.hideBeforeLoad + " w-100 br-5px cursor-pointer"}
+        className={[
+          styles.hideBeforeLoad,
+          "w-100 br-5px cursor-pointer",
+          loaded ? styles.visible : "",
+        ].join(" ")}
       ></video>
       {showShimmerUntilLoaded()}
     </>

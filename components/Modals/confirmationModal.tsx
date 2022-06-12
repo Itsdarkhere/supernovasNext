@@ -7,8 +7,7 @@ const ConfirmationModal = () => {
       <ModalHeader header="title" bsModalRef="bsModalRef"></ModalHeader>
       <div className="py-15px para_txt">{text}</div>
       <div className="d-flex flex-column align-items-center py-15px">
-        {/* (click)="confirm()" [disabled]="closingAuction" */}
-        <button className="btn fs-15px close_acution_btn br-12px">
+        <button onClick={() => confirm()} disabled={closingAuction} className="btn fs-15px close_acution_btn br-12px">
           {buttonText}
         </button>
       </div>

@@ -20,8 +20,6 @@ const SectionTitle = ({ title, viewAll, whatAllToShow, routeViewAll }) => {
   // Dom manipulation end
   return (
     <div className={styles.section_title_wrapper}>
-      {/* PUT BACK intersection observer api  */}
-      {/* observeVisibility [debounceTime]="0" (visible)="getRecentSales()" */}
       <div className={styles.discovery_header_box}>
         <h2 id={title}>{title}</h2>
       </div>

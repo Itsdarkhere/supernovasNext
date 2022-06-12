@@ -80,8 +80,8 @@ const PostIconRow = ({
   };
   return (
     <div className="mt-5px js-feed-post-icon-row__container fs-14px text-grey5 d-flex justify-content-between unselectable">
-      {/* (click)="openModal($event)" */}
       <div
+        onClick={(e) => openModal(e)}
         className="cursor-pointer d-flex align-items-center feed-post-icon-hv"
         data-toggle="modal"
         data-target=".js-feed-post-icon-row__comment-modal"
@@ -96,11 +96,8 @@ const PostIconRow = ({
         {!hideNumbers ? <span>{postContent?.CommentCount}</span> : null}
       </div>
 
-      {/*#dropdown="bs-dropdown"
-            (click)="$event.stopPropagation()"
-            dropdown
-        */}
       <div
+        onClick={(e) => e.stopPropagation()}
         className={[
           "btn-group cursor-pointer d-flex align-items-center feed-post-icon-hv",
           !!postContent?.PostEntryReaderState?.RepostedByReader
@@ -108,7 +105,6 @@ const PostIconRow = ({
             : "",
         ].join(" ")}
       >
-        {/**dropdownMenu*/}
         <Dropdown
           placement="bottomStart"
           renderToggle={renderDropdownButton}
@@ -122,16 +118,16 @@ const PostIconRow = ({
             <>
               {userHasReposted() ? (
                 <Dropdown.Item
+                  onClick={(e) => _undoRepost()}
                   icon={<i className={styles.icon_repost + " icon-repost"}></i>}
                   className="dropdown-menu-item d-block fs-12px link--unstyled p-5px feed-post__dropdown-menu-item"
                 >
-                  {/* (click)="_undoRepost($event)" THIS WAS ABOVE */}
                   Hide
                 </Dropdown.Item>
               ) : (
                 <>
-                  {/* (click)="_repost($event)" */}
                   <Dropdown.Item
+                    onClick={(e) => _repost(e)}
                     icon={
                       <i className={styles.icon_repost + " icon-repost"}></i>
                     }
@@ -141,8 +137,9 @@ const PostIconRow = ({
                   </Dropdown.Item>
                 </>
               )}
-              {/*(click)="openModal($event, true)"*/}
+
               <Dropdown.Item
+                onClick={(e) => openModal(e, true)}
                 icon={
                   <i
                     className="fas fa-pencil-alt pl-5px"
@@ -167,16 +164,15 @@ const PostIconRow = ({
         ) : null}
       </div>
 
-      {/*(click)="toggleLike($event)"
-            " */}
       <div
+        onClick={(e) => toggleLike(e)}
         className={[
           "cursor-pointer d-flex align-items-center",
           animateLike ? "is_animating" : "",
         ].join(" ")}
       >
-        {/*(click)="animateLike = !animateLike" */}
         <i
+          onClick={() => setAnimateLike(!animateLike)}
           className={[
             "feed-post-icon-row__icon background-hover-red",
             animateLike ? "is_animating" : "",
@@ -241,10 +237,12 @@ const PostIconRow = ({
             </p>
           </div>
         </div>
-        {/* (click)="sendOneDiamond($event, false)"
-            (mouseover)="addDiamondSelection($event)"
-            (mouseleave)="removeDiamondSelection()" */}
-        <div className="feed-reaction cursor-pointer d-flex align-items-center">
+        <div
+          onMouseLeave={() => removeDiamondSelection()}
+          onMouseOver={(e) => addDiamondSelection(e)}
+          onClick={(e) => sendOneDiamond(e, false)}
+          className="feed-reaction cursor-pointer d-flex align-items-center"
+        >
           <i
             className={[
               "feed-post-icon-row__icon",
@@ -287,11 +285,11 @@ const PostIconRow = ({
                 </div>
               ) : null}
 
-              {/* (click)="onDiamondSelected($event, diamondIndex)"
-                    (mouseover)="diamondHovered = diamondIndex"
-                (mouseleave)="diamondHovered = -1" */}
               {diamondIndexes.map((diamondIndex, index) => (
                 <div
+                  onClick={(e) => onDiamondSelected(e, diamondIndex)}
+                  onMouseOver={() => setDiamondHovered(diamondIndex)}
+                  onMouseLeave={() => setDiamondHovered(-1)}
                   key={index}
                   className={[
                     "reaction-icon transformable",
@@ -313,23 +311,21 @@ const PostIconRow = ({
                   ></i>
                 </div>
               ))}
-
-              {/* (click)="toggleExplainer($event)"
-                    (mouseover)="collapseDiamondInfo = false"
-                    (mouseleave)="collapseDiamondInfo = true" */}
-              <div className="reaction-icon show">
+              <div
+                onMouseLeave={() => setCollapseDiamondInfo(true)}
+                onMouseOver={() => setCollapseDiamondInfo(false)}
+                onClick={(e) => toggleExplainer(e)}
+                className="reaction-icon show"
+              >
                 <i className="fas fa-info-circle diamond-reaction diamond-help"></i>
               </div>
             </div>
           </div>
-          {/* <!--Draggable element for mobile drag-selection--> */}
-          {/* (touchstart)="startDrag()"
-                (touchend)="dragClick($event)"
-                (cdkDragEnded)="endDrag($event)"
-                (cdkDragMoved)="duringDrag($event)"
-                cdkDrag
-                */}
           <div
+            onTouchStart={startDrag()}
+            onTouchEnd={(e) => dragClick(e)}
+            onDragEnd={(e) => endDrag(e)}
+            onDragCapture={(e) => duringDrag(e)}
             className={[
               "diamond-mobile-drag-grab",
               postContent.ProfileEntryResponse?.PublicKeyBase58Check ===
@@ -340,8 +336,7 @@ const PostIconRow = ({
             id="diamond-mobile-drag-grab"
           ></div>
         </div>
-        {/* *ngIf="!hideNumbers" */}
-        <span>{postContent.DiamondCount}</span>
+        {!hideNumbers ? <span>{postContent.DiamondCount}</span> : null}
       </div>
     </div>
   );

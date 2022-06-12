@@ -2,6 +2,9 @@ import styles from "../../../styles/NFT/NFTCard/nftCard.module.scss";
 import buyNowIcon from "../../../public/icons/buy_now_card_icon.svg";
 import { nanosToDeSo } from "../../../utils/global-context";
 import Image from "next/image";
+import Link from "next/link";
+import Avatar from "../../Reusables/avatar";
+import { RouteNames } from "../../../utils/backendapi-context";
 
 // This component is used to show:
 // The information about price, edition, buy now etc on the nftCard
@@ -157,8 +160,12 @@ const NFTCardBidInfo = ({
                 </p>
               </div>
             </>
-            {/* (click)="openAcceptModal($event)" */}
-            <button className={styles.accept_transfer}>Accept transfer</button>
+            <button
+              onClick={(e) => openAcceptModal(e)}
+              className={styles.accept_transfer}
+            >
+              Accept transfer
+            </button>
           </div>
         );
       }
@@ -234,14 +241,18 @@ const NFTCardBidInfo = ({
                   style={{ borderBottom: "0px" }}
                 >
                   <div className={styles.profile_img}>
-                    {/* [avatar]="postContent.PosterPublicKeyBase58Check"
-                      [routerLink]="[
-                        '/' + globalVars.RouteNames.USER_PREFIX,
-                        loadProfile ? this.creatorProfile?.Username : postContent.ProfileEntryResponse?.Username
-                      ]" 
-                      queryParamsHandling="merge"
-                      */}
-                    <div></div>
+                    <Link
+                      href={
+                        "/" + RouteNames.USER_PREFIX + "/" + loadProfile
+                          ? creatorProfile?.Username
+                          : postContent.ProfileEntryResponse?.Username
+                      }
+                    >
+                      <Avatar
+                        classN=""
+                        avatar={postContent.PosterPublicKeyBase58Check}
+                      ></Avatar>
+                    </Link>
                   </div>
                 </div>
                 <div className="d-flex flex-column">
@@ -249,16 +260,24 @@ const NFTCardBidInfo = ({
                       '/' + globalVars.RouteNames.USER_PREFIX,
                       loadProfile ? this.creatorProfile?.Username : postContent.ProfileEntryResponse?.Username
                     ]" */}
-                  <div className={styles.username_nft_card}>
-                    {loadProfile
-                      ? creatorProfile?.Username
-                      : postContent.ProfileEntryResponse?.Username}
-                    {loadProfile ? (
-                      creatorProfile?.IsVerified
-                    ) : postContent.ProfileEntryResponse?.IsVerified ? (
-                      <i className="fas fa-check-circle pl-5px fa-md text-primary"></i>
-                    ) : null}
-                  </div>
+                  <Link
+                    href={
+                      "/" + RouteNames.USER_PREFIX + "/" + loadProfile
+                        ? creatorProfile?.Username
+                        : postContent.ProfileEntryResponse?.Username
+                    }
+                  >
+                    <div className={styles.username_nft_card}>
+                      {loadProfile
+                        ? creatorProfile?.Username
+                        : postContent.ProfileEntryResponse?.Username}
+                      {loadProfile ? (
+                        creatorProfile?.IsVerified
+                      ) : postContent.ProfileEntryResponse?.IsVerified ? (
+                        <i className="fas fa-check-circle pl-5px fa-md text-primary"></i>
+                      ) : null}
+                    </div>
+                  </Link>
                 </div>
               </div>
             ) : (

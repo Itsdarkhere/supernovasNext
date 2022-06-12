@@ -22,8 +22,7 @@ const BuyEth = () => {
           using Moonpay.
         </p>
       </div>
-      {/* (click)="buyEthButtonClicked()" */}
-      <button className="imx-buy-button">
+      <button onClick={() => buyEthButtonClicked()} className="imx-buy-button">
         <div className="general-success-modal-button-text-connected">
           Buy ETH with Moonpay
         </div>

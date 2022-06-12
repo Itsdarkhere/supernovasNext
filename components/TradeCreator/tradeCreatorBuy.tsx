@@ -6,11 +6,11 @@ const TradeCreatorBuy = () => {
         <div className="trade-creator-buy-wrapper position-relative d-flex flex-column flex-center-start w-100 h-100">
           <div className="trade-creator-spacer"></div>
           <div className="position-relative trade-creator-input-container d-flex flex-row flex-start w-90 mt-10px">
-            {/* (change)="emitInvalidateAndUpdateAmounts()"
-              [formControl]="creatorCoinTrade.amount" */}
+            {/*[formControl]="creatorCoinTrade.amount" */}
               {/* matInput */}
             <input
               type="number"
+              onChange={() => emitInvalidateAndUpdateAmounts()}
               placeholder="0"
               name="creatorCoinTrade.amount"
               className="pl-10px color-text font-weight-bold flex-center pr-10px trade-creator-input m-0px h-100 w-60"
@@ -21,30 +21,53 @@ const TradeCreatorBuy = () => {
             </button>
           </div>
           {/* <!-- ERRORS --> */}
-          {/* *ngIf="creatorCoinTrade.amount.invalid && (creatorCoinTrade.amount.dirty || creatorCoinTrade.amount.touched)" */}
+          {creatorCoinTrade.amount.invalid && (creatorCoinTrade.amount.dirty || creatorCoinTrade.amount.touched) ?
           <div
-            className="text-danger text-center 2-90 errors-fontsize mt-2"
+          className="text-danger text-center 2-90 errors-fontsize mt-2"
           >
-            {/* *ngIf="creatorCoinTrade.amount.errors.required" */}
+            {creatorCoinTrade.amount.errors.required ?
             <div className="mt-10px">Amount is required</div>
-              {/* *ngIf="creatorCoinTrade.amount.errors.exclusiveMin" */}
+            :
+            null
+          }
+            
+              {creatorCoinTrade.amount.errors.exclusiveMin ?
             <div className="mt-10px">
-              Amount must be greater than { _minAmount() | number: "0.0-9" }
-              (to cover fees)
-            </div>
-              {/* *ngIf="creatorCoinTrade.amount.errors.dynamicMax" */}
-            <div class="mt-10px">
-                {/* *ngIf="this._maxAmount() && this._maxAmount() > 0; else elseBlock" */}
-              <div>
-                Amount must be less than
-                { _maxAmount() | number: "0.0-9" }
-                (your balance net of fees)
-              </div>
-              {/* <ng-template #elseBlock>Amount must be less than your balance plus fees</ng-template> */}
-            </div>
-              {/* *ngIf="creatorCoinTrade.amount.errors.pattern" */}
-            <div className="mt-10px">Amount must be numbers and decimals only</div>
+            Amount must be greater than { _minAmount() | number: "0.0-9" }
+            (to cover fees)
           </div>
+          :
+          null  
+            }
+            
+              {creatorCoinTrade.amount.errors.dynamicMax ?
+             <div class="mt-10px">
+             {_maxAmount() && _maxAmount() > 0 ?
+             <div>
+             Amount must be less than
+             { _maxAmount() | number: "0.0-9" }
+             (your balance net of fees)
+           </div>
+           :
+           null
+            }
+           
+         </div>
+         :
+         null 
+            }
+            
+              {creatorCoinTrade.amount.errors.pattern ?
+            <div className="mt-10px">Amount must be numbers and decimals only</div>
+            :
+            null  
+            }
+            
+          </div>
+          :
+          null
+          }
+          
           {/* <!-- ERRORS END --> */}
           <div className="trade-creator-spacer-two"></div>
           <span className="trade-creator-balance-info">
@@ -63,14 +86,18 @@ const TradeCreatorBuy = () => {
               Reward
             </span>
           </div>
-          {/* [disabled]="creatorCoinTrade.amount.invalid || buyingCoin" */}
-          {/* (click)="clickBuy()" */}
           <button
+          onClick={() => clickBuy()}
+            disabled={creatorCoinTrade.amount.invalid || buyingCoin}
             className="black-rounded-button bounce-button mt-20px trade-creator-button"
           >
-        {/* *ngIf="buyingCoin; else elseBlock" */}
+        {buyingCoin ?
         <i className="fa fa-spinner fa-spin"></i>
-        {/* <ng-template #elseBlock>Buy</ng-template> */}
+        :
+        <>
+        Buy
+        </>
+      }
       </button>
     </div>
 

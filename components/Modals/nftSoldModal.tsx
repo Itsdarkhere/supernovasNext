@@ -7,8 +7,8 @@ const NFTSoldModal = () => {
       className="nft-modal-container nft_sold_modal overwrite-min-height-450 p-15px"
     >
       <ModalHeader
-        header="'Your NFT is sold!'"
-        bsModalRef="bsModalRef"
+        header="Your NFT is sold!"
+        bsModalRef={bsModalRef}
       ></ModalHeader>
 
       <div className="pb-15px fs-15px text-align-center mt-20px">
@@ -19,8 +19,7 @@ const NFTSoldModal = () => {
       <p className="text-align-center font-weight-bold mt-10px">
         Share your success with others by quote reposting the NFT you just sold!
       </p>
-      {/* (click)="quoteRepost($event, true)" */}
-      <button className="btn cta-button-gradient">Quote Repost the NFT</button>
+      <button onClick={(e) => quoteRepost(e, true)} className="btn cta-button-gradient">Quote Repost the NFT</button>
     </div>
   );
 };

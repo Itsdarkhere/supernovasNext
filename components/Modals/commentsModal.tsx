@@ -6,8 +6,7 @@ const CommentsModal = () => {
   return (
     <div className="comment_modal">
       <div className="comment-header">
-        {/* (click)="bsModalRef.hide()" */}
-        <button type="button" className="close feed-create-comment-form__close">
+        <button onClick={() => bsModalRef.hide()} type="button" className="close feed-create-comment-form__close">
           <svg
             width="10"
             height="10"

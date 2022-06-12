@@ -6,6 +6,9 @@ import moneyIcon from "../../../public/icons/u_money-bill.svg";
 import { nanosToDeSo, nanosToUSD } from "../../../utils/global-context";
 import Image from "next/image";
 import { useState } from "react";
+import Avatar from "../../Reusables/avatar";
+import Link from "next/link";
+import { RouteNames } from "../../../utils/backendapi-context";
 
 // This component displays all deso nft states in the nft profile
 // Texts such as:
@@ -76,10 +79,12 @@ const DesoDetails = ({
                         <>
                           <div className="nft_current_bid">
                             <div>
-                              {/* *ngIf="!editionHasBids" */}
-                              <span className="hq">MINIMUM BID</span>
-                              {/* *ngIf="editionHasBids" */}
-                              <span className="hq">HIGHEST BID</span>
+                              {!editionHasBids ? (
+                                <span className="hq">MINIMUM BID</span>
+                              ) : (
+                                <span className="hq">HIGHEST BID</span>
+                              )}
+
                               {/* <!-- FOR MIN AND HIGH BID--> */}
                               <div className="val">
                                 {highBid === 0
@@ -98,26 +103,37 @@ const DesoDetails = ({
                             <div className="nft_done_by">
                               <span className="hq">Made By</span>
                               <div className="d-flex">
-                                {/* [avatar]="hightestBidOwner?.ProfileEntryResponse?.PublicKeyBase58Check" */}
-                                <div className="bid_by_avtar"></div>
+                                <Avatar
+                                  avatar={
+                                    hightestBidOwner?.ProfileEntryResponse
+                                      ?.PublicKeyBase58Check
+                                  }
+                                  classN="bid_by_avtar"
+                                ></Avatar>
                                 <div className="name">
-                                  {/* [routerLink]="
-                                    getRouterLink([
-                                        '/' + globalVars.RouteNames.USER_PREFIX,
-                                        hightestBidOwner?.ProfileEntryResponse?.Username
-                                    ])
-                                    "
-                                    queryParamsHandling="merge" */}
-                                  <a className="fc-default font-weight-bold">
-                                    {
-                                      highestBidOwner?.ProfileEntryResponse
+                                  <Link
+                                    href={
+                                      "/" +
+                                      RouteNames.USER_PREFIX +
+                                      "/" +
+                                      hightestBidOwner?.ProfileEntryResponse
                                         ?.Username
                                     }
-                                  </a>
-                                  {/* *ngIf="hightestBidOwner?.ProfileEntryResponse?.IsVerified" */}
-                                  <span className="ml-1 text-primary">
-                                    <i className="fas fa-check-circle fa-md align-middle"></i>
-                                  </span>
+                                  >
+                                    <a className="fc-default font-weight-bold">
+                                      {
+                                        highestBidOwner?.ProfileEntryResponse
+                                          ?.Username
+                                      }
+                                    </a>
+                                  </Link>
+
+                                  {hightestBidOwner?.ProfileEntryResponse
+                                    ?.IsVerified ? (
+                                    <span className="ml-1 text-primary">
+                                      <i className="fas fa-check-circle fa-md align-middle"></i>
+                                    </span>
+                                  ) : null}
                                 </div>
                               </div>
                             </div>
@@ -162,8 +178,12 @@ const DesoDetails = ({
                         <div className="auction_detl">
                           <span className="hq">Owner</span>
                           <div className="d-flex">
-                            {/* [avatar]="nftEntryResponse?.OwnerPublicKeyBase58Check" */}
-                            <div className="bid_by_avtar"></div>
+                            <Avatar
+                              avatar={
+                                nftEntryResponse?.OwnerPublicKeyBase58Check
+                              }
+                              classN="bid_by_avtar"
+                            ></Avatar>
                           </div>
                         </div>
                       ) : null}
@@ -190,15 +210,19 @@ const DesoDetails = ({
                   {editionForSale ? (
                     editionHasBids ? (
                       <div className="feed_post_btn_grp d-flex flex-wrap w-100 justify-content-between">
-                        {/* (click)="sellYourBid()" */}
-                        <button className="btn blk_fill_btn with_ico small">
+                        <button
+                          onClick={() => sellYourBid()}
+                          className="btn blk_fill_btn with_ico small"
+                        >
                           <i>
                             <Image src={moneyIcon} alt="" />
                           </i>
                           Sell your NFT
                         </button>
-                        {/* (click)="closeYourAuction()" */}
-                        <button className="btn blk_line_btn with_ico small">
+                        <button
+                          onClick={() => closeYourAuction()}
+                          className="btn blk_line_btn with_ico small"
+                        >
                           <i>
                             <Image src={circleErrorIcon} alt="" />
                           </i>
@@ -215,8 +239,10 @@ const DesoDetails = ({
                     )
                   ) : editionHasUnlockable ? (
                     <>
-                      {/*(click)="ViewUnlockableContent($event)"*/}
-                      <button className="btn nft_place_bid_btn nft_sale_btn">
+                      <button
+                        onClick={(e) => ViewUnlockableContent(e)}
+                        className="btn nft_place_bid_btn nft_sale_btn"
+                      >
                         <i>
                           <Image src={unlockIcon} alt="lock icon" />
                         </i>
@@ -225,8 +251,10 @@ const DesoDetails = ({
                     </>
                   ) : (
                     <>
-                      {/*"(click)="openCreateNFTAuctionModal($event)"*/}
-                      <button className="btn nft_place_bid_btn">
+                      <button
+                        onClick={(e) => openCreateNFTAuctionModal(e)}
+                        className="btn nft_place_bid_btn"
+                      >
                         Put NFT for sale
                       </button>
                     </>
@@ -238,20 +266,26 @@ const DesoDetails = ({
                     <>
                       {editionHasBidByUser ? (
                         <div className="w-100 d-flex flex-row flex-center">
-                          {/* (click)="openPlaceBidModal($event)" */}
-                          <button className="btn blk_line_btn with_ico buy_now_btn mw-250">
+                          <button
+                            onClick={(e) => openPlaceBidModal(e)}
+                            className="btn blk_line_btn with_ico buy_now_btn mw-250"
+                          >
                             Place new bid
                           </button>
-                          {/* (click)="onBidCancel($event)" */}
-                          <button className="btn blk_line_btn place_bid_btn_both mw-250">
+                          <button
+                            onClick={(e) => onBidCancel(e)}
+                            className="btn blk_line_btn place_bid_btn_both mw-250"
+                          >
                             Cancel your bid
                           </button>
                         </div>
                       ) : editionIsBuyNow ? (
                         buyNowEqualMinBid ? (
                           <div className="w-100 d-flex flex-center">
-                            {/* (click)="openBuyNowModal($event)" */}
-                            <button className="btn blk_line_btn with_ico big buy_now_btn">
+                            <button
+                              onClick={(e) => openBuyNowModal(e)}
+                              className="btn blk_line_btn with_ico big buy_now_btn"
+                            >
                               <i>
                                 <Image
                                   src={buyNowIcon}
@@ -264,8 +298,10 @@ const DesoDetails = ({
                           </div>
                         ) : (
                           <div className="w-100 d-flex flex-row flex-center">
-                            {/* (click)="openBuyNowModal($event)" */}
-                            <button className="btn blk_line_btn with_ico buy_now_btn mw-250">
+                            <button
+                              onClick={(e) => openBuyNowModal(e)}
+                              className="btn blk_line_btn with_ico buy_now_btn mw-250"
+                            >
                               <i>
                                 <Image
                                   src={buyNowIcon}
@@ -275,17 +311,20 @@ const DesoDetails = ({
                               </i>
                               Buy Now
                             </button>
-                            {/* [ngClass]="{ 'mt-15px': isQuotedContent }"
-                            (click)="openPlaceBidModal($event)" */}
-                            <button className="btn blk_line_btn place_bid_btn_both mw-250">
+                            <button
+                              onClick={(e) => openPlaceBidModal(e)}
+                              className={[
+                                "btn blk_line_btn place_bid_btn_both mw-250",
+                                isQuotedContent ? "mt-15px" : "",
+                              ].join(" ")}
+                            >
                               Place a bid
                             </button>
                           </div>
                         )
                       ) : (
                         <>
-                          {/*"(click)="openPlaceBidModal($event)"*/}
-                          <button className="btn nft_place_bid_btn">
+                          <button onClick={(e) => openPlaceBidModal(e)} className="btn nft_place_bid_btn">
                             Place your Bid
                           </button>
                         </>

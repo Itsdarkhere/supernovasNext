@@ -4,6 +4,7 @@ import circleErrorIcon from "../../../public/icons/circle-error.svg";
 import Image from "next/image";
 import { useState } from "react";
 import { useAppSelector } from "../../../utils/Redux/hooks";
+import Avatar from "../../Reusables/avatar";
 
 const ETHDetails = ({
   ethNFTOwnerWalletAddress,
@@ -12,7 +13,9 @@ const ETHDetails = ({
   ethNFTOwnerDesoPublicKey,
 }) => {
   // Redux
-  const isEthereumNFTForSale = useAppSelector((state) => state.imx.isEthereumNFTForSale);
+  const isEthereumNFTForSale = useAppSelector(
+    (state) => state.imx.isEthereumNFTForSale
+  );
   // Redux end
 
   // State
@@ -44,8 +47,10 @@ const ETHDetails = ({
                       </div>
                     </div>
                   </div>
-                  {/* (click)="closeYourETHAuction()" */}
-                  <button className="btn blk_line_btn with_ico big">
+                  <button
+                    onClick={() => closeYourETHAuction()}
+                    className="btn blk_line_btn with_ico big"
+                  >
                     <i>
                       <Image src={circleErrorIcon} alt="circle error icon" />
                     </i>
@@ -65,8 +70,10 @@ const ETHDetails = ({
                   </div>
 
                   <div className="w-100 d-flex flex-center">
-                    {/* (click)="openBuyNowModal($event)" */}
-                    <button className="btn blk_line_btn with_ico big buy_now_btn">
+                    <button
+                      onClick={(e) => openBuyNowModal(e)}
+                      className="btn blk_line_btn with_ico big buy_now_btn"
+                    >
                       <i>
                         <Image
                           src={buyNowIcon}
@@ -94,9 +101,11 @@ const ETHDetails = ({
                 <span className="hq">Owner</span>
                 {ethNFTOwnerWalletAddress === "-" ? (
                   <div className="d-flex">
-                    {/* [avatar]="this.ethNFTCreatorDesoPublicKey" */}
                     {ethNFTCreatorDesoProfile ? (
-                      <div className="bid_by_avtar"></div>
+                      <Avatar
+                        avatar={ethNFTCreatorDesoPublicKey}
+                        classN="bid_by_avtar"
+                      ></Avatar>
                     ) : (
                       <p className="eth-provenance-row-text-mobile">
                         {ethNFTCreatorWalletAddress}
@@ -105,9 +114,11 @@ const ETHDetails = ({
                   </div>
                 ) : (
                   <div className="d-flex">
-                    {/*[avatar]="this.ethNFTOwnerDesoPublicKey"*/}
                     {ethNFTOwnerDesoPublicKey ? (
-                      <div className="bid_by_avtar"></div>
+                      <Avatar
+                        avatar={ethNFTCreatorDesoPublicKey}
+                        classN="bid_by_avtar"
+                      ></Avatar>
                     ) : (
                       <p className="eth-provenance-row-text-mobile">
                         {ethNFTOwnerWalletAddress}
@@ -124,8 +135,10 @@ const ETHDetails = ({
           {!isEthereumNFTForSale && ownsEthNFT ? (
             <div className="d-flex nft_current_bid_tpwrapper put-nft-for-sale-container">
               <div className="d-flex flex-wrap justify-content-between">
-                {/*(click)="openCreateETHNFTAuctionModal($event)"*/}
-                <button className="btn nft_place_bid_btn">
+                <button
+                  onClick={(e) => openCreateETHNFTAuctionModal(e)}
+                  className="btn nft_place_bid_btn"
+                >
                   Put NFT for sale
                 </button>
               </div>

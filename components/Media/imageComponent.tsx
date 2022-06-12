@@ -9,7 +9,10 @@ const ImageComponent = ({ imageSrc }) => {
 
   // Functions
   const mapImageURLs = (imgURL: string): string => {
-    if (imgURL.startsWith("https://arweave.net/") || imgURL.includes(".arweave.net")) {
+    if (
+      imgURL.startsWith("https://arweave.net/") ||
+      imgURL.includes(".arweave.net")
+    ) {
       // Build cloudflare imageString
       imgURL =
         "https://supernovas.app/cdn-cgi/image/width=800,height=800,fit=scale-down,quality=90/" +
@@ -32,19 +35,21 @@ const ImageComponent = ({ imageSrc }) => {
   // Dom manipulation end
   return (
     <>
-      {/* (click)="openImgModal($event, imageSrc)"
-  [ngClass]="{ visible: completelyLoaded }"
-  (error)="useNormalImage(imageSrc)"
-  (load)="loaded()" 
-  id="post-image"*/}
-        <Image
-          width={500}
-          height={500}
-          data-toggle="modal"
-          className={styles.hideBeforeLoad}
-          src={mapImageURLs(imageSrc)}
-          alt="nft post image"
-        />
+      <Image
+        id="post-image"
+        onError={() => useNormalImage(imageSrc)}
+        onLoad={() => loaded()}
+        onClick={(e) => openImgModal(e, imageSrc)}
+        width={500}
+        height={500}
+        data-toggle="modal"
+        className={[
+          styles.hideBeforeLoad,
+          completelyLoaded ? styles.visible : "",
+        ].join(" ")}
+        src={mapImageURLs(imageSrc)}
+        alt="nft post image"
+      />
       {showShimmerUntilLoaded()}
     </>
   );

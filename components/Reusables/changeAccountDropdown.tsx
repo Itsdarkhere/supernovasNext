@@ -45,42 +45,44 @@ const ChangeAccountDropdown = () => {
           id={styles.cas_selector}
           className="d-flex align-items-center justify-content-between h-100 w-100"
         >
-          {/* *ngIf="globalVars.loggedInUser" */}
-          <div
-            className={
-              styles.change_account_selector__ellipsis_restriction +
-              " d-flex flex-row flex-start align-items-center cursor-pointer"
-            }
-          >
-            <Avatar
-              avatar={loggedInUser.PublicKeyBase58Check}
-              classN={
-                styles.change_account_selector__account_image +
-                " align-items-center"
-              }
-            ></Avatar>
+          {loggedInUser ? (
             <div
-              className={[
-                styles.change_account_selector__acount_name,
-                styles.cas_dont_copy,
-                styles.change_account_selector__ellipsis_restriction,
-              ].join(" ")}
+              className={
+                styles.change_account_selector__ellipsis_restriction +
+                " d-flex flex-row flex-start align-items-center cursor-pointer"
+              }
             >
-              {loggedInUser.ProfileEntryResponse?.Username
-                ? loggedInUser.ProfileEntryResponse.Username
-                : loggedInUser.PublicKeyBase58Check}
-            </div>
-            {loggedInUser.ProfileEntryResponse?.IsVerified ? (
-              <span
-                className={
-                  styles.cas_dont_copy +
-                  " ml-1 d-inline-block align-center text-primary fs-12px"
+              <Avatar
+                avatar={loggedInUser.PublicKeyBase58Check}
+                classN={
+                  styles.change_account_selector__account_image +
+                  " align-items-center"
                 }
+              ></Avatar>
+              <div
+                className={[
+                  styles.change_account_selector__acount_name,
+                  styles.cas_dont_copy,
+                  styles.change_account_selector__ellipsis_restriction,
+                ].join(" ")}
               >
-                <i className="fas fa-check-circle fa-md"></i>
-              </span>
-            ) : null}
-          </div>
+                {loggedInUser.ProfileEntryResponse?.Username
+                  ? loggedInUser.ProfileEntryResponse.Username
+                  : loggedInUser.PublicKeyBase58Check}
+              </div>
+              {loggedInUser.ProfileEntryResponse?.IsVerified ? (
+                <span
+                  className={
+                    styles.cas_dont_copy +
+                    " ml-1 d-inline-block align-center text-primary fs-12px"
+                  }
+                >
+                  <i className="fas fa-check-circle fa-md"></i>
+                </span>
+              ) : null}
+            </div>
+          ) : null}
+
           <div
             id={styles.nav_icon3}
             className={styles.cas_dont_copy + " h-100 d-flex flex-center"}
@@ -99,12 +101,16 @@ const ChangeAccountDropdown = () => {
     <div>
       {!loggedInUser ? (
         <div className={styles.cas_logged_out}>
-          {/* (click)="createProfile()" */}
-          <button className={styles.cas_logged_out_btn_1}>
+          <button
+            onClick={() => createProfile()}
+            className={styles.cas_logged_out_btn_1}
+          >
             Create profile
           </button>
-          {/* (click)="globalVars.launchLoginFlow()" */}
-          <button className={styles.cas_logged_out_btn_2}>
+          <button
+            onClick={() => globalVars.launchLoginFlow()}
+            className={styles.cas_logged_out_btn_2}
+          >
             <Image src={lockIcon} alt="lock" />
             Log in
           </button>
@@ -154,8 +160,10 @@ const ChangeAccountDropdown = () => {
                 <Image src={supportIcon} alt="cas icon" />
                 Support
               </Dropdown.Item>
-              {/* (click)="launchLogoutFlow()" */}
-              <Dropdown.Item className={styles.cas_button}>
+              <Dropdown.Item
+                onClick={() => launchLogoutFlow()}
+                className={styles.cas_button}
+              >
                 <Image src={logoutIcon} alt="cas icon" />
                 Log out
               </Dropdown.Item>
@@ -182,10 +190,9 @@ const ChangeAccountDropdown = () => {
           ) : (
             <div className={styles.cas_page_two + " w-100 h-100"}>
               {/* [@casSwipeAnimation]="animationType" THIS WAS ABOVE */}
-              {/* (click)="clickBack($event)" */}
               <Dropdown.Item
-                className={styles.cas_back_button}
                 onClick={(e) => clickBack(e)}
+                className={styles.cas_back_button}
               >
                 <Image src={backIcon} alt="cas icon" />
                 Back
@@ -194,11 +201,11 @@ const ChangeAccountDropdown = () => {
               <Dropdown.Item className={styles.cas_account_list}>
                 {userList.map((user, index) => (
                   <div key={index}>
-                    {/* (mouseover)="hoverRow = rowNum"
-                (click)="_switchToUser(user)" */}
                     {user.PublicKeyBase58Check !=
                     loggedInUser.PublicKeyBase58Check ? (
                       <div
+                        onClick={() => _switchToUser(user)}
+                        onMouseOver={() => setHoverRow(rowNum)} 
                         className={
                           styles.change_account_selector_list__inner +
                           " pt-10px pb-10px pl-15px pr-15px d-flex align-items-center"
@@ -242,8 +249,7 @@ const ChangeAccountDropdown = () => {
                 ))}
               </Dropdown.Item>
               <hr />
-              {/* (click)="globalVars.launchLoginFlow()" */}
-              <Dropdown.Item className={styles.cas_add_acc_button}>
+              <Dropdown.Item onClick={() => globalVars.launchLoginFlow()} className={styles.cas_add_acc_button}>
                 <Image src={addAccountIcon} alt="cas icon" />
                 <p>Add account</p>
               </Dropdown.Item>

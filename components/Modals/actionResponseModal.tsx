@@ -8,12 +8,10 @@ const ActionResponseModal = () => {
         <label className="mb-0px">{mainText}</label>
       </div>
       <div className="action-response-buttons-container d-flex flex-column w-90">
-        {/* (click)="dissmissReasonOne()" */}
-        <button className="black-rounded-button action-response-black-button w-100">
+        <button onClick={() => dissmissReasonOne()} className="black-rounded-button action-response-black-button w-100">
           { buttonOneText }
         </button>
-        {/* (click)="dissmissReasonTwo()" */}
-        <button className="white-rounded-button action-response-white-button w-100">
+        <button onClick={() => dissmissReasonTwo()} className="white-rounded-button action-response-white-button w-100">
           Close this window
         </button>
       </div>

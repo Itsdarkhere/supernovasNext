@@ -8,6 +8,8 @@ import { RouteNames } from "../../utils/backendapi-context";
 import Link from "next/link";
 import { useAppSelector } from "../../utils/Redux/hooks";
 import ChangeAccountDropdown from "../Reusables/changeAccountDropdown";
+import NotificationsList from "../Notifications/notificationsList";
+import SearchBar from "../Reusables/searchBar";
 const Header = () => {
   // Redux
   const loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
@@ -79,15 +81,16 @@ const Header = () => {
       return (
         <div className={styles.notification_list_cover}>
           <div className={styles.header_notification_list_inner}>
-            {/* <app-notifications-list [isNotificationBar]="true"></app-notifications-list> Rewrite in react */}
+            <NotificationsList isNotificationBar={true}></NotificationsList>
           </div>
-          {/* [routerLink]="'/' + globalVars.RouteNames.NOTIFICATIONS" rewrite in react */}
-          <a
-            className={styles.view_all_text + "text_primary"}
-            title="View All Notifications"
-          >
-            View all
-          </a>
+          <Link href="/notifications">
+            <a
+              className={styles.view_all_text + "text_primary"}
+              title="View All Notifications"
+            >
+              View all
+            </a>
+          </Link>
         </div>
       );
     }
@@ -142,7 +145,10 @@ const Header = () => {
           </Link>
           {/* [class.active-mobile]="isSearchOpen" */}
           <div className={styles.search_bar_cover}>
-            {/* <search-bar [focusSearchInput]="isSearchOpen" [headerSearchBar]="true"></search-bar> */}
+            <SearchBar
+              focusSearchInput={isSearchOpen}
+              headerSearchBar={true}
+            ></SearchBar>
           </div>
           <div className={styles.right_portion}>
             <ul className={styles.right_side_options + " " + styles.for_mobile}>
@@ -156,28 +162,31 @@ const Header = () => {
                 styles.right_side_options + " " + styles.menu_options_list
               }
             >
-              {/* (clickOutside)="clickOutside()" *ngIf="globalVars.loggedInUser"  REWRITE IN REACT*/}
-              <li
-                className={
-                  styles.notification_icon_cover +
-                  " " +
-                  styles.single_option +
-                  " " +
-                  "h-100 d-flex flex-center flex-column"
-                }
-              >
-                <div className={styles.noti_hv}>
-                  <Image
-                    onClick={() => showNotification()}
-                    alt="notification bell"
-                    src={notificationIcon}
-                    height="25px"
-                    title="Notification"
-                  />
-                  {showNotificationAmount()}
-                </div>
-                {showOpenNotifications()}
-              </li>
+              {/* (clickOutside)="clickOutside()"  REWRITE IN REACT*/}
+              {loggedInUser ? (
+                <li
+                  className={
+                    styles.notification_icon_cover +
+                    " " +
+                    styles.single_option +
+                    " " +
+                    "h-100 d-flex flex-center flex-column"
+                  }
+                >
+                  <div className={styles.noti_hv}>
+                    <Image
+                      onClick={() => showNotification()}
+                      alt="notification bell"
+                      src={notificationIcon}
+                      height="25px"
+                      title="Notification"
+                    />
+                    {showNotificationAmount()}
+                  </div>
+                  {showOpenNotifications()}
+                </li>
+              ) : null}
+
               {getCreateButton()}
               <div className="ml-20px">
                 <ChangeAccountDropdown></ChangeAccountDropdown>

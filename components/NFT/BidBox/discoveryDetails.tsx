@@ -1,9 +1,9 @@
 import styles from "../../styles/NFT/bidBox.module.scss";
-import {
-  nanosToDeSo,
-  nanosToUSD,
-} from "../../../utils/global-context";
+import { nanosToDeSo, nanosToUSD } from "../../../utils/global-context";
 import { useAppSelector } from "../../../utils/Redux/hooks";
+import Avatar from "../../Reusables/avatar";
+import { RouteNames } from "../../../utils/backendapi-context";
+import Link from "next/link";
 // These details of the box, are used on the promoted NFT on discovery page
 // There is a whole big bunch of different 'states' so beware
 const DiscoveryDetails = ({
@@ -24,7 +24,7 @@ const DiscoveryDetails = ({
   editionForSale,
   editionHasBeenSold,
 }) => {
-    // Redux
+  // Redux
   const loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
   // Redux end
 
@@ -91,16 +91,25 @@ const DiscoveryDetails = ({
         <div className="w-50 nft_done_by">
           <span className="lb">Made By</span>
           <div className="d-flex flex-center-start">
-            {/* [avatar]="hightestBidOwner?.ProfileEntryResponse?.PublicKeyBase58Check" */}
-            <div className="bid_by_avtar"></div>
+            <Avatar
+              avatar={
+                hightestBidOwner?.ProfileEntryResponse?.PublicKeyBase58Check
+              }
+              classN="bid_by_avtar"
+            ></Avatar>
             <div className="name">
-              {/* [routerLink]="
-                getRouterLink(['/' + globalVars.RouteNames.USER_PREFIX, hightestBidOwner?.ProfileEntryResponse?.Username])
-                "
-                queryParamsHandling="merge" */}
-              <a className="fc-secalt val_sm">
-                {hightestBidOwner?.ProfileEntryResponse?.Username}
-              </a>
+              <Link
+                href={
+                  "/" +
+                  RouteNames.USER_PREFIX +
+                  "/" +
+                  hightestBidOwner?.ProfileEntryResponse?.Username
+                }
+              >
+                <a className="fc-secalt val_sm">
+                  {hightestBidOwner?.ProfileEntryResponse?.Username}
+                </a>
+              </Link>
             </div>
           </div>
         </div>
@@ -113,8 +122,10 @@ const DiscoveryDetails = ({
         <div className="auction_detl">
           <span className="lb">Owner</span>
           <div className="d-flex">
-            {/* [avatar]="nftEntryResponse?.OwnerPublicKeyBase58Check" */}
-            <div className="bid_by_avtar"></div>
+            <Avatar
+              classN="bid_by_avtar"
+              avatar={nftEntryResponse?.OwnerPublicKeyBase58Check}
+            ></Avatar>
           </div>
         </div>
       );
@@ -155,16 +166,26 @@ const DiscoveryDetails = ({
         <div className="discovery-hgs">
           <span className="lb">Made By</span>
           <div className="d-flex">
-            {/* [avatar]="hightestBidOwner?.ProfileEntryResponse?.PublicKeyBase58Check" */}
-            <div className="bid_by_avtar"></div>
+            <Avatar
+              classN="bid_by_avtar"
+              avatar={
+                hightestBidOwner?.ProfileEntryResponse?.PublicKeyBase58Check
+              }
+            ></Avatar>
             <div className="name">
-              {/* [routerLink]="
-                getRouterLink(['/' + globalVars.RouteNames.USER_PREFIX, hightestBidOwner?.ProfileEntryResponse?.Username])
-                "
-                queryParamsHandling="merge" */}
-              <a className="fc-secalt font-weight-bold">
-                {hightestBidOwner?.ProfileEntryResponse?.Username}
-              </a>
+              <Link
+                href={
+                  "/" +
+                  RouteNames.USER_PREFIX +
+                  "/" +
+                  hightestBidOwner?.ProfileEntryResponse?.Username
+                }
+              >
+                <a className="fc-secalt font-weight-bold">
+                  {hightestBidOwner?.ProfileEntryResponse?.Username}
+                </a>
+              </Link>
+
               {nftBidData?.BidEntryResponses[0]?.ProfileEntryResponse
                 ?.IsVerified ? (
                 <span className="ml-1 text-primary">
@@ -225,7 +246,8 @@ const DiscoveryDetails = ({
               <div className="val">
                 {highBid === 0
                   ? nanosToDeSo(nftMinBidAmountNanos, 5)
-                  : nanosToDeSo(highBid, 5)} DESO
+                  : nanosToDeSo(highBid, 5)}{" "}
+                DESO
               </div>
 
               <div className="val_sm">
@@ -258,8 +280,10 @@ const DiscoveryDetails = ({
           <div className="val">
             <span className="lb">Owner</span>
             <div className="owner_lft align-items-center d-flex">
-              {/* [avatar]="nftEntryResponse?.OwnerPublicKeyBase58Check" */}
-              <div className="bid_by_avtar"></div>
+              <Avatar
+                avatar={nftEntryResponse?.OwnerPublicKeyBase58Check}
+                classN="bid_by_avtar"
+              ></Avatar>
             </div>
           </div>
         ) : null}

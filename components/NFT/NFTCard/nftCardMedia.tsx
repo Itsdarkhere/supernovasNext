@@ -3,6 +3,7 @@ import Image from "next/image";
 import videoIcon from "../../../public/icons/video-type-white.svg";
 import smallAudioIcon from "../../../public/icons/audio-play-small.svg";
 import musicIcon from "../../../public/icons/music-type-white.svg";
+import { transformVideoURL } from "../../../utils/sanitizeVideoURL";
 
 // This component holds all the media of an nftCard
 // Image, video, iframe ...
@@ -69,9 +70,9 @@ const NFTCardMedia = ({
             alt="nft image"
             className={styles.card_img}
             id="nft-card-image"
-            // onError="useNormalImage()"
-            // mouseenter="activateOnHoverAudio(false)"
-            // mouseleave="activateOnHoverAudio(true)"
+            onMouseEnter={() => activateOnHoverAudio(false)}
+            onMouseLeave={() => activateOnHoverAudio(true)}
+            onError={() => useNormalImage()}
             data-toggle="modal"
             src={imageURL}
           />
@@ -83,8 +84,12 @@ const NFTCardMedia = ({
         postContent?.PostExtraData?.arweaveVideoSrc &&
         !postContent.ParentStakeID ? (
           <div className={styles.video_nft_container + " overflow-hidden"}>
-            {/* [ngClass]="{ opacity_0: !showVideoTypeIcon }" */}
-            <div className={styles.card_video_icon_container}>
+            <div
+              className={[
+                styles.card_video_icon_container,
+                !showVideoTypeIcon ? styles.opacity_0 : "",
+              ].join(" ")}
+            >
               <Image
                 width={"50%"}
                 className={styles.card_video_icon}
@@ -94,8 +99,8 @@ const NFTCardMedia = ({
             </div>
             <video
               id="video-nft-1"
-              //   mouseenter="activateOnHover($event, true)"
-              //   mouseleave="activateOnHover($event, false)"
+              onMouseEnter={(e) => activateOnHover(e, true)}
+              onMouseLeave={(e) => activateOnHover(e, false)}
               loop
               //muted="'muted'"
               muted
@@ -107,26 +112,30 @@ const NFTCardMedia = ({
         ) : null}
 
         {/* Video from google */}
-        {/* allowfullscreen */}
-        {/* put back ,,, src used to have | sanitizeVideoUrl */}
         {postContent?.VideoURLs &&
         postContent?.VideoURLs[0] &&
         !postContent?.ParentStakeID &&
         !postContent?.PostExtraData?.arweaveVideoSrc ? (
           <iframe
-            src={postContent.VideoURLs[0]}
+            allowFullScreen
+            src={
+              transformVideoURL(postContent.VideoURLs[0])
+                ? postContent.VideoURLs[0]
+                : ""
+            }
             allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
             className={styles.video_tag}
           ></iframe>
         ) : null}
 
         {/* Embeds, twitch, youtube etc */}
-        {/* frameborder="0" allowfullscreen */}
+        {/* frameborder="0"*/}
         {/* Check works ,,, used to have 'max-width': getEmbedWidth(constructedEmbedURL)
         but that class does not exist */}
         {/* put back ,,, src used to have | sanitizeVideoUrl */}
         {constructedEmbedURL ? (
           <iframe
+            allowFullScreen
             id="embed-iframe"
             height="getEmbedHeight()"
             className={styles.video_tag}

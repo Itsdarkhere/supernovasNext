@@ -1,14 +1,15 @@
 import styles from "../../styles/NotFound/notFound.module.scss";
+import TopBarMobileNavigation from "../Navigation/TopBarMobile/topBarMobileNavigation";
 
 const NotFound = () => {
   return (
     <>
       <div
         className="d-flex align-items-center justify-content-between w-100 px-15px fs-18px font-weight-bold fc-default border-bottom border-color-grey"
-        style="min-height: 80px"
+        style={{ minHeight: "80px" }}
       >
         <div className="d-flex align-items-center">
-          <top-bar-mobile-navigation-control class="mr-15px d-lg-none d-inline-block"></top-bar-mobile-navigation-control>
+          <TopBarMobileNavigation></TopBarMobileNavigation>
           Page not found
         </div>
       </div>

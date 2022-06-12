@@ -1,12 +1,15 @@
 import styles from "../../styles/Modals/unlockContentModal.module.scss";
+import { SanitizeAndAutoLink } from "../../utils/sanitizeAndAutoLink";
 
 const UnlockContentModal = () => {
   return (
     <div app-theme className="nft-modal-container gray_bg p-15px">
       <div className="bid-popup-wrapper">
         <h3 className="bid-title">Unlockable Content</h3>
-        {/* (click)="bsModalRef.hide()" */}
-        <div className="fs-25px lh-20px close_btn unlockable_pop_close cursor-pointer pr-15px">
+        <div
+          onClick={() => bsModalRef.hide()}
+          className="fs-25px lh-20px close_btn unlockable_pop_close cursor-pointer pr-15px"
+        >
           <svg
             width="10"
             height="10"
@@ -21,16 +24,20 @@ const UnlockContentModal = () => {
           </svg>
         </div>
         <div className="unlockable_content_popwrp">
-          {/* *ngFor="let nftEntry of decryptableNFTEntryResponses" */}
-          <div className="d-flex link_list_sc flex-row">
-            <div className="num">#{nftEntry.SerialNumber} :</div>
-            {/* [innerHTML]="nftEntry.DecryptedUnlockableText | sanitizeAndAutoLink" */}
-            <div className="ln_val"></div>
-          </div>
+          {decryptableNFTEntryResponses.map((nftEntry, index) => (
+            <div key={index} className="d-flex link_list_sc flex-row">
+              <div className="num">#{nftEntry.SerialNumber} :</div>
+              <div
+                className="ln_val"
+                dangerouslySetInnerHTML={{
+                  __html: SanitizeAndAutoLink(nftEntry.DecryptedUnlockableText),
+                }}
+              ></div>
+            </div>
+          ))}
         </div>
         <div className="d-flex flex-wrap justify-content-between align-items-center">
-          {/* (click)="closeThisWindow()" */}
-          <button type="button" className="btn pop_singl_btn nft_place_bid_btn">
+          <button onClick={() => closeThisWindow()} type="button" className="btn pop_singl_btn nft_place_bid_btn">
             Close window
           </button>
         </div>

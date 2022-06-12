@@ -14,7 +14,7 @@ const MobileVerification = () => {
       <form className="form-group mt-5px">
         <div className="mobile-verification-input-button-one mt-20px">
           {/* <!-- kyle's modified code --> */}
-          <ngx-intl-tel-input
+          {/* <ngx-intl-tel-input
             style="font-size: 15px !important"
             cssClass="'form-control mobile-input sign-up__phone-input'"
             separateDialCode="true"
@@ -31,7 +31,7 @@ const MobileVerification = () => {
             click="phoneInputClicked()"
             clickOutside
             clickOutside="clickOutsideEventFunction($event)"
-          ></ngx-intl-tel-input>
+          ></ngx-intl-tel-input> */}
 
           {/* <!-- deso identity code --> */}
 

@@ -1,13 +1,15 @@
 import styles from "../../styles/Navigation/leftNavMobile.module.scss";
+import MobileNavigation from "./mobileNavigation";
 
 const LeftNavMobile = () => {
-  // [@leftBarAnimation] *ngIf="globalVars.isLeftBarMobileOpen"
+  // [@leftBarAnimation]
+  if (!isLeftBarMobileOpen) {
+    return null;
+  }
   return (
     <div className="left-bar-mobile__flyout-div">
-      {/* (closeMobile)="_closeMenu()" */}
-      <app-mobile-navigation class="w-100 h-100 d-flex flex-center"></app-mobile-navigation>
-      {/* (click)="_closeMenu()" */}
-      <div className="nav_close">
+      <MobileNavigation closeMobile={() => _closeMenu()}></MobileNavigation>
+      <div onClick={() => _closeMenu()} className="nav_close">
         <img src="/assets/icons/cas_x_icon.svg" alt="" />
       </div>
     </div>

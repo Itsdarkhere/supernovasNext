@@ -33,6 +33,7 @@ import {
 import {
   getEmbedURL,
   getEmbedWidth,
+  isValidEmbedURL,
   isVimeoLink,
 } from "../../utils/staticServices/embedURLParser";
 import { useAppDispatch, useAppSelector } from "../../utils/Redux/hooks";
@@ -44,6 +45,8 @@ import { setIsEthereumNFTForSale } from "../../utils/Redux/Slices/imxSlice";
 import { ethers } from "ethers";
 import { SwalHelper } from "../../utils/helpers/swal-helper";
 import { SanitizeAndAutoLink } from "../../utils/sanitizeAndAutoLink";
+import Link from "next/link";
+import { transformVideoURL } from "../../utils/sanitizeVideoURL";
 
 const FeedPost = ({
   hoverable,
@@ -575,10 +578,11 @@ const FeedPost = ({
     if (post.IsHidden) {
       return (
         <div className="p-10px br-30px background-color-grey d-flex align-items-center justify-content-center fs-15px">
-          {/* (click)="onPostClicked($event)"
-                [routerLink]="getRouterLink(['/' + globalVars.RouteNames.POSTS, post.PostHashHex])" 
-                queryParamsHandling="merge"*/}
-          <a className="link--unstyled">This post was removed by the author.</a>
+          <Link href={"/" + RouteNames.POSTS + "/" + post.PostHashHex}>
+            <a onClick={(e) => onPostClicked(e)} className="link--unstyled">
+              This post was removed by the author.
+            </a>
+          </Link>
         </div>
       );
     }
@@ -607,12 +611,19 @@ const FeedPost = ({
 
         {hasUserBlockedCreator(post.PosterPublicKeyBase58Check) ? (
           <div className="p-15px background-color-grey d-flex align-items-center justify-content-center fs-15px">
-            {/* [routerLink]="getRouterLink(['/' + globalVars.RouteNames.USER_PREFIX, post.ProfileEntryResponse.Username])" 
-                    queryParamsHandling="merge"*/}
-            <a className="link--unstyled" style={{ textAlign: "center" }}>
-              This is a post from {post.ProfileEntryResponse.Username} who you
-              have blocked. Click here to visit their profile to unblock them.
-            </a>
+            <Link
+              href={
+                "/" +
+                RouteNames.USER_PREFIX +
+                "/" +
+                post.ProfileEntryResponse.Username
+              }
+            >
+              <a className="link--unstyled" style={{ textAlign: "center" }}>
+                This is a post from {post.ProfileEntryResponse.Username} who you
+                have blocked. Click here to visit their profile to unblock them.
+              </a>
+            </Link>
           </div>
         ) : null}
 
@@ -624,8 +635,8 @@ const FeedPost = ({
             className="d-flex flex-column js-feed-post"
             style={{ borderRadius: setBorder ? "12px 12px 0 0" : "" }}
           >
-            {/* (click)="onPostClicked($event)"*/}
             <a
+              onClick={(e) => onPostClicked(e)}
               className={[
                 "link--unstyled",
                 !contentShouldLinkToThread ? "cursor-inherit" : "",
@@ -636,19 +647,19 @@ const FeedPost = ({
                   className="pl-15px pt-5px align-items-center"
                   style={{ marginBottom: "-5px" }}
                 >
-                  {/* [routerLink]="
-                        getRouterLink([
-                            '/' + globalVars.RouteNames.USER_PREFIX,
-                            post.ParentPosts[0].ProfileEntryResponse.Username
-                        ])
-                        " 
-                        queryParamsHandling="merge"
-                        */}
-
-                  <a className="fc-muted font-weight-semibold fs-15px">
-                    replying to{" "}
-                    {post.ParentPosts[0].ProfileEntryResponse.Username}
-                  </a>
+                  <Link
+                    href={
+                      "/" +
+                      RouteNames.USER_PREFIX +
+                      "/" +
+                      post.ParentPosts[0].ProfileEntryResponse.Username
+                    }
+                  >
+                    <a className="fc-muted font-weight-semibold fs-15px">
+                      replying to{" "}
+                      {post.ParentPosts[0].ProfileEntryResponse.Username}
+                    </a>
+                  </Link>
                 </div>
               ) : null}
 
@@ -663,22 +674,28 @@ const FeedPost = ({
                     showLeftSelectedBorder ? "feed-post__blue-border" : "",
                   ].join(" ")}
                 >
-                  {/* [routerLink]="getRouterLink(['/' + globalVars.RouteNames.USER_PREFIX, reposterProfile.Username])" 
-                        queryParamsHandling="merge"*/}
-                  <a className="fc-muted font-weight-semibold align-items-center">
-                    <i
-                      className="icon-repost fs-20px"
-                      style={{ verticalAlign: "middle" }}
-                    ></i>
-                    <span
-                      style={{ verticalAlign: "middle" }}
-                      className="fs-15px"
-                    >
-                      @{reposterProfile.Username} reposted
-                    </span>
-                  </a>
+                  <Link
+                    href={
+                      "/" +
+                      RouteNames.USER_PREFIX +
+                      "/" +
+                      reposterProfile.Username
+                    }
+                  >
+                    <a className="fc-muted font-weight-semibold align-items-center">
+                      <i
+                        className="icon-repost fs-20px"
+                        style={{ verticalAlign: "middle" }}
+                      ></i>
+                      <span
+                        style={{ verticalAlign: "middle" }}
+                        className="fs-15px"
+                      >
+                        @{reposterProfile.Username} reposted
+                      </span>
+                    </a>
+                  </Link>
 
-                  {/* class="ml-auto" */}
                   {showDropdown ? (
                     <FeedPostDropdown
                       post={post}
@@ -708,11 +725,10 @@ const FeedPost = ({
                       : "",
                   ].join("")}
                 >
-                  {/* (click)="onPostClicked($event)" 
-                            [routerLink]="getRouterLink(['/' + globalVars.RouteNames.POSTS, postContent.PostHashHex])"
-                            queryParamsHandling="merge"
-                            */}
-                  <a className="link--unstyled">
+                  <a
+                    onClick={(e) => onPostClicked(e)}
+                    className="link--unstyled"
+                  >
                     The original post was removed by its author.
                   </a>
                 </div>
@@ -740,17 +756,22 @@ const FeedPost = ({
                 >
                   {/* <!-- Avatar --> */}
                   <div className="feed-post__avatar-container">
-                    {/*
-                        [routerLink]="
-                            getRouterLink(['/' + globalVars.RouteNames.USER_PREFIX, postContent.ProfileEntryResponse?.Username])
-                        "
-                        queryParamsHandling="merge" */}
-                    <Avatar
-                      classN="feed-post__avatar br-12px"
-                      avatar={
-                        postContent?.ProfileEntryResponse?.PublicKeyBase58Check
+                    <Link
+                      href={
+                        "/" +
+                        RouteNames.USER_PREFIX +
+                        "/" +
+                        postContent.ProfileEntryResponse?.Username
                       }
-                    ></Avatar>
+                    >
+                      <Avatar
+                        classN="feed-post__avatar br-12px"
+                        avatar={
+                          postContent?.ProfileEntryResponse
+                            ?.PublicKeyBase58Check
+                        }
+                      ></Avatar>
+                    </Link>
 
                     {showThreadConnectionLine ? (
                       <div className="feed-post__parent-thread-connector"></div>
@@ -768,25 +789,32 @@ const FeedPost = ({
 
                           {/* <!-- Username--> */}
                           <div className="mr-20px d-flex flex-center flex-row">
-                            {/* [routerLink]="
-                                    getRouterLink([
-                                    '/' + globalVars.RouteNames.USER_PREFIX,
-                                    postContent.ProfileEntryResponse?.Username
-                                    ])
-                                " queryParamsHandling="merge"*/}
-                            <a
-                              className={[
-                                "fc-default font-weight-semiboldn",
-                                isNFTDetail ? styles.nft_detail_username : "",
-                              ].join(" ")}
+                            <Link
+                              href={
+                                "/" +
+                                RouteNames.USER_PREFIX +
+                                "/" +
+                                postContent.ProfileEntryResponse?.Username
+                              }
                             >
-                              {postContent?.ProfileEntryResponse?.Username}
-                            </a>
+                              <a
+                                className={[
+                                  "fc-default font-weight-semiboldn",
+                                  isNFTDetail ? styles.nft_detail_username : "",
+                                ].join(" ")}
+                              >
+                                {postContent?.ProfileEntryResponse?.Username}
+                              </a>
+                            </Link>
 
                             {postContent?.ProfileEntryResponse?.IsVerified ? (
                               <span className="ml-1 text-primary">
-                                {/* [ngClass]="{ 'fs-14px': isNFTDetail }" */}
-                                <i className="fas fa-check-circle fa-md align-middle"></i>
+                                <i
+                                  className={[
+                                    "fas fa-check-circle fa-md align-middle",
+                                    isNFTDetail ? "fs-14px" : null,
+                                  ].join(" ")}
+                                ></i>
                               </span>
                             ) : null}
                           </div>
@@ -806,12 +834,18 @@ const FeedPost = ({
                         <div className="nft-detail-lock-info-wrap ml-auto">
                           {showNFTDetails && postContent.IsNFT ? (
                             <>
-                              {/* (clickOutside)="clickOutside()"
-                                    (mouseenter)="$event.stopImmediatePropagation()"
-                                    (mouseleave)="$event.stopImmediatePropagation()"
-                                    (click)="toggleLockablePopup()" */}
+                              {/* (clickOutside)="clickOutside()" */}
                               {postContent.HasUnlockable ? (
-                                <span className="cursor-pointer d-lg-inline-block d-block mt-5px">
+                                <span
+                                  onClick={() => toggleLockablePopup()}
+                                  onMouseEnter={(e) =>
+                                    e.stopImmediatePropagation()
+                                  }
+                                  onMouseLeave={(e) =>
+                                    e.stopImmediatePropagation()
+                                  }
+                                  className="cursor-pointer d-lg-inline-block d-block mt-5px"
+                                >
                                   <i
                                     className={[
                                       "fas",
@@ -899,7 +933,16 @@ const FeedPost = ({
                                 ])
                                 "
                                 queryParamsHandling="merge" */}
-                        <a>@{parentPost.ProfileEntryResponse.Username}</a>
+                        <Link
+                          href={
+                            "/" +
+                            RouteNames.USER_PREFIX +
+                            "/" +
+                            parentPost.ProfileEntryResponse.Username
+                          }
+                        >
+                          <a>@{parentPost.ProfileEntryResponse.Username}</a>
+                        </Link>
                       </div>
                     ) : null}
 
@@ -933,8 +976,10 @@ const FeedPost = ({
                           quotedContent && showQuotedContent ? "mb-10px" : "",
                         ].join(" ")}
                       >
-                        {/* (click)="openImgModal($event, postContent.ImageURLs[0])" */}
                         <Image
+                          onClick={(e) =>
+                            openImgModal(e, postContent.ImageURLs[0])
+                          }
                           width={680}
                           height={400}
                           data-toggle="modal"
@@ -956,10 +1001,13 @@ const FeedPost = ({
                           quotedContent && showQuotedContent ? "mb-10px" : "",
                         ].join(" ")}
                       >
-                        {/*| sanitizeVideoUrl" allowfullscreen
-                         */}
                         <iframe
-                          src={postContent.VideoURLs[0]}
+                          src={
+                            transformVideoURL()
+                              ? postContent.VideoURLs[0]
+                              : null
+                          }
+                          allowFullScreen
                           allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
                           className="feed-post__video"
                         ></iframe>
@@ -974,12 +1022,13 @@ const FeedPost = ({
                           quotedContent && showQuotedContent ? "mb-10px" : "",
                         ].join(" ")}
                       >
-                        {/* [height]="getEmbedHeight()" 
-                            | sanitizeEmbed" 
+                        {/* 
                             frameborder="0"
-                            allowfullscreen*/}
+                            */}
                         <iframe
-                          src={constructedEmbedURL}
+                          allowFullScreen
+                          height={getEmbedHeight()}
+                          src={isValidEmbedURL(constructedEmbedURL)}
                           style={{
                             marginTop: setNegativeMargins(constructedEmbedURL)
                               ? "-65px"
@@ -1015,7 +1064,6 @@ const FeedPost = ({
                             className="nft-background"
                             type="image/svg+xml"
                           ></object>
-                          {/* className="w-100 d-flex flex-center" */}
                           {quotedContent && showQuotedContent ? (
                             <NFTCard
                               insidePost={true}
@@ -1058,7 +1106,6 @@ const FeedPost = ({
                             className="nft-background"
                             type="image/svg+xml"
                           ></object>
-                          {/* className="w-100 d-flex flex-center" */}
                           {quotedContent && showQuotedContent ? (
                             <NFTCard
                               insidePost={true}
@@ -1147,9 +1194,11 @@ const FeedPost = ({
                   {/* <!-- Admin Buttons --> */}
                   {showAdminRow ? (
                     <div className="pt-10px fs-15px d-flex align-items-center">
-                      {/* (click)="_addPostToGlobalFeed($event)" */}
                       {!postContent.InGlobalFeed && !addingPostToGlobalFeed ? (
-                        <div className="py-5px px-10px admin__add-to-feed-button">
+                        <div
+                          onClick={(e) => addPostToGlobalFeed(e)}
+                          className="py-5px px-10px admin__add-to-feed-button"
+                        >
                           <i className="fas fa-folder-plus"></i>
                           Add to global feed
                         </div>
@@ -1162,9 +1211,11 @@ const FeedPost = ({
                         </div>
                       ) : null}
 
-                      {/* (click)="_addPostToGlobalFeed($event)" */}
                       {postContent.InGlobalFeed && !addingPostToGlobalFeed ? (
-                        <div className="py-5px px-10px admin__remove-from-feed-button">
+                        <div
+                          onClick={(e) => addPostToGlobalFeed(e)}
+                          className="py-5px px-10px admin__remove-from-feed-button"
+                        >
                           <i className="fas fa-check"></i>
                           On global feed
                         </div>
@@ -1179,9 +1230,16 @@ const FeedPost = ({
 
                       <div>
                         &nbsp;&middot;
-                        {/* [routerLink]="getRouterLink(['/' + globalVars.RouteNames.POSTS, postContent.PostHashHex])" 
-                    queryParamsHandling="merge" */}
-                        <a>View</a>
+                        <Link
+                          href={
+                            "/" +
+                            RouteNames.POSTS +
+                            "/" +
+                            postContent.PostHashHex
+                          }
+                        >
+                          <a>View</a>
+                        </Link>
                       </div>
 
                       <div className="text-grey8A">
@@ -1212,8 +1270,8 @@ const FeedPost = ({
                         styles.interaction_details_container + " d-flex"
                       }
                     >
-                      {/* (click)="openRepostsModal($event)" */}
                       <span
+                        onClick={(e) => openRepostsModal(e)}
                         className={[
                           styles.post_thread_engagement_detail,
                           styles.interaction_detail,
@@ -1223,8 +1281,8 @@ const FeedPost = ({
                         <b>{abbreviateNumber(post.CommentCount)}</b>
                         Comments&nbsp;
                       </span>
-                      {/* (click)="openQuoteRepostsModal($event)" */}
                       <span
+                        onClick={(e) => openQuoteRepostsModal(e)}
                         className={[
                           styles.post_thread_engagement_detail,
                           styles.interaction_detail,
@@ -1239,8 +1297,8 @@ const FeedPost = ({
                         </b>
                         Reposts&nbsp;
                       </span>
-                      {/* (click)="openLikesModal($event)" */}
                       <span
+                        onClick={(e) => openLikesModal(e)}
                         className={[
                           styles.post_thread_engagement_detail,
                           styles.interaction_detail,
@@ -1250,8 +1308,8 @@ const FeedPost = ({
                         <b>{abbreviateNumber(post.LikeCount)}</b>
                         Likes
                       </span>
-                      {/* (click)="openDiamondsModal($event)" */}
                       <span
+                        onClick={(e) => openDiamondsModal(e)}
                         className={[
                           styles.post_thread_engagement_detail,
                           styles.interaction_detail,
@@ -1265,8 +1323,8 @@ const FeedPost = ({
                   </div>
                   {/* <!-- MOBILE --> */}
                   <div className="d-flex flex-row justify-content-between d-lg-none py-10px px-5px fs-15px border-top border-bottom border-color-light-grey cursor-pointer">
-                    {/* (click)="openRepostsModal($event)" */}
                     <div
+                      onClick={(e) => openRepostsModal(e)}
                       className={
                         styles.mobile_post_interaction_detail +
                         " mb-0 interaction-detail pl-5px fs-12px"
@@ -1275,8 +1333,8 @@ const FeedPost = ({
                       <b>{abbreviateNumber(post.CommentCount)}</b>
                       Comments
                     </div>
-                    {/* (click)="openQuoteRepostsModal($event)" */}
                     <div
+                      onClick={(e) => openQuoteRepostsModal(e)}
                       className={
                         styles.mobile_post_interaction_detail +
                         " mb-0 interaction-detail px-5px fs-12px"
@@ -1290,8 +1348,8 @@ const FeedPost = ({
                       </b>
                       Reposts
                     </div>
-                    {/* (click)="openLikesModal($event)" */}
                     <div
+                      onClick={(e) => openLikesModal(e)}
                       className={
                         styles.mobile_post_interaction_detail +
                         " mb-0 interaction-detail px-5px fs-12px"
@@ -1300,8 +1358,8 @@ const FeedPost = ({
                       <b>{abbreviateNumber(postContent.LikeCount)}</b>
                       Likes
                     </div>
-                    {/* (click)="openDiamondsModal($event)" */}
                     <div
+                      onClick={(e) => openDiamondsModal(e)}
                       className={
                         styles.mobile_post_interaction_detail +
                         " mb-0 interaction-detail px-5px fs-12px"

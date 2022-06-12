@@ -12,8 +12,8 @@ const MessagesFilterMenu = () => {
 
         <div className="w-100 d-flex pl-5px flex-column">
           <div className="mt-5px d-flex flex-row align-items-center">
-            {/* [(ngModel)]="messageFilterHoldsMe" */}
             <input
+              value={messageFilterHoldsMe}
               id="holdsMeCheckbox"
               type="checkbox"
               name="holdsMe"
@@ -25,8 +25,8 @@ const MessagesFilterMenu = () => {
           </div>
 
           <div className="mt-5px d-flex flex-row align-items-center">
-            {/* [(ngModel)]="messageFilterIHold" */}
             <input
+              value={messageFilterIHold}
               id="iHoldCheckbox"
               type="checkbox"
               style="vertical-align: middle"
@@ -39,8 +39,8 @@ const MessagesFilterMenu = () => {
           </div>
 
           <div className="mt-5px d-flex flex-row align-items-center">
-            {/* [(ngModel)]="messageFilterFollowingMe" */}
             <input
+              value={messageFilterFollowingMe}
               id="followingMeCheckbox"
               type="checkbox"
               style="vertical-align: middle"
@@ -56,8 +56,8 @@ const MessagesFilterMenu = () => {
           </div>
 
           <div className="mt-5px d-flex flex-row align-items-center">
-            {/* [(ngModel)]="messageFilterIFollow" */}
             <input
+              value={messageFilterIFollow}
               id="iFollowCheckbox"
               type="checkbox"
               name="iFollow"
@@ -92,21 +92,28 @@ const MessagesFilterMenu = () => {
               role="menu"
               aria-labelledby="button-basic"
             >
-              {/* (click)="setSortAlgorithm('time')" */}
-              <li role="menuitem">
+              <li onClick={() => setSortAlgorithm("time")} role="menuitem">
                 <a className="dropdown-item fs-16px">Most recent</a>
               </li>
-              {/* (click)="setSortAlgorithm('deso')" */}
-              <li role="menuitem">
+
+              <li onClick={() => setSortAlgorithm("deso")} role="menuitem">
                 <a className="dropdown-item fs-16px">Most deso</a>
               </li>
               <li role="menuitem">
-                {/* (click)="setSortAlgorithm('followers')" */}
-                <a className="dropdown-item fs-16px">Most followed</a>
+                <a
+                  onClick={() => setSortAlgorithm("followers")}
+                  className="dropdown-item fs-16px"
+                >
+                  Most followed
+                </a>
               </li>
               <li role="menuitem">
-                {/* (click)="setSortAlgorithm('holders')" */}
-                <a className="dropdown-item fs-16px">Largest Holder</a>
+                <a
+                  onClick={() => setSortAlgorithm("holders")}
+                  className="dropdown-item fs-16px"
+                >
+                  Largest Holder
+                </a>
               </li>
             </ul>
           </div>
@@ -115,8 +122,10 @@ const MessagesFilterMenu = () => {
 
       <div className="d-flex flex-center w-100 pb-15px border-bottom border-color-grey">
         <div className="w-100 btn-default">
-          {/* (click)="updateGlobalMessagesPreferences()" */}
-          <button className="btn btn-primary btn-lg font-weight-bold mr-30px fs-13px mt-5px">
+          <button
+            onClick={() => updateGlobalMessagesPreferences()}
+            className="btn btn-primary btn-lg font-weight-bold mr-30px fs-13px mt-5px"
+          >
             Update
           </button>
         </div>

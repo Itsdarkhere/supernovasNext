@@ -27,23 +27,22 @@ const ReferralsComponent = () => {
             Share your referral link and earn 200% of all the transaction fees
             creators you refer bring in.
           </h4>
-          {/* (click)="_copyLink()" */}
-          <div>
+          <div onClick={() => _copyLink()}>
             <label className="mb-0px">
               supernovas.app/home/
               {loggedInUser?.ProfileEntryResponse?.Username.toLowerCase()}
             </label>
             <button>
-              {/* *ngIf="!linkCopied; else copiedSuccess" */}
-              <Image
-                height={"20px"}
-                className="cursor-pointer"
-                alt="key"
-                src={copyIcon}
-              />
-              {/* <ng-template #copiedSuccess>
-                        <i className="fas fa-check-circle fa-md align-middle"></i>
-                    </ng-template> */}
+              {!linkCopied ? (
+                <Image
+                  height={"20px"}
+                  className="cursor-pointer"
+                  alt="key"
+                  src={copyIcon}
+                />
+              ) : (
+                <i className="fas fa-check-circle fa-md align-middle"></i>
+              )}
               Copy
             </button>
           </div>

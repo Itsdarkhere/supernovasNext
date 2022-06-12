@@ -6,13 +6,19 @@ const SellDeso = () => {
       <div className="deso-sell-subheading mt-20px">
         SELL AND CASHOUT $DESO ON EXCHANGE
       </div>
-      {/* (click)="openLink('https://www.coinbase.com/price/decentralized-social')" */}
-      <button className="deso-sell-exchange-container">
+      <button
+        onClick={() =>
+          openLink("https://www.coinbase.com/price/decentralized-social")
+        }
+        className="deso-sell-exchange-container"
+      >
         <label>Coinbase</label>
         <p>Sell $DESO on Coinbase.</p>
       </button>
-      {/* (click)="openLink('https://support.supernovas.app/en/')" */}
-      <div className="sell-deso-help">
+      <div
+        onClick={() => openLink("https://support.supernovas.app/en/")}
+        className="sell-deso-help"
+      >
         <img src="/assets/icons/chevron_right.svg" alt="arrow" />
         Need help? Contact our support.
       </div>

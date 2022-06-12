@@ -5,6 +5,7 @@ import {
   GetHotFeed,
   GetPostsStateless,
   GetStorage,
+  RouteNames,
   stringifyError,
 } from "../../utils/backendapi-context";
 import {
@@ -31,6 +32,8 @@ import FeedPost from "./feedPost";
 import GLOBAL_TAB_ICON from "../../public/icons/feed_sn_icon.png";
 import FOLLOWING_TAB_ICON from "../../public/icons/feed_following_icon.svg";
 import HOT_TAB_ICON from "../../public/icons/hot_feed_icon.svg";
+import Link from "next/link";
+
 const Feed = ({ isMobile }) => {
   const GLOBAL_TAB = "Supernovas Feed";
   const FOLLOWING_TAB = "Following";
@@ -565,14 +568,13 @@ const Feed = ({ isMobile }) => {
             <div
               className={[
                 "formbg create_post_wrapper",
-                // canPost ? "active-box-shadow" : "",
+                canPost ? "active-box-shadow" : "",
               ].join(" ")}
             >
               <CreatePost
                 parentPost={undefined}
                 numberOfRowsInTextArea={2}
-                // changeCanPost={(e) => changeCanPost(e)}
-                // Put back
+                changeCanPost={(e) => changeCanPost(e)}
                 postRefreshFunc={undefined}
               ></CreatePost>
             </div>
@@ -580,8 +582,7 @@ const Feed = ({ isMobile }) => {
         </div>
       ) : null}
 
-      <div className="w-100 d-flex flex-center">
-        {/* className="feed_tabs" */}
+      <div className={styles.feed_tabs + " w-100 d-flex flex-center"}>
         <TabSelector
           tabs={feedTabs}
           icons={iconTabs}
@@ -591,8 +592,7 @@ const Feed = ({ isMobile }) => {
         ></TabSelector>
       </div>
 
-      {/* (click)="showRecent()" */}
-      <button type="button" className="recent_post_btn">
+      <button onClick={() => showRecent()} type="button" className="recent_post_btn">
         Show recent
       </button>
       {/* <!-- Posts --> */}
@@ -616,7 +616,6 @@ const Feed = ({ isMobile }) => {
 
       {showGlobalOrFollowingOrHotPosts() ? (
         <div className="feed_mobile_gap">
-          {/* *ngFor="let post of whichPostsToShow()" */}
           {whichPostsToShow().map((post, i) => (
             <div key={i}>
               {/* Dont show anything if null */}
@@ -775,10 +774,8 @@ const Feed = ({ isMobile }) => {
             </div>
           ))}
 
-          {/* (click)="loadMorePosts()" */}
           {showMoreButton() ? (
-            <div className="w-100 py-15px d-flex align-items-center justify-content-center cursor-pointer creator-leaderboard__load-more">
-              {/* (click)="loadMorePosts()" */}
+            <div onClick={() => loadMorePosts()} className="w-100 py-15px d-flex align-items-center justify-content-center cursor-pointer creator-leaderboard__load-more">
               {!activeTabReadyForDisplay() ? (
                 <div className="fs-15px">Load More</div>
               ) : (
@@ -797,10 +794,10 @@ const Feed = ({ isMobile }) => {
           <div>No posts yet</div>
 
           <div className="mt-10px">
-            {/* [routerLink]="['/' + globalVars.RouteNames.BROWSE]"
-            [queryParams]="{ feedTab: FeedComponent.GLOBAL_TAB }"
-            queryParamsHandling="merge" */}
-            <a className="">View the Supernovas feed</a>
+            {/*[queryParams]="{ feedTab: FeedComponent.GLOBAL_TAB }"*/}
+            <Link href={"/" + RouteNames.BROWSE}>
+              <a className="">View the Supernovas feed</a>
+            </Link>
             to find more people to follow
           </div>
         </div>

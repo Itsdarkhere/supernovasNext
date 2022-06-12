@@ -3,6 +3,8 @@ import styles from "../../styles/Wrappers/page.module.scss";
 import Header from "../Navigation/header";
 import LeftNav from "../Navigation/leftNav";
 import { isMobile } from "../../utils/global-context";
+import BottomBarMobile from "../Navigation/bottomBarMobile";
+import LeftNavMobile from "../Navigation/leftNavMobile";
 
 const Page = ({ children, isNFTProfile, noCap }) => {
   const [mobile, setMobile] = useState(false);
@@ -42,14 +44,11 @@ const Page = ({ children, isNFTProfile, noCap }) => {
         ].join(" ")}
       >
         {getNav()}
-        {/* *ngIf="mobile" */}
-        {/* <left-bar-mobile></left-bar-mobile> */}
+        {mobile ? <LeftNavMobile></LeftNavMobile> : null}
         <div className={"w-100"}>{children}</div>
-        {/* *ngIf="mobile && !noBottomBar" */}
-        {/* <bottom-bar-mobile
-            class="global__bottom-bar-mobile scrolled"
-            [showPostButton]="showPostButton"
-            ></bottom-bar-mobile> */}
+        {mobile && !noBottomBar ? (
+          <BottomBarMobile showPostButton={showPostButton}></BottomBarMobile>
+        ) : null}
       </div>
     </div>
   );
