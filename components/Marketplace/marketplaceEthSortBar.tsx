@@ -1,6 +1,188 @@
+import { useState } from "react";
 import styles from "../../styles/Marketplace/marketplaceEthSortBar.module.scss";
+import { getEthNFTsByFilter } from "../../utils/global-context";
+import { useAppDispatch, useAppSelector } from "../../utils/Redux/hooks";
+import { setIsMarketplaceLoading } from "../../utils/Redux/Slices/marketplaceSlice";
+import { setIsEthMarketplaceLeftBarMobileOpen } from "../../utils/Redux/Slices/openSlice";
+import { setETHMarketplaceNFTCategory, setETHMarketplaceStatus, setMarketplaceVerifiedCreators } from "../../utils/Redux/Slices/sortSlice";
 
-const MarketplaceEthSortBar = ({ flyout }) => {
+const MarketplaceEthSortBar = ({ flyout, onFilter }) => {
+  const dispatch = useAppDispatch();
+  const ethMarketplaceNFTCategory = useAppSelector((state) => state.sort.ethMarketplaceNFTCategory)
+  // Status
+  const [statusAll, setStatusAll] = useState(false);
+  const [statusForSale, setStatusForSale] = useState(false);
+  const [statusHasBids, setStatusHasBids] = useState(false);
+  const [statusSold, setStatusSold] = useState(false);
+  // Market
+  const [marketPrimary, setMarketPrimary] = useState(false);
+  const [marketSecondary, setMarketSecondary] = useState(false);
+  // Format
+  const [formatAll, setFormatAll] = useState(false);
+  const [formatImages, setFormatImages] = useState(false);
+  const [formatVideo, setFormatVideo] = useState(false);
+  const [formatMusic, setFormatMusic] = useState(false);
+  const [format3D, setFormat3D] = useState(false);
+  // Category
+  const [NFTCategory, setNFTCategory] = useState("");
+  // CreatorType
+  const [creatorTypeVerified, setCreatorTypeVerified] = useState(false);
+  // If Apply button is disabled or allowed
+  const [canUserSort, setCanUserSort] = useState(false);
+  // Last sort values, keep last sort values in memory to compare them to current values
+  // This is to enable / disable the apply button accordingly
+  let lastSortLowPrice = 0;
+  let lastSortHighPrice = 0;
+  let lastSortContentFormatAll = true;
+  let lastSortContentFormatVideo = false;
+  let lastSortContentFormatMusic = false;
+  let lastSortContentFormatImages = false;
+  let lastSortCreatorTypeVerified = true;
+  let lastSortMarketPrimary = true;
+  let lastSortMarketSecondary = true;
+  let lastSortStatusAll = true;
+  let lastSortStatusForSale = false;
+  let lastSortStatusHasBids = false;
+  let lastSortStatusSold = false;
+  let lastSortCategory = "all"; 
+
+  // Functions
+  const statusClick = (button: string) => {
+    switch (button) {
+      case "all":
+        if (!statusAll) {
+          setStatusAll(true)
+          setStatusForSale(false)
+          setStatusHasBids(false);
+          setStatusSold(false);
+        }
+        break;
+      case "for sale":
+        if (statusForSale) {
+          setStatusAll(true)
+          setStatusForSale(false)
+        } else {
+          setStatusAll(false)
+          setStatusForSale(true)
+          setStatusHasBids(false);
+          setStatusSold(false);
+        }
+        break;
+        default:
+          break;
+    }
+    // Check if user can sort
+    canSort();
+  };
+
+  const categorySelectChange = (event) => {
+    if (NFTCategory != event) {
+      setNFTCategory(event);
+      // Check if user can sort
+      canSort();
+    }
+  }
+
+  const creatorsClick = (creatorType: string) => {
+    switch (creatorType) {
+      case "verified":
+        setCreatorTypeVerified(true);
+        break;
+      case "all":
+        setCreatorTypeVerified(false);
+        // this.categoryAndFormatToBaseState();
+        break;
+      default:
+        break;
+    }
+    // Check if user can sort
+    canSort();
+  }
+
+  const canSort = () => {
+    //   if category is different from last then sort
+    if (NFTCategory != lastSortCategory) {
+      setCanUserSort(true);
+      // If content format is different from last sort
+    } else if (lastSortStatusAll != statusAll || lastSortStatusForSale != statusForSale) {
+      setCanUserSort(true);
+      // If creator type is different from last time
+    } else if (lastSortCreatorTypeVerified != creatorTypeVerified) {
+      setCanUserSort(true);
+      // If nothing has changed user cannot sort
+    } else {
+      setCanUserSort(false);
+    }
+  }
+
+  const closeMenu = () => {
+    functionPass.filter("ethClose");
+    onFilter("ethClose");
+    setTimeout(() => {
+      dispatch(setIsEthMarketplaceLeftBarMobileOpen(false));
+    }, 200);
+  }
+
+  const apply = () => {
+    dispatch(setIsMarketplaceLoading(true));
+
+    setCategory();
+    setStatus();
+    setCreatorType();
+    setCanUserSort(false);
+
+    onFilter("ethSort");
+    functionPass.filter("ethSort");
+
+    getEthNFTsByFilter();
+
+    setTimeout(() => {
+      dispatch(setIsEthMarketplaceLeftBarMobileOpen(false));
+    }, 200);
+  }
+
+  const setCategory = () => {
+    if (ethMarketplaceNFTCategory != NFTCategory) {
+      dispatch(setETHMarketplaceNFTCategory(NFTCategory))
+      // Store to use in canSort
+      lastSortCategory = NFTCategory;
+      // Check if user can sort
+      canSort();
+    }
+  }
+
+  const setStatus = () => {
+    if (statusAll) {
+      dispatch(setETHMarketplaceStatus("all"));
+      // Store to use in canSort()
+      lastSortStatusAll = true;
+      lastSortStatusForSale = false;
+      lastSortStatusHasBids = false;
+      lastSortStatusSold = false;
+    } else if (statusForSale) {
+      dispatch(setETHMarketplaceStatus("for sale"));
+      // Store to use in canSort()
+      lastSortStatusForSale = true;
+      lastSortStatusSold = false;
+      lastSortStatusAll = false;
+      lastSortStatusHasBids = false;
+    }
+    // Check if user can sort
+    canSort();
+  }
+
+  const setCreatorType = () => {
+    if (creatorTypeVerified) {
+      dispatch(setMarketplaceVerifiedCreators("verified"));
+      // Store to use in canSort
+      lastSortCreatorTypeVerified = true;
+    } else {
+      dispatch(setMarketplaceVerifiedCreators("verified"));
+      // Store to use in canSort
+      lastSortCreatorTypeVerified = false;
+    }
+  }
+
   // *ngIf="!flyout"
   return (
     <>

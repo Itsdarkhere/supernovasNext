@@ -8,8 +8,41 @@ import { hexlify } from "ethers/lib/utils";
 import Avatar from "../Reusables/avatar";
 import { nanosToUSD } from "../../utils/global-context";
 import { SanitizeAndAutoLink } from "../../utils/sanitizeAndAutoLink";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import { canPKFollowTargetPK } from "../../utils/canPKFollowTargetPK";
 
 const ManageFollows = () => {
+    const router = useRouter();
+  const [targetUsername, setTargetUsername] = useState("");
+  const [activeTab, setActiveTab] = useState("");
+  const [totalFollowerCount, setTotalFollowerCount] = useState(0);
+  const [anonymousFollowerCount, setAnonymousFollowerCount] = useState(0);
+
+  // Functions
+  const onRowClicked = (event, username: string) => {
+    // don't navigate if the user is selecting text
+    // from https://stackoverflow.com/questions/31982407/prevent-onclick-event-when-selecting-text
+    var selection = window.getSelection();
+    if (selection.toString().length !== 0) {
+      return true;
+    }
+
+    // don't navigate if the user clicked a link
+    if (event.target.tagName.toLowerCase() === "a") {
+      return true;
+    }
+
+    router.push("/u/" + username);
+  }
+
+  const canLoggedInUserFollowTargetPublicKey = (targetPubKeyBase58Check) => {
+    return canPKFollowTargetPK(
+      loggedInUser?.PublicKeyBase58Check,
+      targetPubKeyBase58Check
+    );
+  }
+
   return (
     <div className="flex-grow-1">
       {/* <!--Header Mobile--> */}
@@ -40,7 +73,7 @@ const ManageFollows = () => {
         <div className="d-flex w-100 px-15px global__top-bar__height align-items-center justify-content-between fs-18px font-weight-bold fc-default border-bottom border-color-grey">
           {/* [routerLink]="['/' + appData.RouteNames.USER_PREFIX, targetUsername]" */}
           <Link
-            href={"/" + appData.RouteNames.USER_PREFIX + "/" + targetUsername}
+            href={"/" + RouteNames.USER_PREFIX + "/" + targetUsername}
           >
             <a className="link--unstyled">{targetUsername}</a>
           </Link>
@@ -172,7 +205,7 @@ const ManageFollows = () => {
         <div className="fs-15px d-flex justify-content-left w-100 p-15px">
           {/* <!--TODO: pluralize--> */}
           ... Plus {anonymousFollowerCount} anonymous{" "}
-          {this.activeTab.toLowerCase()}
+          {activeTab.toLowerCase()}
         </div>
       ) : null}
 

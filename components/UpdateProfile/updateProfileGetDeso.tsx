@@ -2,9 +2,20 @@ import styles from "../../styles/UpdateProfile/updateProfileGetDeso.module.scss"
 import {
   createProfileFeeInDeSo,
   createProfileFeeInUsd,
+  isMobile,
 } from "../../utils/global-context";
+import { useAppSelector } from "../../utils/Redux/hooks";
+import Image from "next/image";
+// ./assets/icons/coinbase-white.png
+// ./assets/icons/deso.svg
+import coinbaseIcon from "../../public/icons/coinbase-white.png";
+import desoIcon from "../../public/icons/deso.svg";
 
 const UpdateProfileGetDeso = () => {
+  // Redux
+  const createProfileFeeNanos = useAppSelector(
+    (state) => state.exhange.createProfileFeeNanos
+  );
   return (
     <>
       {!isMobile() ? (
@@ -55,7 +66,7 @@ const UpdateProfileGetDeso = () => {
             target="_blank"
             rel="noreferrer"
           >
-            <img src="./assets/icons/deso.svg" alt="" className="deso-img" />
+            <Image src={desoIcon} alt="" className="deso-img" />
           </a>
           <p>Buy $DESO with a credit card, Bitcoin or Ethereum.</p>
         </div>
@@ -67,11 +78,7 @@ const UpdateProfileGetDeso = () => {
             target="_blank"
             rel="noreferrer"
           >
-            <img
-              src="./assets/icons/coinbase-white.png"
-              alt=""
-              className="coinbase-img"
-            />
+            <Image src={coinbaseIcon} alt="" className="coinbase-img" />
           </a>
           <p>Buy $DESO on Coinbase’s exchange.</p>
         </div>

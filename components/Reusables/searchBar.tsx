@@ -1,8 +1,219 @@
+import { useEffect, useState } from "react";
 import styles from "../../styles/Reusables/searchBar.module.scss";
-import { nanosToUSD } from "../../utils/global-context";
+import {
+  GetProfiles,
+  GetSingleProfile,
+  ProfileEntryResponse,
+  stringifyError,
+} from "../../utils/backendapi-context";
+import {
+  isMaybePublicKey,
+  nanosToUSD,
+  _alertError,
+} from "../../utils/global-context";
+import _ from "lodash";
 import Avatar from "./avatar";
+import { useAppSelector } from "../../utils/Redux/hooks";
+import searchIcon from "../../public/icons/desktop_search_icon.svg";
+import Image from "next/image";
 
-const SearchBar = () => {
+const SearchBar = ({
+  placeHolder,
+  isSearchForUsersToMessage,
+  isSearchForUsersToSendDESO,
+  showCloutavista,
+  startingSearchText,
+  sickSearchBar,
+  sickSearchBarAvatarPublicKey,
+  headerSearchBar,
+  mintSearchBar,
+  // Functions
+  creatorToMessage,
+}) => {
+  const [loading, setLoading] = useState(false);
+  const [searchText, setSearchText] = useState("");
+  const [selectedCreatorIndex, setSelectedCreatorIndex] = useState(null);
+  const [creatorSelected, setCreatorSelected] = useState(null);
+  // Vars
+  let creators: ProfileEntryResponse[] = [];
+  const DEBOUNCE_TIME_MS = 300;
+  let debouncedSearchFunction: () => void;
+  // Redux
+  let loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
+  let localNode = useAppSelector((state) => state.node.localNode);
+
+  // Functions
+  const _handleMouseOver = (creator: string, index: number) => {
+    setCreatorSelected(creator);
+    setSelectedCreatorIndex(index);
+  };
+
+  const _handleMouseOut = (creator: string, index: number) => {
+    if (creatorSelected === creator) {
+      setCreatorSelected("");
+    }
+    if (selectedCreatorIndex === index) {
+      setSelectedCreatorIndex(-1);
+    }
+  };
+
+  // This search bar is used for more than just navigating to a user profile. It is also
+  // used for finding users to message.  We handle both cases here.
+  const _handleCreatorSelect = (creator: any) => {
+    if (creator && creator != "") {
+      if (isSearchForUsersToMessage || isSearchForUsersToSendDESO) {
+        creatorToMessage.emit(creator);
+      } else {
+        // this.router.navigate(["/" + this.globalVars.RouteNames.USER_PREFIX, creator.Username], {
+        //   queryParamsHandling: "merge",
+        // });
+      }
+      _exitSearch();
+    } else {
+      // If a user presses the enter key while the cursor is still in the search bar,
+      // this user should be redirected to the profile page of the user with the username
+      // equal to that of the current searchText.
+      if (searchText !== "" && !isSearchForUsersToMessage) {
+        if (isSearchForUsersToSendDESO) {
+          creatorToMessage(creators[0]);
+        } else {
+          //   this.router.navigate(["/" + this.globalVars.RouteNames.USER_PREFIX, this.searchText], {
+          //     queryParamsHandling: "merge",
+          //   });
+        }
+        _exitSearch();
+      }
+    }
+  };
+
+  const _handleSearchTextChange = (change: string) => {
+    // When the search text changes we reset the arrow key selections.
+    setCreatorSelected("");
+    setSelectedCreatorIndex(-1);
+
+    if (change === "") {
+      // clear out the creators list to prevent a future search
+      // from flashing with a list of creators, and skip
+      // making an empty search request as well
+      creators = [];
+    } else {
+      // show the loader now before calling the debounced search
+      // to improve the user experience
+      setLoading(true);
+      // Then we filter the creator list based on the search text.
+      debouncedSearchFunction();
+    }
+  };
+
+  const _exitSearch = () => {
+    setSearchText("");
+    setCreatorSelected("");
+    setSelectedCreatorIndex(-1);
+  };
+
+  const _searchUsernamePrefix = () => {
+    // store the search text for the upcoming API call
+    let requestedSearchText = searchText;
+    let readerPubKey = "";
+    if (loggedInUser) {
+      readerPubKey = loggedInUser.PublicKeyBase58Check;
+    }
+
+    // If we are searching for a public key, call get single profile with the public key.
+    if (isMaybePublicKey(requestedSearchText)) {
+      return GetSingleProfile(localNode, requestedSearchText, "").subscribe(
+        (res) => {
+          if (
+            requestedSearchText === searchText ||
+            requestedSearchText === startingSearchText
+          ) {
+            setLoading(false);
+            if (res.IsBlacklisted) {
+              return;
+            }
+            creators = [res.Profile];
+            if (startingSearchText) {
+              // If starting search text is set, we handle the selection of the creator.
+              _handleCreatorSelect(res.Profile);
+            }
+          }
+        },
+        (err) => {
+          if (
+            requestedSearchText === searchText ||
+            requestedSearchText === startingSearchText
+          ) {
+            setLoading(false);
+            // a 404 occurs for anonymous public keys.
+            if (err.status === 404 && isMaybePublicKey(requestedSearchText)) {
+              const anonProfile = {
+                PublicKeyBase58Check: requestedSearchText,
+                Username: "",
+                Description: "",
+              };
+              creators = [anonProfile];
+              // If starting search text is set, we handle the selection of the creator.
+              _handleCreatorSelect(anonProfile);
+              return;
+            }
+          }
+          console.error(err);
+          _alertError("Error loading profiles: " + stringifyError(err));
+        }
+      );
+    }
+
+    return GetProfiles(
+      localNode,
+      "" /*PublicKeyBase58Check*/,
+      "" /*Username*/,
+      searchText.trim().replace(/^@/, "") /*UsernamePrefix*/,
+      "" /*Description*/,
+      "" /*Order by*/,
+      20 /*NumToFetch*/,
+      readerPubKey /*ReaderPublicKeyBase58Check*/,
+      "" /*ModerationType*/,
+      false /*FetchUsersThatHODL*/,
+      false /*AddGlobalFeedBool*/
+    ).subscribe(
+      (response) => {
+        // only process this response if it came from
+        // the request for the current search text
+        if (
+          requestedSearchText === searchText ||
+          requestedSearchText === startingSearchText
+        ) {
+          setLoading(false);
+          creators = response.ProfilesFound;
+          // If starting search text is set, we handle the selection of the creator.
+          if (startingSearchText && response.ProfilesFound.length) {
+            _handleCreatorSelect(response.ProfilesFound[0]);
+          }
+        }
+      },
+      (err) => {
+        // only process this response if it came from
+        // the request for the current search text
+        if (
+          requestedSearchText === searchText ||
+          requestedSearchText === startingSearchText
+        ) {
+          setLoading(false);
+        }
+        console.error(err);
+        _alertError("Error loading profiles: " + stringifyError(err));
+      }
+    );
+  };
+
+  // Lifecycle methods
+  useEffect(() => {
+    debouncedSearchFunction = _.debounce(
+      _searchUsernamePrefix.bind(this),
+      DEBOUNCE_TIME_MS
+    );
+  }, []);
+
   return (
     <>
       {/* #searchBarRoot */}
@@ -28,26 +239,26 @@ const SearchBar = () => {
               ) : null}
 
               {!sickSearchBar && headerSearchBar ? (
-                <span className="input-group-text search-bar__icon search_bar__icon_header">
-                  <img
-                    src="/assets/icons/desktop_search_icon.svg"
+                <span className={styles.search_bar__icon_header + " input-group-text search-bar__icon"}>
+                  <Image
+                    src={searchIcon}
                     alt="search icon"
                   />
                 </span>
               ) : null}
 
               {sickSearchBar ? (
-                <span className="input-group-text search-bar__icon search_bar__icon_sick">
+                <span className={styles.search_bar__icon_sick + " input-group-text search-bar__icon"}>
                   {/* <!-- IF this is null it gets a placeholder so thats fucking nice --> */}
                   <Avatar
                     avatar={sickSearchBarAvatarPublicKey}
-                    classN="sick-search-avatar"
+                    classN={styles.sick_search_avatar}
                   ></Avatar>
                 </span>
               ) : null}
 
               {mintSearchBar ? (
-                <span className="input-group-text search-bar__icon search_bar__icon_mint">
+                <span className={styles.search_bar__icon_mint + " input-group-text search-bar__icon"}>
                   <i className="icon-search"></i>
                 </span>
               ) : null}
@@ -65,8 +276,12 @@ const SearchBar = () => {
                 onChange={(e) => _handleSearchTextChange(e)}
                 type="text"
                 className="form-control shadow-none search-bar__fix-active"
-                style="font-size: 15px; padding-left: 0; border-left-color: rgba(0, 0, 0, 0)"
-                placeholder="{{ placeHolder ? placeHolder : 'Search' }}"
+                style={{
+                  fontSize: "15px",
+                  paddingLeft: "0",
+                  borderLeftColor: "rgba(0, 0, 0, 0)",
+                }}
+                placeholder={placeHolder ? placeHolder : "Search"}
               />
             ) : null}
 
@@ -82,8 +297,12 @@ const SearchBar = () => {
             {headerSearchBar ? (
               <input
                 type="text"
-                className="form-control header-search-bar shadow-none search-bar__fix-active"
-                style="font-size: 15px; padding-left: 0; border-left-color: rgba(0, 0, 0, 0)"
+                className={styles.header_search_bar + " form-control shadow-none search-bar__fix-active"}
+                style={{
+                  fontSize: "15px",
+                  paddingLeft: "0",
+                  borderLeftColor: "rgba(0, 0, 0, 0)",
+                }}
                 placeholder="Search for creators & collectors..."
               />
             ) : null}
@@ -100,7 +319,8 @@ const SearchBar = () => {
                 value={searchText}
                 type="text"
                 className={[
-                  "form-control sick-search-bar shadow-none search-bar__fix-active",
+                   styles.sick_search_bar,
+                  "form-control shadow-none search-bar__fix-active",
                   !isSearchForUsersToSendDESO ? "br-12px" : "",
                 ].join(" ")}
                 style={{
@@ -212,16 +432,16 @@ const SearchBar = () => {
                   }
                   onMouseOver={() => _handleMouseOver("Cloutavista", -2)}
                   onMouseOut={() => _handleMouseOut("Cloutavista", -2)}
-                  index="-2"
-                  href="https://www.cloutavista.com/bitclout/posts?text={{ searchText }}"
+                  tabIndex={-2}
+                  href={
+                    "https://www.cloutavista.com/bitclout/posts?text=" +
+                    searchText
+                  }
                   target="_blank"
                   rel="noreferrer"
                 >
                   <div className="search-bar__selected-color"></div>
-                  <p
-                    target="_blank"
-                    href="https://www.cloutavista.com/bitclout/posts?text={{ searchText }}"
-                  >
+                  <p>
                     <i
                       className="fas fa-external-link-alt"
                       aria-hidden="true"

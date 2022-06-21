@@ -3,8 +3,10 @@ import ChangeAccountDropdown from "../Reusables/changeAccountDropdown";
 import Link from "next/link";
 import { profilePath } from "../../utils/routingFunctions";
 import { RouteNames } from "../../utils/backendapi-context";
+import { useAppSelector } from "../../utils/Redux/hooks";
 
 const MobileNavigation = () => {
+    let loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
   return (
     <div className="mobile-navigation-container disable-scrollbars">
       <ChangeAccountDropdown></ChangeAccountDropdown>

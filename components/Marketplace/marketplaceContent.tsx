@@ -32,9 +32,9 @@ const MarketplaceContent = ({
       {!mobile && desoMarketplace ? (
         <div>
           {desoMarketplace ? (
-            <MarketplaceSortBar flyout={false}></MarketplaceSortBar>
+            <MarketplaceSortBar flyout={false} onFilter={undefined}></MarketplaceSortBar>
           ) : (
-            <MarketplaceEthSortBar flyout="false"></MarketplaceEthSortBar>
+            <MarketplaceEthSortBar flyout="false" onFilter={undefined}></MarketplaceEthSortBar>
           )}
         </div>
       ) : null}

@@ -33,6 +33,8 @@ import Avatar from "../../Reusables/avatar";
 import FeedPostDropdown from "../../Feed/feedPostDropdown";
 import { SwalHelper } from "../../../utils/helpers/swal-helper";
 import Link from "next/link";
+import { track33 } from "../../../utils/mixpanel";
+import { useRouter } from "next/router";
 // Missing top bar from the angular version
 const NFTCard = ({
   hoverable,
@@ -60,6 +62,9 @@ const NFTCard = ({
   const dispatch = useAppDispatch();
   // Redux end
 
+  // Router
+  const router = useRouter();
+
   // Vars
   let nftEntryResponses: NFTEntryResponse[];
   let decryptableNFTEntryResponses: NFTEntryResponse[];
@@ -75,7 +80,6 @@ const NFTCard = ({
   const [imageURL, setImageURL] = useState("");
   const [hidingPost, setHidingPost] = useState(false);
   const [constructedEmbedURL, setConstructedEmbedURL] = useState("");
-  const [showAudioTypeIcon, setShowAudioTypeIcon] = useState(true);
   const [creatorProfile, setCreatorProfile] = useState(null);
   const [showPlaceABid, setShowPlaceABid] = useState(false);
   const [isBuyNow, setIsBuyNow] = useState(false);
@@ -411,6 +415,49 @@ const NFTCard = ({
     }
     return basePost?.NumNFTCopiesBurned === basePost?.NumNFTCopies;
   };
+
+  const onPostClicked = (event) => {
+    // if we shouldn't be navigating the user to a new page, just return
+    if (!contentShouldLinkToThread) {
+      return true;
+    }
+    // don't navigate if the user is selecting text
+    // from https://stackoverflow.com/questions/31982407/prevent-onclick-event-when-selecting-text
+    const selection = window.getSelection();
+    if (selection.toString().length !== 0) {
+      return true;
+    }
+    // don't navigate if the user clicked a link
+    if (event.target.tagName.toLowerCase() === "a") {
+      return true;
+    }
+
+    let route: string;
+    if (post.IsNFT) {
+      route = RouteNames.NFT;
+    } else if (postContent?.PostExtraData?.isEthereumNFT) {
+      route = RouteNames.ETH_NFT;
+    } else {
+      route = RouteNames.POSTS;
+    }
+
+    // identify ctrl+click (or) cmd+clik and opens feed in new tab
+    if (event.ctrlKey) {
+      window.open("https://supernovas.app/" + route + "/" + postContent.PostHashHex, "_blank");
+      // don't navigate after new tab is opened
+      return true;
+    }
+    router.push("https://supernovas.app" + route + "/" + postContent.PostHashHex);
+
+    track33("Post Clicked", {
+      Body: postContent.Body,
+      "is NFT": postContent.isNFT,
+      "Like Count": postContent.LikeCount,
+      "Poster Key": postContent.PosterPublicKeyBase58Check,
+      Diamonds: postContent.DiamondCount,
+      Category: postContent.PostExtraData,
+    });
+  }
   // Functions end
 
   // Lifecycle methods
@@ -466,38 +513,38 @@ const NFTCard = ({
       {!postContent?.IsHidden && nftPost ? (
         <div className={styles.card_header + " " + styles.nft_post_top}>
           <div className={styles.profile_img}>
-            <Link
+            {/* <Link
               href={
                 "/" +
                 RouteNames.USER_PREFIX +
                 "/" +
                 postContent.ProfileEntryResponse.Username
               }
-            >
+            > */}
               <Avatar
                 avatar={postContent?.ProfileEntryResponse.PublicKeyBase58Check}
                 classN={styles.avatar}
               ></Avatar>
-            </Link>
+            {/* </Link> */}
             {showThreadConnectionLine ? (
               <div className="feed-post__parent-thread-connector"></div>
             ) : null}
           </div>
-          <Link
+          {/* <Link
             href={
               "/" +
               RouteNames.USER_PREFIX +
               "/" +
               postContent.ProfileEntryResponse.Username
             }
-          >
+          > */}
             <h6 className="cursor-pointer">
               {postContent?.ProfileEntryResponse.Username}
               {postContent?.ProfileEntryResponse.IsVerified ? (
                 <i className="fas fa-check-circle fa-md text-primary"></i>
               ) : null}
             </h6>
-          </Link>
+          {/* </Link> */}
 
           <div className={styles.value_buy_cover}></div>
           {/*     className="ml-auto" */}
@@ -542,7 +589,6 @@ const NFTCard = ({
                     postContent={postContent}
                     constructedEmbedURL={constructedEmbedURL}
                     isQuotedCard={isQuotedCard}
-                    showAudioTypeIcon={showAudioTypeIcon}
                     imageURL={imageURL}
                   ></NFTCardMedia>
 
@@ -559,7 +605,7 @@ const NFTCard = ({
                   {/* QUOTING CARD WAS HERE ,,, Needs feed post */}
 
                   {/* Card caption, so NFT name, creator name etc */}
-                  {!(quotedContent?.IsNFT && profileFeed) ? (
+                  {!(quotedContent?.IsNFT && profileFeed && postContent) ? (
                     <NFTCardCaption
                       postContent={postContent}
                       loadProfile={loadProfile}

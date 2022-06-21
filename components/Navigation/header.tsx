@@ -147,6 +147,7 @@ const Header = () => {
           <div className={styles.search_bar_cover}>
             <SearchBar
               focusSearchInput={isSearchOpen}
+              isSearchForUsersToMessage={true}
               headerSearchBar={true}
             ></SearchBar>
           </div>

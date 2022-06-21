@@ -4,8 +4,11 @@ import { nanosToDeSo, nanosToUSD } from "../../utils/global-context";
 import Avatar from "../Reusables/avatar";
 import videoTypeIcon from "../../public/icons/video-type.svg";
 import chevronDownIcon from "../../public/icons/chevron-down.svg";
+import { NFTBidEntryResponse } from "../../utils/backendapi-context";
+import { useState } from "react";
 
 const BidsAccordion = ({ nftEntry }) => {
+  const [accordionOpen, setAccordionOpen] = useState(false);
   // Functions
   const mapImageURLs = (imgURL: string): string => {
     if (imgURL.startsWith("https://i.imgur.com")) {
@@ -17,10 +20,67 @@ const BidsAccordion = ({ nftEntry }) => {
     return imgURL;
   };
 
+  const checkSelectedBidEntries = (bidEntry: NFTBidEntryResponse): void => {
+    bidEntry.selected = true;
+    nftEntry.BidEntryResponses.forEach((bidEntryResponse) => {
+      if (
+        bidEntryResponse.SerialNumber === bidEntry.SerialNumber &&
+        bidEntry !== bidEntryResponse &&
+        bidEntryResponse.selected
+      ) {
+        bidEntryResponse.selected = false;
+      }
+    });
+    sellNFT();
+  };
+
+  const sellNFT = (): void => {
+    // put back
+    // const sellNFTModalDetails = modalService.show(SellNftModalComponent, {
+    //   class: "modal-dialog-center",
+    //   initialState: {
+    //     post: nftEntry.PostEntryResponse,
+    //     nftEntries: nftEntry.NFTEntryResponses,
+    //     selectedBidEntries: nftEntry.BidEntryResponses.filter(
+    //       (bidEntry) => bidEntry.selected
+    //     ),
+    //   },
+    // });
+    // const onHiddenEvent = sellNFTModalDetails.onHidden.pipe(take(1));
+    // onHiddenEvent.subscribe((response) => {
+    //   if (response === "nft sold") {
+    //     // This is different from basic implementation
+    //     window.location.reload();
+    //   } else if (response === "unlockable content opened") {
+    //     const unlockableModalDetails = modalService.show(
+    //       AddUnlockableModalComponent,
+    //       {
+    //         class: "modal-dialog-centered",
+    //         initialState: {
+    //           post: this.nftEntry.PostEntryResponse,
+    //           selectedBidEntries: this.nftEntry.BidEntryResponses.filter(
+    //             (bidEntry) => bidEntry.selected
+    //           ),
+    //         },
+    //       }
+    //     );
+    //     const onHiddenEvent = unlockableModalDetails.onHidden.pipe(take(1));
+    //     onHiddenEvent.subscribe((response) => {
+    //       if (response === "nft sold") {
+    //         // This is different from basic implementation
+    //         window.location.reload();
+    //       }
+    //     });
+    //   }
+    // });
+  };
+
   return (
     <div className="bids-accordion-container br-13px mt-10px">
-      {/* (click)="toggleAccordion()" */}
-      <button className="w-100 activity-box-bids">
+      <button
+        onClick={() => toggleAccordion()}
+        className="w-100 activity-box-bids"
+      >
         {/* <!-- IMAGE --> */}
         <div className="activity-frame-container-bids">
           {nftEntry.PostEntryResponse?.ImageURLs &&
@@ -37,10 +97,13 @@ const BidsAccordion = ({ nftEntry }) => {
           ) : null}
 
           {/* <!-- VIDEO --> */}
-          {/* [ngClass]="{ 'mb-10px': quotedContent && showQuotedContent }" */}
           {nftEntry.PostEntryResponse?.VideoURLs &&
           nftEntry.PostEntryResponse?.VideoURLs[0] ? (
-            <div className="image-size-active-bids-accordion w-100 d-flex flex-center position-relative">
+            <div
+              className={[
+                "image-size-active-bids-accordion w-100 d-flex flex-center position-relative",
+              ].join(" ")}
+            >
               <Image src={videoTypeIcon} alt="creator icon" />
             </div>
           ) : null}
@@ -118,12 +181,21 @@ const BidsAccordion = ({ nftEntry }) => {
           </div>
         </div>
         <div className="bids-dropdown-icon-container h-100 grid-area-d">
-          {/* [ngClass]="accordionOpen ? 'open' : ''" src={chevronDownIcon} */}
-          <img className="bids-dropdown-icon" alt="arrow down" />
+          <img
+            src={chevronDownIcon}
+            className={["bids-dropdown-icon", accordionOpen ? "open" : ""].join(
+              " "
+            )}
+            alt="arrow down"
+          />
         </div>
       </button>
-      {/* [ngClass]="accordionOpen ? 'open' : ''" */}
-      <div className="bids-received-accordion disable-scrollbars">
+      <div
+        className={[
+          "bids-received-accordion disable-scrollbars",
+          accordionOpen ? "open" : "",
+        ].join(" ")}
+      >
         {nftEntry.BidEntryResponses.map((bidEntry, index) => (
           <div key={index}>
             <button className="bids-received-bid">
@@ -188,8 +260,10 @@ const BidsAccordion = ({ nftEntry }) => {
                 </div>
               </div>
               <div className="grid-area-c h-100 d-flex flex-center">
-                {/* (click)="checkSelectedBidEntries(bidEntry)" */}
-                <button className="black-rounded-button font-weight-bold h-40px w-100 max-width-225px">
+                <button
+                  onClick={() => checkSelectedBidEntries(bidEntry)}
+                  className="black-rounded-button font-weight-bold h-40px w-100 max-width-225px"
+                >
                   Accept bid
                 </button>
               </div>

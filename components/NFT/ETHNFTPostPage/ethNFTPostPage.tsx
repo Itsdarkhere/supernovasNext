@@ -443,12 +443,12 @@ const ETHNFTPostPage = () => {
                                         href={
                                           bidEntry.ProfileEntryResponse
                                             ?.Username
-                                            ? [
-                                                "/" + RouteNames.USER_PREFIX,
+                                            ? 
+                                                "/" + RouteNames.USER_PREFIX + "/" +
                                                 bidEntry.ProfileEntryResponse
-                                                  .Username,
-                                              ]
-                                            : []
+                                                  .Username
+                                              
+                                            : ""
                                         }
                                       >
                                         <div

@@ -1,7 +1,9 @@
 import styles from "../../styles/Marketplace/marketplaceSortMobile.module.scss";
+import { useAppSelector } from "../../utils/Redux/hooks";
 import MarketplaceSortBar from "./marketplaceSortBar";
 
 const MarketplaceSortMobile = () => {
+  const isMarketplaceLeftBarMobileOpen = useAppSelector((state) => state.open.isMarketplaceLeftBarMobileOpen);
   // [@leftBarAnimation]
   if (isMarketplaceLeftBarMobileOpen) {
     return null;
@@ -17,7 +19,7 @@ const MarketplaceSortMobile = () => {
           styles.max_width_400px + " d-flex flex-center disable-scrollbars"
         }
       >
-        <MarketplaceSortBar flyout={true}></MarketplaceSortBar>
+        <MarketplaceSortBar flyout={true} onFilter={undefined}></MarketplaceSortBar>
       </div>
     </div>
   );

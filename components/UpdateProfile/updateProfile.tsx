@@ -1,7 +1,338 @@
 import styles from "../../styles/UpdateProfile/updateProfile.module.scss";
 import UpdateProfileGetDeso from "./updateProfileGetDeso";
+import infoIcon from "../../public/icons/info-icon.svg";
+import uploadIcon from "../../public/icons/upload_grey.svg";
+import defaultBanner from "../../public/img/default-banner.png";
+import chevronDown from "../../public/icons/chevron-down.svg";
+import twitterIcon from "../../public/icons/profile-twitter-icon.svg";
+import instagramIcon from "../../public/icons/profile-instagram-icon.svg";
+import discordIcon from "../../public/icons/profile-discord-icon.svg";
+import worldIcon from "../../public/icons/profile-world-icon.svg";
+import lockIcon from "../../public/icons/lock.svg";
+import Image from "next/image";
+import {
+  createProfileFeeInDeSo,
+  createProfileFeeInUsd,
+  getTargetComponentSelector,
+  isMobile,
+  launchGetFreeDESOFlow,
+  _alertError,
+} from "../../utils/global-context";
+import { SwalHelper } from "../../utils/helpers/swal-helper";
+import {
+  InsertOrUpdateProfileDetails,
+  parseProfileError,
+  RouteNames,
+  UpdateProfile,
+  UpdateUserGlobalMetadata,
+} from "../../utils/backendapi-context";
+import { useState } from "react";
+import { useRouter } from "next/router";
+import { useAppDispatch, useAppSelector } from "../../utils/Redux/hooks";
+import { setProfileUpdateTimestamp } from "../../utils/Redux/Slices/loggedInSlice";
+import { peoplesetemail } from "../../utils/mixpanel";
+// Firebase
 
-const UpdateProfile = () => {
+export type ProfileUpdates = {
+  usernameUpdate: string;
+  descriptionUpdate: string;
+  profilePicUpdate: string;
+};
+
+export type ProfileUpdateErrors = {
+  usernameError: boolean;
+  descriptionError: boolean;
+  profilePicError: boolean;
+  founderRewardError: boolean;
+};
+
+const UpdateProfileC = () => {
+  const router = useRouter();
+  const [usernameInput, setUsernameInput] = useState("");
+  const [emailAddress, setEmailAddress] = useState("");
+  const [discord, setDiscord] = useState("");
+  const [twitter, setTwitter] = useState("");
+  const [instagram, setInstagram] = useState("");
+  const [website, setWebsite] = useState("");
+  const [profilePicInput, setProfilePicInput] = useState("");
+  const [descriptionInput, setDescriptionInput] = useState("");
+  const [founderRewardInput, setFounderRewardInput] = useState<number>(100);
+  const [profileData, setProfileData] = useState<any>(null);
+  const [updatingSettings, setUpdatingSettings] = useState(false);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [invalidEmailEntered, setInvalidEmailEntered] = useState(false);
+  const [successMessageTimeout, setSuccessMessageTimeout] = useState<any>(null);
+  const [updateProfileBeingCalled, setUpdateProfileBeingCalled] =
+    useState(false);
+  const [profileUpdateErrors, setProfileUpdateErrors] =
+    useState<ProfileUpdateErrors>({
+      usernameError: false,
+      descriptionError: false,
+      profilePicError: false,
+      founderRewardError: false,
+    });
+
+  // Redux
+  const dispatch = useAppDispatch();
+  const loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
+  const localNode = useAppSelector((state) => state.node.localNode);
+  const updateEverything = useAppSelector(
+    (state) => state.other.updateEverything
+  );
+
+  // Functions
+  const _updateProfile = () => {
+    // Trim the username input in case the user added a space at the end. Some mobile
+    // browsers may do this.
+    setUsernameInput(usernameInput.trim());
+
+    // update socials
+    updateSocials();
+
+    // update Email
+    if (!invalidEmailEntered && emailAddress != "") {
+      _updateEmail();
+    }
+
+    const hasErrors = _setProfileErrors();
+    if (hasErrors) {
+      return;
+    }
+
+    setUpdateProfileBeingCalled(true);
+    _setProfileUpdates();
+    _callBackendUpdateProfile().subscribe(
+      (res) => {
+        dispatch(setProfileUpdateTimestamp(Date.now()));
+
+        // This updates things like the username that shows up in the dropdown.
+        updateEverything(
+          res.TxnHashHex,
+          _updateProfileSuccess,
+          _updateProfileFailure,
+          this
+        );
+
+        openGeneralSuccessModal();
+      },
+      (err) => {
+        const parsedError = parseProfileError(err);
+        const lowBalance = parsedError.indexOf("insufficient");
+        setUpdateProfileBeingCalled(false);
+        SwalHelper.fire({
+          target: getTargetComponentSelector(),
+          icon: "error",
+          title: `An Error Occurred`,
+          html: parsedError,
+          showConfirmButton: true,
+          focusConfirm: true,
+          customClass: {
+            confirmButton: "btn btn-light",
+            cancelButton: "btn btn-light no",
+          },
+          confirmButtonText: lowBalance ? "Buy $DESO" : null,
+          cancelButtonText: lowBalance ? "Later" : null,
+          showCancelButton: !!lowBalance,
+        }).then((res) => {
+          if (lowBalance && res.isConfirmed) {
+            router.push(RouteNames.BUY_DESO);
+          }
+        });
+      }
+    );
+  };
+
+  const _updateProfileSuccess = (comp: UpdateProfileC) => {
+    // comp.globalVars.celebrate();
+    comp.updateProfileBeingCalled = false;
+    comp.profileUpdated = true;
+    if (comp.inTutorial) {
+      comp.router.navigate(
+        [RouteNames.TUTORIAL, RouteNames.INVEST, RouteNames.BUY_CREATOR],
+        {
+          queryParamsHandling: "merge",
+        }
+      );
+      return;
+    }
+
+    if (comp.globalVars.loggedInUser.UsersWhoHODLYouCount === 0) {
+      //   old logic where swal helper was firing had to move this.openGeneralSuccessModal(); because it was firing twice here
+
+      return;
+    }
+  };
+
+  const _setProfileUpdates = () => {
+    const profileEntryResponse = loggedInUser.ProfileEntryResponse;
+    profileUpdates.usernameUpdate =
+      profileEntryResponse?.Username !== usernameInput ? usernameInput : "";
+    profileUpdates.descriptionUpdate =
+      profileEntryResponse?.Description !== descriptionInput
+        ? descriptionInput
+        : "";
+    profileUpdates.profilePicUpdate =
+      profileEntryResponse?.ProfilePic !== profilePicInput
+        ? profilePicInput
+        : "";
+  };
+
+  const updateSocials = () => {
+    if (profileData) {
+      return InsertOrUpdateProfileDetails(
+        localNode,
+        loggedInUser.PublicKeyBase58Check,
+        typeof twitter === "undefined" ? profileData.Twitter : twitter,
+        typeof website === "undefined" ? profileData.Website : website,
+        typeof discord === "undefined" ? profileData.Discord : discord,
+        typeof instagram === "undefined" ? profileData.Instagram : instagram,
+        typeof name === "undefined" ? profileData.Name : name
+      ).subscribe({
+        next: (res) => {
+          console.log(res);
+        },
+        error: (err) => {
+          console.log(err);
+        },
+      });
+    }
+  };
+
+  const _callBackendUpdateProfile = () => {
+    console.log("UPDATE PROFILE");
+    return UpdateProfile(
+      localNode,
+      loggedInUser.PublicKeyBase58Check /*UpdaterPublicKeyBase58Check*/,
+      "" /*ProfilePublicKeyBase58Check*/,
+      // Start params
+      profileUpdates.usernameUpdate /*NewUsername*/,
+      profileUpdates.descriptionUpdate /*NewDescription*/,
+      profileUpdates.profilePicUpdate /*NewProfilePic*/,
+      founderRewardInput * 100 /*NewCreatorBasisPoints*/,
+      1.25 * 100 * 100 /*NewStakeMultipleBasisPoints*/,
+      false /*IsHidden*/,
+      // End params
+      feeRateDeSoPerKB * 1e9 /*MinFeeRateNanosPerKB*/
+    );
+  };
+
+  const openGeneralSuccessModal = () => {
+    console.log(
+      ` ------------------------- general success modal function hit -------------- `
+    );
+
+    // modalService.show(GeneralSuccessModalComponent, {
+    //   class: "modal-dialog-centered nft_placebid_modal_bx  modal-lg",
+    //   initialState: {
+    //     header: "You're all set!",
+    //     text: "Your profile has been updated.",
+    //     buttonText: "Go to my profile",
+    //     buttonClickedAction: "profileRoute",
+    //   },
+    // });
+  };
+
+  const _updateEmail = () => {
+    if (showSuccessMessage) {
+      setShowSuccessMessage(false);
+      clearTimeout(successMessageTimeout);
+    }
+
+    setUpdatingSettings(true);
+    UpdateUserGlobalMetadata(
+      localNode,
+      loggedInUser.PublicKeyBase58Check /*UpdaterPublicKeyBase58Check*/,
+      emailAddress /*EmailAddress*/,
+      null /*MessageReadStateUpdatesByContact*/
+    )
+      .subscribe(
+        (res) => {},
+        (err) => {
+          _alertError("Error updating email...", err);
+        }
+      )
+      .add(() => {
+        setShowSuccessMessage(true);
+        setUpdatingSettings(false);
+        let tempSuccessMessageTimeout = setTimeout(() => {
+          setShowSuccessMessage(false);
+        }, 500);
+        setSuccessMessageTimeout(tempSuccessMessageTimeout);
+      });
+    peoplesetemail({
+      $email: emailAddress,
+    });
+  };
+
+  const _uploadBannerImage = (files: FileList) => {
+    let fileToUpload = files.item(0);
+    if (!fileToUpload.type || !fileToUpload.type.startsWith("image/")) {
+      _alertError("File selected does not have an image file type.");
+      return;
+    }
+    if (fileToUpload.size > 5 * 1024 * 1024) {
+      _alertError("Please upload an image that is smaller than 5MB.");
+      return;
+    }
+    uploadingBannerImage = true;
+    // Make banner image the default image
+    document
+      .getElementById("banner-image")
+      .setAttribute("src", "./assets/img/default-banner.png");
+
+    //this.photoLocation = (Math.random() + 1).toString(36).substring(7);
+
+    // Here store the image itself
+    ref = afStorage.ref(loggedInUser?.PublicKeyBase58Check);
+    task = ref.put(fileToUpload);
+
+    // This is for cache busting, but idk if it even works
+    setTimeout(() => {
+      loadBannerImage();
+      uploadingBannerImage = false;
+    }, 2500);
+  };
+
+  const _setProfileErrors = (): boolean => {
+    let hasErrors = false;
+    if (usernameInput.length == 0) {
+      profileUpdateErrors.usernameError = true;
+      hasErrors = true;
+    } else {
+      profileUpdateErrors.usernameError = false;
+    }
+
+    if (descriptionInput.length > 512) {
+      profileUpdateErrors.descriptionError = true;
+      hasErrors = true;
+    } else {
+      profileUpdateErrors.descriptionError = false;
+    }
+
+    if (
+      profilePicInput == null ||
+      profilePicInput.length == 0 ||
+      profilePicInput.length > 5 * 1024 * 1024 //
+    ) {
+      profileUpdateErrors.profilePicError = true;
+      hasErrors = true;
+    } else {
+      profileUpdateErrors.profilePicError = false;
+    }
+
+    if (
+      typeof founderRewardInput != "number" ||
+      founderRewardInput < 0 ||
+      founderRewardInput > 100
+    ) {
+      profileUpdateErrors.founderRewardError = true;
+      hasErrors = true;
+    } else {
+      profileUpdateErrors.founderRewardError = false;
+    }
+
+    return hasErrors;
+  };
   return (
     <>
       <div className="w-100 d-flex flex-column flex-center">
@@ -18,11 +349,7 @@ const UpdateProfile = () => {
             ].join(" ")}
           >
             <div className="p-15px fs-14px font-weight-semiboldn d-flex flex-center up-cost-warning h-100 w-100">
-              <img
-                src="../assets/icons/info-icon.svg"
-                className="mr-10px"
-                alt="info icon"
-              />
+              <Image src={infoIcon} className="mr-10px" alt="info icon" />
               Creating a profile costs {createProfileFeeInDeSo()} DeSo ≈
               {createProfileFeeInUsd()} USD. This helps prevent spam.
             </div>
@@ -33,7 +360,7 @@ const UpdateProfile = () => {
           <div
             className={[
               "update-profile-container",
-              globalVars.isMobile() ? "w-100" : "feed-cover",
+              isMobile() ? "w-100" : "feed-cover",
             ].join(" ")}
           >
             {/* <!-- Create Profile Fee Warning --> */}
@@ -82,8 +409,8 @@ const UpdateProfile = () => {
                         {!uploadingBannerImage ? (
                           <div className="banner-image-text">
                             <div className="d-flex flex-row flex-center font-weight-bold color-white">
-                              <img
-                                src="/assets/icons/upload_grey.svg"
+                              <Image
+                                src={uploadIcon}
                                 alt="upload-icon"
                                 className="mr-10px"
                               />
@@ -97,9 +424,9 @@ const UpdateProfile = () => {
                           <div className="banner-else">Uploading...</div>
                         )}
 
-                        <img
+                        <Image
                           id="banner-image"
-                          src="./assets/img/default-banner.png"
+                          src={defaultBanner}
                           className="banner-image"
                         />
                       </button>
@@ -273,7 +600,8 @@ const UpdateProfile = () => {
                     </div>
                     <div className="h-100 d-flex flex-center">
                       {/* src="/assets/icons/chevron-down.svg" */}
-                      <img
+                      <Image
+                        src={chevronDown}
                         className={[
                           "update-profile-dropdown-icon up-rotate-icon",
                           contactsOpen ? "open" : "",
@@ -325,7 +653,8 @@ const UpdateProfile = () => {
                     </div>
                     <div className="h-100 d-flex flex-center">
                       {/* src="/assets/icons/chevron-down.svg" */}
-                      <img
+                      <Image
+                        src={chevronDown}
                         className={[
                           "update-profile-dropdown-icon up-rotate-icon",
                           socialsOpen ? "open" : "",
@@ -341,10 +670,7 @@ const UpdateProfile = () => {
                   >
                     <div className="social-input">
                       <label className="social-label">
-                        <img
-                          src="assets/icons/profile-twitter-icon.svg"
-                          className="pr-5px"
-                        />
+                        <Image src={twitterIcon} className="pr-5px" />
                         twitter.com/
                       </label>
                       <input
@@ -358,10 +684,7 @@ const UpdateProfile = () => {
                     </div>
                     <div className="social-input">
                       <label className="social-label">
-                        <img
-                          src="assets/icons/profile-instagram-icon.svg"
-                          className="pr-5px"
-                        />
+                        <Image src={instagramIcon} className="pr-5px" />
                         instagram.com/
                       </label>
                       <input
@@ -377,10 +700,7 @@ const UpdateProfile = () => {
                     </div>
                     <div className="social-input">
                       <label className="social-label">
-                        <img
-                          src="assets/icons/profile-discord-icon.svg"
-                          className="pr-5px"
-                        />
+                        <Image src={discordIcon} className="pr-5px" />
                         discord.gg/
                       </label>
                       <input
@@ -389,13 +709,17 @@ const UpdateProfile = () => {
                         className="social-input-inner"
                         type="text"
                         placeholder="The ID in your Discord server invite link"
-                        value="{{ this.profileData?.Discord ? this.profileData?.Discord : '' }}"
+                        value={
+                          this.profileData?.Discord
+                            ? this.profileData?.Discord
+                            : ""
+                        }
                       />
                     </div>
                     <div className="social-input">
                       <label className="social-label">
-                        <img
-                          src="assets/icons/profile-world-icon.svg"
+                        <Image
+                          src={worldIcon}
                           className="pr-5px minus-margin"
                         />
                         Website
@@ -410,7 +734,7 @@ const UpdateProfile = () => {
                       />
                     </div>
                   </div>
-                  {!globalVars.loggedInUser.JumioFinishedTime ? (
+                  {!loggedInUser.JumioFinishedTime ? (
                     <button
                       onClick={() => setVerificationOpen(!verificationOpen)}
                       className={[
@@ -432,7 +756,8 @@ const UpdateProfile = () => {
                       </div>
                       <div className="h-100 d-flex flex-center">
                         {/* src="/assets/icons/chevron-down.svg" */}
-                        <img
+                        <Image
+                          src={chevronDown}
                           className={[
                             "update-profile-dropdown-icon up-rotate-icon",
                             verificationOpen ? "open" : "",
@@ -465,9 +790,9 @@ const UpdateProfile = () => {
                       onClick={() => launchGetFreeDESOFlow()}
                       className="white-rounded-button fs-14px up-jumio-button mt-20px d-flex flex-center pl-10px pr-10px pt-5px pb-5px font-weight-bold"
                     >
-                      <img
+                      <Image
                         className="mr-5px color-text fs-13px"
-                        src="../assets/icons/lock.svg"
+                        src={lockIcon}
                       />
                       Verify your ID with Jumio
                     </button>
@@ -557,4 +882,4 @@ const UpdateProfile = () => {
   );
 };
 
-export default UpdateProfile;
+export default UpdateProfileC;

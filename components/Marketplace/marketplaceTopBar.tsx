@@ -4,11 +4,15 @@ import ethIcon from "../../public/eth/ethlogo.svg";
 import marketCardIcon from "../../public/icons/market_grid_type_card_icon.svg";
 import marketGridIcon from "../../public/icons/market_grid_type_grid_icon.svg";
 import Image from "next/image";
-import { useAppSelector } from "../../utils/Redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../utils/Redux/hooks";
+import { setDesoMarketplace, setETHMarketplaceNFTCategory, setETHMarketplaceStatus, setEthMarketplaceVerifiedCreators, setMarketplaceSortType, setMarketplaceViewTypeCard } from "../../utils/Redux/Slices/sortSlice";
 
-const MarketplaceTopBar = () => {
+const MarketplaceTopBar = ({ sortMarketplace }) => {
   // Redux
+  const dispatch = useAppDispatch();
   let desoMarketplace = useAppSelector((state) => state.sort.desoMarketplace);
+  let marketplaceSortType = useAppSelector((state) => state.sort.marketplaceSortType);
+  let marketplaceViewTypeCard = useAppSelector((state) => state.sort.marketplaceViewTypeCard);
 
   const marketplaceSortTypeOptions = [
     { id: "most recent first", name: "Most recent first" },
@@ -29,6 +33,83 @@ const MarketplaceTopBar = () => {
     { id: "most comments first", name: "Most comments first" },
     { id: "most reposts first", name: "Most reposts first" },
   ];
+
+  // Functions
+
+  const updateEthMarketplaceStatus = () => {
+    dispatch(setDesoMarketplace(false));
+
+    dispatch(setETHMarketplaceStatus("all"));
+    dispatch(setETHMarketplaceNFTCategory("all"))
+    dispatch(setEthMarketplaceVerifiedCreators("verified"));
+    dispatch(setMarketplaceSortType("most recent first"));
+
+    // Put back
+    // globalVars.getAllEthNFTs();
+  }
+
+  const updateDesoMarketplaceStatus = () => {
+    dispatch(setDesoMarketplace(true));
+  }
+
+  const blockchainSelectChange = (desoMarket: string) => {
+    if (desoMarket == "true" && !desoMarketplace) {
+      updateDesoMarketplaceStatus();
+    } else if (desoMarket == "false" && desoMarketplace) {
+      updateEthMarketplaceStatus();
+    }
+  }
+
+  const sortSelectChange = (event) => {
+    if (marketplaceSortType != event) {
+      if (!desoMarketplace) {
+        sortSelectChangeEth(event);
+      } else {
+        dispatch(setMarketplaceSortType(event));
+        sortMarketplace(0, false);
+      }
+    }
+  }
+
+  const sortSelectChangeEth = (event) => {
+    if (marketplaceSortType != event) {
+      dispatch(setMarketplaceSortType(event));
+
+      if (
+        marketplaceSortType === "highest price first" ||
+        marketplaceSortType === "lowest price first"
+      ) {
+        // Put back
+        // this.modalService.show(GeneralSuccessModalComponent, {
+        //   class: "modal-dialog-centered nft_placebid_modal_bx  modal-lg",
+        //   initialState: {
+        //     header: "Error",
+        //     text: "You cannot filter by price.",
+        //     buttonText: "Ok",
+        //     buttonClickedAction: "connectWalletMobileError",
+        //   },
+        // });
+      } else {
+        // Put back
+        // this.globalVars.getEthNFTsByFilter();
+      }
+    }
+    //     }
+  }
+
+  // Choosing between a grid display of NFTs and Card display
+  const setDisplayType = (display: string) => {
+    switch (display) {
+      case "Card":
+        dispatch(setMarketplaceViewTypeCard(true));
+        break;
+      case "Grid":
+        dispatch(setMarketplaceViewTypeCard(false));
+        break;
+      default:
+        break;
+    }
+  }
 
   return (
     <div className={styles.mrk_top}>

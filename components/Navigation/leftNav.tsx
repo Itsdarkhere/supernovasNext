@@ -12,8 +12,15 @@ import onBoardingIcon from "../../public/icons/profile-icon.svg";
 import daoIcon from "../../public/icons/feed_sn_icon.png";
 import Link from "next/link";
 import { RouteNames } from "../../utils/backendapi-context";
+import { useAppSelector } from "../../utils/Redux/hooks";
+import { showAdminTools } from "../../utils/global-context";
 
 const LeftNav = () => {
+  // Redux
+  let loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
+  let isOnboardingComplete = useAppSelector(
+    (state) => state.user.isOnboardingComplete
+  );
   return (
     <div>
       <div

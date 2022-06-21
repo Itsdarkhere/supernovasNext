@@ -23,29 +23,29 @@ const NFTCardCaption = ({ postContent, loadProfile, creatorProfile }) => {
       <div className="d-flex flex-row">
         <div className={styles.card_header} style={{ borderBottom: "0px" }}>
           <div className={styles.profile_img}>
-            <Link
+            {/* <Link
               href={
                 "/" + RouteNames.USER_PREFIX + "/" + loadProfile
                   ? creatorProfile?.Username
                   : postContent.ProfileEntryResponse?.Username
               }
-            >
+            > */}
               <Avatar
                 classN={styles.avatar}
                 avatar={postContent?.PosterPublicKeyBase58Check}
               ></Avatar>
-            </Link>
+            {/* </Link> */}
           </div>
         </div>
         <div className="d-flex flex-column">
           <p className={styles.creator_text_nft_card}>CREATOR</p>
-          <Link
+          {/* <Link
             href={
               "/" + RouteNames.USER_PREFIX + "/" + loadProfile
-                ? creatorProfile?.Username
-                : postContent.ProfileEntryResponse?.Username
+              ? creatorProfile?.Username
+              : postContent?.ProfileEntryResponse?.Username
             }
-          >
+          > */}
             <div className={styles.username_nft_card}>
               {loadProfile
                 ? creatorProfile?.Username
@@ -57,7 +57,7 @@ const NFTCardCaption = ({ postContent, loadProfile, creatorProfile }) => {
                 <i className="fas fa-check-circle pl-5px fa-md text-primary"></i>
               ) : null}
             </div>
-          </Link>
+          {/* </Link> */}
         </div>
       </div>
     </div>

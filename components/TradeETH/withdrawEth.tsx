@@ -1,6 +1,16 @@
 import styles from "../../styles/TradeETH/withdrawEth.module.scss";
+import Image from "next/image";
+import ethIcon from "../../public/eth/ethlogo.svg";
+import imxIcon from "../../public/eth/imxlogo.svg";
+import whiteEthIcon from "../../public/eth/ethlogo-white.svg";
+import supportArrowIcon from "../../public/eth/support-arrow.svg";
+import { useState } from "react";
 
 const WithdrawEth = () => {
+  const [pendingWithdrawalsResponse, setPendingWithdrawalsResponse] =
+    useState(true);
+  const [pendingWithdrawals, setPendingWithdrawals] = useState(false);
+  const [readyWithdrawalsResponse, ]
   return (
     <>
       {/* <!-- no pending withdrawals --> */}
@@ -9,17 +19,15 @@ const WithdrawEth = () => {
       !completeWithdrawalSuccess ? (
         <div className="withdraw-eth-wrapper d-flex flex-column flex-center-start h-100">
           <div className="withdraw-eth-icon-container">
-            <img
+            <Image
               className="eth-logo-withdraw-icon d-flex flex-row flex-center"
-              src="/assets/eth/ethlogo.svg"
+              src={ethIcon}
               alt="eth-logo"
-              name="eth-logo-withdraw-icon"
             />
-            <img
+            <Image
               className="imx-logo-withdraw-icon d-flex flex-row flex-center"
               src="/assets/eth/imxlogo.svg"
               alt="imx-logo"
-              name="imx-logo-withdraw-icon"
             />
           </div>
           <p className="withdraw-eth-description">
@@ -39,11 +47,10 @@ const WithdrawEth = () => {
                 id="ethWithdrawAmount"
               />
               <button className="withdraw-eth-min-price-label h-100 w-40 fs-23-responsive pt-5px">
-                <img
+                <Image
                   className="eth-logo-withdraw-button d-flex flex-row flex-center"
-                  src="/assets/eth/ethlogo-white.svg"
+                  src={whiteEthIcon}
                   alt="eth-logo"
-                  name="eth-logo-white"
                 />
                 <label className="mb-0px eth-withdraw-text">ETH</label>
               </button>
@@ -56,8 +63,8 @@ const WithdrawEth = () => {
             <div className="withdraw-eth-text">Prepare ETH Withdrawal</div>
           </button>
           <a className="support-container">
-            <img
-              src="/assets/eth/support-arrow.svg"
+            <Image
+              src={supportArrowIcon}
               alt="support-arrow"
               className="support-arrow"
             />
@@ -70,17 +77,15 @@ const WithdrawEth = () => {
       {pendingWithdrawals && !readyWithdrawals && !completeWithdrawalSuccess ? (
         <div className="withdraw-eth-wrapper d-flex flex-column flex-center-start h-100">
           <div className="withdraw-eth-icon-container">
-            <img
+            <Image
               className="eth-logo-withdraw-icon d-flex flex-row flex-center"
-              src="/assets/eth/ethlogo.svg"
+              src={ethIcon}
               alt="eth-logo"
-              name="eth-logo-withdraw-icon"
             />
-            <img
+            <Image
               className="imx-logo-withdraw-icon d-flex flex-row flex-center"
-              src="/assets/eth/imxlogo.svg"
+              src={imxIcon}
               alt="imx-logo"
-              name="imx-logo-withdraw-icon"
             />
           </div>
           <p className="withdraw-eth-description">
@@ -98,23 +103,21 @@ const WithdrawEth = () => {
       {!pendingWithdrawals && readyWithdrawals && !completeWithdrawalSuccess ? (
         <div className="withdraw-eth-wrapper d-flex flex-column flex-center-start h-100">
           <div className="withdraw-eth-icon-container">
-            <img
+            <Image
               className="eth-logo-withdraw-icon d-flex flex-row flex-center"
-              src="/assets/eth/ethlogo.svg"
+              src={ethIcon}
               alt="eth-logo"
-              name="eth-logo-withdraw-icon"
             />
-            <img
+            <Image
               className="imx-logo-withdraw-icon d-flex flex-row flex-center"
-              src="/assets/eth/imxlogo.svg"
+              src={imxIcon}
               alt="imx-logo"
-              name="imx-logo-withdraw-icon"
             />
           </div>
           <p className="withdraw-eth-description">
             Your ETH is ready to be withdrawn!
           </p>
-          <p className="eth-ready-withdraw-amount">{this.withdrawAmount} ETH</p>
+          <p className="eth-ready-withdraw-amount">{withdrawAmount} ETH</p>
           <button
             onClick={() => completeWithdrawal()}
             className="imx-complete-withdraw-button"
@@ -128,24 +131,25 @@ const WithdrawEth = () => {
       {completeWithdrawalSuccess ? (
         <div className="withdraw-eth-wrapper d-flex flex-column flex-center-start h-100">
           <div className="withdraw-eth-icon-container">
-            <img
+            <Image
               className="eth-logo-withdraw-icon d-flex flex-row flex-center"
-              src="/assets/eth/ethlogo.svg"
+              src={ethIcon}
               alt="eth-logo"
-              name="eth-logo-withdraw-icon"
             />
-            <img
+            <Image
               className="imx-logo-withdraw-icon d-flex flex-row flex-center"
-              src="/assets/eth/imxlogo.svg"
+              src={imxIcon}
               alt="imx-logo"
-              name="imx-logo-withdraw-icon"
             />
           </div>
           <p className="withdraw-eth-description">
             Withdrawal Completed Successfully
           </p>
-          <p className="eth-ready-withdraw-amount">{this.withdrawAmount} ETH</p>
-          <button onClick={() => withdrawAgain()} className="imx-complete-withdraw-button">
+          <p className="eth-ready-withdraw-amount">{withdrawAmount} ETH</p>
+          <button
+            onClick={() => withdrawAgain()}
+            className="imx-complete-withdraw-button"
+          >
             <div className="withdraw-eth-text">Withdraw Again</div>
           </button>
         </div>

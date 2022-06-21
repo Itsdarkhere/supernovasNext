@@ -3,6 +3,10 @@ import minimizeIcon from "../../public/icons/minimize_icon.svg";
 import Image from "next/image";
 
 const FeedPostImageModal = ({ imageURL }) => {
+
+  const closeThisWindow = () => {
+    // this.bsModalRef.hide();
+  }
   return (
     <div className="p-15px d-flex justify-content-center align-items-center br-3px">
       <figure className="img">

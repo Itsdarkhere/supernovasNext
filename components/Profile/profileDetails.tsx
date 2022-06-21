@@ -103,6 +103,7 @@ const ProfileDetails = () => {
   };
 
   const showProfileAsReserved = () => {
+    console.log(profile);
     return profile.IsReserved && profile.IsVerified;
   };
 

@@ -3,7 +3,10 @@ import NFTCard from "../NFT/NFTCard/nftCard";
 import TabSelector from "../Reusables/tabSelector";
 import Image from "next/image";
 import {
+  getPostContentHashHex,
+  getTargetComponentSelector,
   hasUserBlockedCreator,
+  incrementCommentCount,
   nanosToDeSo,
   nanosToUSD,
   _alertError,
@@ -14,6 +17,7 @@ import closeCircleImg from "../../public/img/close-circle.png";
 import videoTypeIcon from "../../public/icons/video-type.svg";
 import { useEffect, useState } from "react";
 import {
+  CreateNFTBid,
   GetNFTBidsForNFTPost,
   GetNFTBidsForUser,
   GetNFTsForUser,
@@ -25,10 +29,11 @@ import {
 import _ from "lodash";
 import { Subscription } from "rxjs";
 import { useAppSelector } from "../../utils/Redux/hooks";
-import { track34 } from "../../utils/mixpanel";
+import { track15, track34 } from "../../utils/mixpanel";
 import { useParams, useSearchParams } from "react-router-dom";
 import { useRouter } from "next/router";
 import BidsAccordion from "./bidsAccordion";
+import { SwalHelper } from "../../utils/helpers/swal-helper";
 
 const ActivityContent = () => {
   const BIDS_MADE = "Bids Made";
@@ -49,8 +54,12 @@ const ActivityContent = () => {
   >([]);
   const [receivedNFTResponse, setReceivedNFTResponse] = useState([]);
   const [myBids, setMyBids] = useState<NFTBidEntryResponse[]>([]);
+  const [mobile, setMobile] = useState(false);
   const loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
   const localNode = useAppSelector((state) => state.node.localNode);
+  const defaultFeeRateNanosPerKB = useAppSelector(
+    (state) => state.fees.defaultFeeRateNanosPerKB
+  );
 
   // Functions
   const _handleTabClick = (tabName: string) => {
@@ -201,6 +210,109 @@ const ActivityContent = () => {
     return false;
   };
 
+  async function _prependComment(uiPostParent, index, newComment) {
+    const uiPostParentHashHex = getPostContentHashHex(uiPostParent);
+    // await this.datasource.adapter.relax();
+    // await this.datasource.adapter.update({
+    //   predicate: ({ $index, data, element }) => {
+    //     let currentPost = data as any as PostEntryResponse;
+    //     if ($index === index) {
+    //       newComment.parentPost = currentPost;
+    //       currentPost.Comments = currentPost.Comments || [];
+    //       currentPost.Comments.unshift(_.cloneDeep(newComment));
+    //       return [incrementCommentCount(currentPost)];
+    //     } else if (getPostContentHashHex(currentPost) === uiPostParentHashHex) {
+    //       // We also want to increment the comment count on any other notifications related to the same post hash hex.
+    //       return [incrementCommentCount(currentPost)];
+    //     }
+    //     // Leave all other items in the datasource as is.
+    //     return true;
+    //   },
+    // });
+  }
+
+  const openPlaceBidModal = (event: any, postEntryResponse) => {
+    if (!loggedInUser?.ProfileEntryResponse) {
+      _alertError("Create profile to perform this action...");
+      return;
+    }
+    event.stopPropagation();
+    track15("Open Place a Bid Modal");
+    // Put back
+    // const modalDetails = modalService.show(PlaceBidModalComponent, {
+    //   class: "modal-dialog-centered nft_placebid_modal_bx buy-modal modal-lg right-align-modal",
+    //   initialState: {
+    //     post: postEntryResponse,
+    //     editionHasBids: true,
+    //     clickedPlaceABid: true,
+    //     isBuyNow: false,
+    //     serialNumber: null,
+    //   },
+    // });
+    // // post: this.postContent
+    // const onHideEvent = modalDetails.onHide;
+    // onHideEvent.subscribe((response) => {
+    //   if (response === "bid placed") {
+    //     getNFTBids();
+    //   }
+    // });
+  };
+
+  const openImgModal = (event, imageURL) => {
+    event.stopPropagation();
+    // put back
+    // modalService.show(FeedPostImageModalComponent, {
+    //   class: "modal-dialog-centered img_popups modal-lg",
+    //   initialState: {
+    //     imageURL,
+    //   },
+    // });
+  };
+
+  const cancelBid = (bidEntry: NFTBidEntryResponse): void => {
+    SwalHelper.fire({
+      target: getTargetComponentSelector(),
+      title: "Cancel Bid",
+      html: `Are you sure you'd like to cancel this bid?`,
+      showCancelButton: true,
+      customClass: {
+        confirmButton: "btn btn-light",
+        cancelButton: "btn btn-light no",
+      },
+      reverseButtons: true,
+    }).then((res) => {
+      if (res.isConfirmed) {
+        CreateNFTBid(
+          localNode,
+          loggedInUser.PublicKeyBase58Check,
+          bidEntry.PostEntryResponse.PostHashHex,
+          bidEntry.SerialNumber,
+          0,
+          defaultFeeRateNanosPerKB
+        ).subscribe(
+          () => {
+            window.location.reload();
+            // Put back
+            // return this.datasource.adapter.remove({
+            //   predicate: ({ data }) => {
+            //     const currBidEntry = data as any as NFTBidEntryResponse;
+            //     return (
+            //       currBidEntry.SerialNumber === bidEntry.SerialNumber &&
+            //       currBidEntry.BidAmountNanos === currBidEntry.BidAmountNanos &&
+            //       currBidEntry.PostEntryResponse.PostHashHex ===
+            //         bidEntry.PostEntryResponse.PostHashHex
+            //     );
+            //   },
+            // });
+          },
+          (err) => {
+            console.error(err);
+          }
+        );
+      }
+    });
+  };
+
   // Lifecycle methods
   useEffect(() => {
     // put back
@@ -231,8 +343,9 @@ const ActivityContent = () => {
           ></TabSelector>
         </div>
         {/* <simple-center-loader [height]="200" *ngIf="isLoading"></simple-center-loader> */}
-        {/* [ngClass]="mobile ? 'p-10px' : ''" */}
-        <div className="pt-0px max-width-100">
+        <div
+          className={["pt-0px max-width-100", mobile ? "p-10px" : ""].join(" ")}
+        >
           {!nftResponse?.length && activeTab === "Transfers" && !isLoading ? (
             <div className="pt-15px">
               <div
@@ -279,8 +392,13 @@ const ActivityContent = () => {
                       nftEntry.PostEntryResponse.ImageURLs[0] &&
                       !nftEntry.PostEntryResponse.ParentStakeID ? (
                         <div className={styles.image_size_active_bids}>
-                          {/* (click)="openImgModal($event, nftEntry.PostEntryResponse.ImageURLs[0])" */}
                           <Image
+                            onClick={(e) =>
+                              openImgModal(
+                                e,
+                                nftEntry.PostEntryResponse.ImageURLs[0]
+                              )
+                            }
                             data-toggle="modal"
                             className="h-100"
                             src={mapImageURLs(
@@ -292,14 +410,13 @@ const ActivityContent = () => {
                       ) : null}
 
                       {/* <!-- VIDEO --> */}
-                      {/* [ngClass]="{ 'mb-10px': quotedContent && showQuotedContent }" */}
                       {nftEntry.PostEntryResponse?.VideoURLs &&
                       nftEntry.PostEntryResponse?.VideoURLs[0] ? (
                         <div
-                          className={
-                            styles.image_size_active_bids +
-                            " d-flex flex-center"
-                          }
+                          className={[
+                            styles.image_size_active_bids,
+                            "d-flex flex-center",
+                          ].join(" ")}
                         >
                           <Image src={videoTypeIcon} alt="creator icon" />
                         </div>
@@ -394,10 +511,12 @@ const ActivityContent = () => {
                       ) : null}
                     </div>
                     <div className={styles.active_bids_buttons}>
-                      {/*(click)="openPlaceBidModal($event, nftEntry.PostEntryResponse)" */}
                       {nftEntry.HighestBidAmountNanos >
                       nftEntry.BidAmountNanos ? (
                         <button
+                          onClick={(e) =>
+                            openPlaceBidModal(e, nftEntry.PostEntryResponse)
+                          }
                           className={
                             styles.active_bids_button_pab + " hover-scale"
                           }
@@ -411,14 +530,19 @@ const ActivityContent = () => {
                   queryParamsHandling="merge"
                   */}
                       <a
-                        className={
-                          styles.active_bids_button_vnft + " hover-scale"
-                        }
+                        className={[
+                          styles.active_bids_button_vnft,
+                          "hover-scale",
+                          nftEntry.HighestBidAmountNanos >
+                          nftEntry.BidAmountNanos
+                            ? "mt-10px"
+                            : "",
+                        ].join(" ")}
                       >
                         View NFT
                       </a>
-                      {/* (click)="cancelBid(nftEntry)" */}
                       <button
+                        onClick={() => cancelBid(nftEntry)}
                         className={
                           styles.active_bids_button_cb + " mt-10px hover-scale"
                         }
@@ -429,9 +553,16 @@ const ActivityContent = () => {
                     </div>
                   </div>
                   <div className="fs-12px pt-0px">
-                    {/*[ngClass]="{ 'pt-5px': nftEntry.HighestBidAmountNanos > nftEntry.BidAmountNanos }" */}
                     {nftEntry.BidderBalanceNanos < nftEntry.BidAmountNanos ? (
-                      <div className="fs-12px fc-red">
+                      <div
+                        className={[
+                          "fs-12px fc-red",
+                          nftEntry.HighestBidAmountNanos >
+                          nftEntry.BidAmountNanos
+                            ? "pt-5px"
+                            : "",
+                        ].join(" ")}
+                      >
                         You do not have enough DESO for this bid. Place a lower
                         bid or
                         {/* [routerLink]="'/' + globalVars.RouteNames.BUY_DESO" */}

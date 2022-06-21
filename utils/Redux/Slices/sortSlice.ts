@@ -57,6 +57,9 @@ export const sortSlice = createSlice({
     setMarketplaceVerifiedCreators: (state, action: PayloadAction<string>) => {
       state.marketplaceVerifiedCreators = action.payload;
     },
+    setEthMarketplaceVerifiedCreators: (state, action: PayloadAction<string>) => {
+      state.ethMarketplaceVerifiedCreators = action.payload;
+    },
     setMarketplaceContentFormat: (state, action: PayloadAction<string>) => {
       state.marketplaceContentFormat = action.payload;
     },
@@ -87,6 +90,12 @@ export const sortSlice = createSlice({
     setMarketplaceSortType: (state, action: PayloadAction<string>) => {
       state.marketplaceSortType = action.payload;
     },
+    setETHMarketplaceNFTCategory: (state, action: PayloadAction<string>) => {
+      state.ethMarketplaceNFTCategory = action.payload;
+    },
+    setETHMarketplaceStatus: (state, action: PayloadAction<string>) => {
+      state.ethMarketplaceStatus = action.payload;
+    }
   },
 });
 
@@ -104,6 +113,9 @@ export const {
   setMarketplacePriceRangeSet,
   setMarketplaceMarketType,
   setMarketplaceSortType,
+  setETHMarketplaceNFTCategory,
+  setETHMarketplaceStatus,
+  setEthMarketplaceVerifiedCreators,
 } = sortSlice.actions;
 
 // Not entirely sure on this ,,, This is how the docs describe it

@@ -1012,7 +1012,7 @@ const NFTPostPage = () => {
                                     <Link
                                       href={
                                         "/" +
-                                        globalVars.RouteNames.USER_PREFIX +
+                                        RouteNames.USER_PREFIX +
                                         "/" +
                                         bidEntry.ProfileEntryResponse.Username
                                       }

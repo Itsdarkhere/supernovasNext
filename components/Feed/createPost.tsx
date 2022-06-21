@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { MAX_POST_LENGTH, _alertError } from "../../utils/global-context";
+import { doesLoggedInUserHaveProfile, MAX_POST_LENGTH, _alertError } from "../../utils/global-context";
 import closeRoundIcon from "../../public/icons/close_round.svg";
 import createPostEmbedIcon from "../../public/icons/create_post_embed.svg";
 import createPostVideoIcon from "../../public/icons/create_post_video.svg";
@@ -8,9 +8,16 @@ import createPostImageicon from "../../public/icons/create_post_image.svg";
 import createPostIcon from "../../public/icons/create_post_icon.svg";
 import Avatar from "../Reusables/avatar";
 import { useAppSelector } from "../../utils/Redux/hooks";
-import { getEmbedHeight, isValidTiktokEmbedURL } from "../../utils/staticServices/embedURLParser";
+import {
+  getEmbedHeight,
+  getEmbedURL,
+  isValidEmbedURL,
+  isValidTiktokEmbedURL,
+} from "../../utils/staticServices/embedURLParser";
 import {
   BackendRoutes,
+  parsePostError,
+  SubmitPost,
   UploadImage,
   _makeRequestURL,
 } from "../../utils/backendapi-context";
@@ -18,18 +25,25 @@ import * as tus from "tus-js-client";
 import { checkVideoStatusByURL } from "../../utils/cloudflareStreamFunctions";
 import Timer = NodeJS.Timer;
 import { transform } from "../../utils/sanitizeEmbed";
+import { track21, track70 } from "../../utils/mixpanel";
+import { transformVideoURL } from "../../utils/sanitizeVideoURL";
+import { showCreateAccountToPostDialog, showCreateProfileToPostDialog } from "../../utils/shared-dialogs";
 
 const CreatePost = ({
   parentPost,
   changeCanPost,
   isQuote,
   numberOfRowsInTextArea,
+  // Functions
+  postRefreshFunc,
+  postCreated,
 }) => {
   const SHOW_POST_LENGTH_WARNING_THRESHOLD = 515; // show warning at 515 characters
   const videoRef = useRef();
   const imageRef = useRef();
   let videoStreamInterval: Timer = null;
 
+  const [embedURL, setTheEmbedURL] = useState("");
   const [postImageSrc, setPostImageSrc] = useState("");
   const [postInput, setPostInput] = useState("");
   const [showEmbedURL, setShowEmbedURL] = useState(false);
@@ -40,9 +54,12 @@ const CreatePost = ({
   const [showImageLink, setShowImageLink] = useState(false);
   const [videoUploadPercentage, setVideoUploadPercentage] = useState(null);
   const [randomMovieQuote, setRandomMovieQuote] = useState("");
+  const [isComment, setIsComment] = useState(false);
   // Redux
   let loggedInUser = useAppSelector((state) => state.loggedIn.loggedInUser);
+  let localNode = useAppSelector((state) => state.node.localNode);
   let userList = useAppSelector((state) => state.loggedIn.userList);
+  let defaultFeeRateNanosPerKB = useAppSelector((state) => state.fees.defaultFeeRateNanosPerKB);
 
   const randomMovieQuotes = [
     "I love it when a plan comes together.",
@@ -272,6 +289,18 @@ const CreatePost = ({
     return postInput.length > MAX_POST_LENGTH;
   };
 
+  const resetEmbed = () => {
+    setTheEmbedURL("");
+    setShowEmbedURL(false);
+    setConstructedEmbedURL("");
+  };
+
+  const _handleFilesInput = (files: FileList): void => {
+    setShowImageLink(false);
+    const fileToUpload = files.item(0);
+    _handleFileInput(fileToUpload);
+  };
+
   const canPost = () => {
     if (
       (postInput.length <= 0 && !postImageSrc && !postVideoSrc) ||
@@ -283,6 +312,115 @@ const CreatePost = ({
       //   changeCanPost(true);
       return false;
     }
+  };
+
+  const _createPost = () => {
+    // Check if the user has an account.
+    if (!loggedInUser) {
+      showCreateAccountToPostDialog();
+      return;
+    }
+
+    // Check if the user has a profile.
+    if (!doesLoggedInUserHaveProfile()) {
+      showCreateProfileToPostDialog(router);
+      return;
+    }
+
+    // The user has an account and a profile. Let's create a post.
+    submitPost();
+    track21("Submit Post on Feed");
+    track70("On-chain activity");
+  };
+
+  const setEmbedURL = () => {
+    getEmbedURL(localNode, embedURL).subscribe((res) =>
+      setConstructedEmbedURL(res)
+    );
+  };
+
+  const submitPost = () => {
+    if (postInput.length > MAX_POST_LENGTH) {
+      return;
+    }
+
+    // post can't be blank
+    if (postInput.length === 0 && !postImageSrc && !postVideoSrc) {
+      return;
+    }
+
+    if (submittingPost) {
+      return;
+    }
+
+    const postExtraData = {};
+    if (embedURL) {
+      if (isValidEmbedURL(constructedEmbedURL)) {
+        postExtraData["EmbedVideoURL"] = constructedEmbedURL;
+      }
+    }
+
+    if (process.env.NEXT_PUBLIC_node_id) {
+      postExtraData["Node"] = process.env.NEXT_PUBLIC_node_id.toString();
+    }
+
+    const bodyObj = {
+      Body: postInput,
+      // Only submit images if the post is a quoted repost or a vanilla post.
+      ImageURLs: [postImageSrc].filter((n) => n),
+      VideoURLs: [postVideoSrc].filter((n) => n),
+    };
+    const repostedPostHashHex = isQuote ? parentPost.PostHashHex : "";
+    setSubmittingPost(true);
+    const postType = isQuote ? "quote" : isComment ? "reply" : "create";
+
+    SubmitPost(
+      localNode,
+      loggedInUser.PublicKeyBase58Check,
+      "" /*PostHashHexToModify*/,
+      isComment ? parentPost.PostHashHex : "" /*ParentPostHashHex*/,
+      "" /*Title*/,
+      bodyObj /*BodyObj*/,
+      repostedPostHashHex,
+      postExtraData,
+      "" /*Sub*/,
+      // TODO: Should we have different values for creator basis points and stake multiple?
+      // TODO: Also, it may not be reasonable to allow stake multiple to be set in the FE.
+      false /*IsHidden*/,
+      defaultFeeRateNanosPerKB /*MinFeeRateNanosPerKB*/,
+      false
+    ).subscribe(
+      (response) => {
+        // Analytics
+        //this.SendPostEvent();
+
+        setSubmittingPost(false);
+
+        setPostInput("");
+        setPostImageSrc(null)
+        setPostVideoSrc(null);
+        setTheEmbedURL("");
+        setConstructedEmbedURL("");
+        setShowEmbedURL(false);
+        // Put back
+        // changeRef.detectChanges();
+
+        // Refresh the post page.
+        if (postRefreshFunc) {
+          postRefreshFunc(response.PostEntryResponse);
+        }
+
+        postCreated(response.data.PostEntryResponse);
+      },
+      (err) => {
+        const parsedError = parsePostError(err);
+        _alertError(parsedError);
+
+        setSubmittingPost(false);
+        // Put back
+        // changeRef.detectChanges()
+      }
+    );
   };
   // Functions end
 
@@ -339,7 +477,10 @@ const CreatePost = ({
               {/* <!-- Embedded Content --> */}
               {constructedEmbedURL ? (
                 <div className="feed-post__embed-container">
-                  <i onClick={() => setEmbedURL("") setShowEmbedURL(false) setConstructedEmbedURL("")} className="icon-close feed-post__image-delete"></i>
+                  <i
+                    onClick={() => resetEmbed()}
+                    className="icon-close feed-post__image-delete"
+                  ></i>
                   {/* frameborder="0"  */}
                   <iframe
                     allowFullScreen
@@ -359,7 +500,10 @@ const CreatePost = ({
             {/* <!-- Post image --> */}
             {postImageSrc ? (
               <div className="feed-post__image-container">
-                <i onClick={() => setPostImageSrc=(null)} className="icon-close feed-post__image-delete"></i>
+                <i
+                  onClick={() => setPostImageSrc(null)}
+                  className="icon-close feed-post__image-delete"
+                ></i>
                 <Image
                   className="feed-post__image"
                   src={postImageSrc}
@@ -379,8 +523,9 @@ const CreatePost = ({
             {/* <!-- Video Player --> */}
             {postVideoSrc && readyToStream ? (
               <div className="feed-post__video-container">
-                {/* allowfullscreen [src]="postVideoSrc | sanitizeVideoUrl" */}
                 <iframe
+                  allowFullScreen
+                  src={transformVideoURL(postVideoSrc) ? postVideoSrc : ""}
                   allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
                   className="feed-post__video"
                 ></iframe>
@@ -403,7 +548,10 @@ const CreatePost = ({
                 parentPost ? "pt-10px" : "",
               ].join(" ")}
             >
-              <i onClick={() => setShowImageLink(!showImageLink)} className="feed-post_delete">
+              <i
+                onClick={() => setShowImageLink(!showImageLink)}
+                className="feed-post_delete"
+              >
                 <Image src={closeRoundIcon} alt="round close icon" />
               </i>
               <input
@@ -436,7 +584,10 @@ const CreatePost = ({
               parentPost ? "pt-10px" : "",
             ].join(" ")}
           >
-            <i onClick={() => setShowEmbedURL(!showEmbedURL)} className="feed-post_delete">
+            <i
+              onClick={() => setShowEmbedURL(!showEmbedURL)}
+              className="feed-post_delete"
+            >
               <Image src={closeRoundIcon} alt="round close icon" />
             </i>
             <input
@@ -448,19 +599,40 @@ const CreatePost = ({
           </div>
         ) : null}
 
-        <i onClick={() => setShowEmbedURL(!showEmbedURL)} className="text-grey8A cursor-pointer fs-18px pr-15px">
+        <i
+          onClick={() => setShowEmbedURL(!showEmbedURL)}
+          className="text-grey8A cursor-pointer fs-18px pr-15px"
+        >
           <Image src={createPostEmbedIcon} alt="embed icon" />
         </i>
-        <input onChange={(e) => _handleFilesInput(e.target.files)} ref={videoRef} className="d-none" type="file" accept="video/*" />
-        <i onClick={() => videoRef.current.click()} className="text-grey8A cursor-pointer pr-15px feed-create-post__image-icon">
+        <input
+          onChange={(e) => _handleFilesInput(e.target.files)}
+          ref={videoRef}
+          className="d-none"
+          type="file"
+          accept="video/*"
+        />
+        <i
+          onClick={() => videoRef.current.click()}
+          className="text-grey8A cursor-pointer pr-15px feed-create-post__image-icon"
+        >
           <Image src={createPostVideoIcon} alt="video icon" />
         </i>
-        <input onChange={(e) => _handleFilesInput(e.target.files)} ref={imageRef} className="d-none" type="file" accept="image/*" />
-        <i onClick={() => imageRef.current.click()} className="text-grey8A cursor-pointer feed-create-post__image-icon">
+        <input
+          onChange={(e) => _handleFilesInput(e.target.files)}
+          ref={imageRef}
+          className="d-none"
+          type="file"
+          accept="image/*"
+        />
+        <i
+          onClick={() => imageRef.current.click()}
+          className="text-grey8A cursor-pointer feed-create-post__image-icon"
+        >
           <Image src={createPostImageicon} alt="image icon" />
         </i>
         <button
-        onClick={() => _createPost()}
+          onClick={() => _createPost()}
           className={[
             "btn-primary post_btn ml-15px",
             canPost() || submittingPost ? "disabled" : "",

@@ -13,13 +13,17 @@ import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
 import {
   convertTstampToDaysOrHours,
+  getTargetComponentSelector,
   hasUserBlockedCreator,
   showAdminTools,
   _alertError,
   _alertSuccess,
+  _copyText,
 } from "../../utils/global-context";
-import { ReportPostEmail } from "../../utils/backendapi-context";
+import { AdminGetNFTDrop, AdminUpdateNFTDrop, ReportPostEmail, RouteNames } from "../../utils/backendapi-context";
 import { useAppSelector } from "../../utils/Redux/hooks";
+import { take } from "rxjs";
+import { SwalHelper } from "../../utils/helpers/swal-helper";
 
 const FeedPostDropdown = ({
   post,
@@ -107,6 +111,72 @@ const FeedPostDropdown = ({
     });
   };
 
+  const copyPostLinkToClipboard = (event) => {
+    // Prevent the post from navigating.
+    event.stopPropagation();
+
+    _copyText(_getPostUrl());
+  }
+
+  const openCreateNFTAuctionModal = (event): void => {
+    // Put back
+    // var auctionModalDetails = modalService.show(CreateNftAuctionModalComponent, {
+    //   class: "modal-dialog-centered nft_placebid_modal_bx  nft_placebid_modal_bx_right modal-lg",
+    //   initialState: { post: post, nftEntryResponses: nftEntryResponses },
+    // });
+    // let onHiddenEvent = auctionModalDetails.onHidden.pipe(take(1));
+    // onHiddenEvent.subscribe((response) => {
+    //   if (response === "nft auction started") {
+    //     window.location.reload();
+    //   }
+    // });
+  }
+
+  const _getPostUrl = () => {
+    const pathArray = ["/" + RouteNames.POSTS, postContent.PostHashHex];
+
+    // need to preserve the curent query params for our dev env to work
+    return "";
+    // Put back
+    // const currentQueryParams = activatedRoute.snapshot.queryParams;
+
+    // const path = router.createUrlTree(pathArray, { queryParams: currentQueryParams }).toString();
+    // const origin = (platformLocation as any).location.origin;
+
+    // return origin + path;
+  }
+
+  const openCreateETHNFTAuctionModal = (event): void => {
+    // Put back
+    // token_id = postContent.PostExtraData["tokenId"];
+    // console.log(` ------------------- tokenId from feed-post is ${token_id}`);
+
+    // modalService.show(CreateNftAuctionModalComponent, {
+    //   class:
+    //     "modal-dialog-centered nft_placebid_modal_bx  nft_placebid_modal_bx_right nft_placebid_modal_bx_right modal-lg",
+    //   initialState: {
+    //     post: postContent,
+    //     nftEntryResponses: nftEntryResponses,
+    //     isEthNFT: true,
+    //     tokenId: token_id,
+    //   },
+    // });
+  }
+
+  const openBurnModal = (event): void => {
+    // Put back
+    // this.openInteractionModalBurn(event, TransferModalComponent);
+  }
+
+  const openTransferModal = (event): void => {
+    // Put back
+    // this.openInteractionModalTransfer(event, TransferModalComponent);
+  }
+
+  const _addPostToGlobalFeed = (event: any) => {
+    toggleGlobalFeed(event);
+  }
+
   const renderDropdownButton = (props, ref) => {
     return (
       <IconButton
@@ -119,6 +189,83 @@ const FeedPostDropdown = ({
       />
     );
   };
+
+  const dropNFT = () => {
+    // Get the latest drop so that we can update it.
+    // Get the latest drop so that we can update it.
+    AdminGetNFTDrop(localNode, loggedInUser.PublicKeyBase58Check, -1 /*DropNumber*/)
+      .subscribe(
+        (res: any) => {
+          console.log("RES");
+          if (res.data.DropEntry.DropTstampNanos == 0) {
+            _alertError("There are no drops. Make one in the admin NFT tab.");
+            return;
+          }
+
+          let currentTime = new Date();
+          if (res.data.DropEntry.DropTstampNanos / 1e6 < currentTime.getTime()) {
+            SwalHelper.fire({
+              target: getTargetComponentSelector(),
+              html:
+                `The latest drop has already dropped.  Add this NFT to the active drop? ` +
+                `If you would like to make a new drop, make one in the NFT admin tab first.`,
+              showCancelButton: true,
+              showConfirmButton: true,
+              focusConfirm: true,
+              customClass: {
+                confirmButton: "btn btn-light",
+                cancelButton: "btn btn-light no",
+              },
+              confirmButtonText: "Yes",
+              cancelButtonText: "No",
+              reverseButtons: true,
+            }).then(async (alertRes: any) => {
+              if (alertRes.isConfirmed) {
+                addNFTToLatestDrop(res.data.DropEntry, post.PostHashHex);
+              }
+            });
+            return;
+          }
+
+          addNFTToLatestDrop(res.DropEntry, post.PostHashHex);
+        },
+        (error) => {
+          _alertError(error.error.error);
+        }
+      );
+  }
+
+  const addNFTToLatestDrop = (latestDrop: any, postHash: string) => {
+    AdminUpdateNFTDrop(
+        localNode,
+        loggedInUser.PublicKeyBase58Check,
+        latestDrop.DropNumber,
+        latestDrop.DropTstampNanos,
+        latestDrop.IsActive /*IsActive*/,
+        postHash /*NFTHashHexToAdd*/,
+        "" /*NFTHashHexToRemove*/
+      )
+      .subscribe(
+        (res: any) => {
+          _alertSuccess("Successfully added NFT to drop #" + latestDrop.DropNumber.toString());
+        },
+        (error) => {
+          _alertError(error.error.error);
+        }
+      );
+  }
+
+  const hidePost = () => {
+    postHidden();
+  }
+
+  const _pinPostToGlobalFeed = (event: any) => {
+    togglePostPin(event);
+  }
+
+  const blockUser = () => {
+    userBlocked();
+  }
 
   const showBlockUserDropdownItem = () => {
     if (!loggedInUser) {

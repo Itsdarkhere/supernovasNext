@@ -20,6 +20,30 @@ const ImageComponent = ({ imageSrc }) => {
     }
     return imgURL;
   };
+
+  const loaded = () => {
+    var image = document.getElementById("post-image") as HTMLImageElement;
+    var isLoaded = image.complete && image.naturalHeight !== 0;
+    if (isLoaded) {
+      setCompletelyLoaded(true);
+    }
+  };
+
+  const useNormalImage = (imgURL) => {
+    let image = document.getElementById("post-image") as HTMLImageElement;
+    image.src = imgURL;
+  };
+
+  const openImgModal = (event, imageURL) => {
+    event.stopPropagation();
+    // this.modalService.show(FeedPostImageModalComponent, {
+    //   class: "modal-dialog-centered img_popups modal-lg",
+    //   initialState: {
+    //     imageURL,
+    //   },
+    //   animated: false,
+    // });
+  };
   // Functions end
 
   // Dom manipulation
@@ -37,7 +61,7 @@ const ImageComponent = ({ imageSrc }) => {
     <>
       <Image
         id="post-image"
-        onError={() => useNormalImage(imageSrc)}
+        //onError={() => useNormalImage(imageSrc)}
         onLoad={() => loaded()}
         onClick={(e) => openImgModal(e, imageSrc)}
         width={500}

@@ -31,6 +31,7 @@ import {
   SubmitPost,
 } from "../../utils/backendapi-context";
 import {
+  getEmbedHeight,
   getEmbedURL,
   getEmbedWidth,
   isValidEmbedURL,
@@ -543,6 +544,50 @@ const FeedPost = ({
       });
   };
 
+  const openTransferModal = (event): void => {
+    // Put back
+    // openInteractionModal(event, TransferModalComponent);
+  }
+
+  const openDiamondsModal = (event): void => {
+    if (postContent.DiamondCount) {
+      // Put back
+      // openInteractionModal(event, DiamondsModalComponent);
+    }
+  }
+
+  const openLikesModal = (event): void => {
+    if (postContent.LikeCount) {
+      // Put back
+      // openInteractionModal(event, LikesModalComponent);
+    }
+  }
+
+  const openRepostsModal = (event): void => {
+    if (postContent.RepostCount) {
+      // Put back
+      // openInteractionModal(event, RepostsModalComponent);
+    }
+  }
+
+  const openQuoteRepostsModal = (event): void => {
+    if (postContent.QuoteRepostCount) {
+      // Put back
+      // openInteractionModal(event, QuoteRepostsModalComponent);
+    }
+  }
+
+  const openImgModal = (event, imageURL) => {
+    event.stopPropagation();
+    // Put back
+    // modalService.show(FeedPostImageModalComponent, {
+    //   class: "modal-dialog-centered img_popups modal-lg",
+    //   initialState: {
+    //     imageURL,
+    //   },
+    // });
+  }
+
   const _pinPostToGlobalFeed = (event: any) => {
     // Prevent the post from navigating.
     event.stopPropagation();
@@ -570,6 +615,10 @@ const FeedPost = ({
         // ref.detectChanges();
       });
   };
+
+  const toggleLockablePopup = () => {
+    setIsLockablePopup(!isLockablePopup);
+  }
 
   // Functions end
 
@@ -839,10 +888,10 @@ const FeedPost = ({
                                 <span
                                   onClick={() => toggleLockablePopup()}
                                   onMouseEnter={(e) =>
-                                    e.stopImmediatePropagation()
+                                    e.stopPropagation()
                                   }
                                   onMouseLeave={(e) =>
-                                    e.stopImmediatePropagation()
+                                    e.stopPropagation()
                                   }
                                   className="cursor-pointer d-lg-inline-block d-block mt-5px"
                                 >
@@ -1003,7 +1052,7 @@ const FeedPost = ({
                       >
                         <iframe
                           src={
-                            transformVideoURL()
+                            transformVideoURL(postContent.VideoURLs[0])
                               ? postContent.VideoURLs[0]
                               : null
                           }
@@ -1027,8 +1076,8 @@ const FeedPost = ({
                             */}
                         <iframe
                           allowFullScreen
-                          height={getEmbedHeight()}
-                          src={isValidEmbedURL(constructedEmbedURL)}
+                          height={getEmbedHeight(constructedEmbedURL)}
+                          src={isValidEmbedURL(constructedEmbedURL) ? constructedEmbedURL : false}
                           style={{
                             marginTop: setNegativeMargins(constructedEmbedURL)
                               ? "-65px"
@@ -1137,34 +1186,31 @@ const FeedPost = ({
                       <>
                         {quotedContent && showQuotedContent ? (
                           <FeedPost
-                            post={quotedContent}
-                            isQuotedContent={true}
-                            includePaddingOnPost={true}
-                            showIconRow={false}
-                            showDropdown={false}
-                            showQuotedContent={false}
-                            contentShouldLinkToThread={
-                              contentShouldLinkToThread
-                            }
-                            hoverable={hoverable}
-                            showNFTDetails={true}
-                            cardStyle={true}
-                            showInteractionDetails={undefined}
-                            postThread={undefined}
-                            showPostsShadow={undefined}
-                            postThreadComment={undefined}
-                            showReplyingToContent={undefined}
-                            parentPost={undefined}
-                            showName={undefined}
-                            afterRepostCreatedCallback={undefined}
-                            changeEdition={undefined}
-                            profilePublicKeyBase58Check={undefined}
-                            isForSaleOnly={undefined}
-                            afterCommentCreatedCallback={undefined}
-                            diamondSent={undefined}
-                            userBlocked={undefined}
-                            postDeleted={undefined}
-                          ></FeedPost>
+                                post={quotedContent}
+                                isQuotedContent={true}
+                                includePaddingOnPost={true}
+                                showIconRow={false}
+                                showDropdown={false}
+                                showQuotedContent={false}
+                                contentShouldLinkToThread={contentShouldLinkToThread}
+                                hoverable={hoverable}
+                                showNFTDetails={true}
+                                cardStyle={true}
+                                showInteractionDetails={undefined}
+                                postThread={undefined}
+                                showPostsShadow={undefined}
+                                postThreadComment={undefined}
+                                showReplyingToContent={undefined}
+                                parentPost={undefined}
+                                showName={undefined}
+                                afterRepostCreatedCallback={undefined}
+                                changeEdition={undefined}
+                                profilePublicKeyBase58Check={undefined}
+                                isForSaleOnly={undefined}
+                                afterCommentCreatedCallback={undefined}
+                                diamondSent={undefined}
+                                userBlocked={undefined}
+                                postDeleted={undefined} containerModalRef={undefined}                          ></FeedPost>
                         ) : null}
                       </>
                     ) : null}
@@ -1213,7 +1259,7 @@ const FeedPost = ({
 
                       {postContent.InGlobalFeed && !addingPostToGlobalFeed ? (
                         <div
-                          onClick={(e) => addPostToGlobalFeed(e)}
+                          onClick={(e) => _addPostToGlobalFeed(e)}
                           className="py-5px px-10px admin__remove-from-feed-button"
                         >
                           <i className="fas fa-check"></i>

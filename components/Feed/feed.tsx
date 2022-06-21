@@ -409,6 +409,16 @@ const Feed = ({ isMobile }) => {
     });
   };
 
+  const loadMorePosts = () => {
+    if (activeTab === FOLLOWING_TAB) {
+      _loadFollowFeedPosts();
+    } else if (activeTab === HOT_TAB) {
+      _loadHotFeedPosts();
+    } else {
+      _loadPosts();
+    }
+  }
+
   const prependPostToFeed = (postsToShow, postEntryResponse) => {
     dispatch(unShiftPostsToShow(postEntryResponse));
   };
@@ -469,6 +479,14 @@ const Feed = ({ isMobile }) => {
       },
     });
   };
+
+  const showRecent = () => {
+    if (activeTab === FOLLOWING_TAB) {
+      _loadFollowFeedPosts(true, true);
+    } else {
+      _loadPosts(true, true);
+    }
+  }
 
   const appendCommentAfterParentPost = (postsToShow, postEntryResponse) => {
     const parentPostIndex = findParentPostIndex(postsToShow, postEntryResponse);
@@ -575,8 +593,7 @@ const Feed = ({ isMobile }) => {
                 parentPost={undefined}
                 numberOfRowsInTextArea={2}
                 changeCanPost={(e) => changeCanPost(e)}
-                postRefreshFunc={undefined}
-              ></CreatePost>
+                postRefreshFunc={undefined} isQuote={undefined} postCreated={undefined}              ></CreatePost>
             </div>
           ) : null}
         </div>

@@ -4,6 +4,10 @@ import buttonIcon from "../../public/icons/ib_button_icon.svg";
 import completeIcon from "../../public/icons/ib_completed.svg";
 import selectedIcon from "../../public/icons/ib_selected.svg";
 const InvestBox = () => {
+  // Functions
+  const linkToInvest = () => {
+    window.open("https://beta.daodao.io/d/supernovas", "_blank");
+  };
   return (
     <div className={"w-100 position-relative " + styles.investor_box_wrapper}>
       <div className={styles.invest_box}>
@@ -19,8 +23,10 @@ const InvestBox = () => {
             incentives and DAO governance.
           </p>
           <div>
-            {/* (click)="linkToInvest()" */}
-            <button className={styles.btn_invest_now}>
+            <button
+              onClick={() => linkToInvest()}
+              className={styles.btn_invest_now}
+            >
               <Image
                 alt="button icon"
                 className={styles.mr_5px}

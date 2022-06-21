@@ -32,7 +32,7 @@ const VideoComponent = ({ videoSrc }) => {
         className={[
           styles.hideBeforeLoad,
           "w-100 br-5px cursor-pointer",
-          loaded ? styles.visible : "",
+          completelyLoaded ? styles.visible : "",
         ].join(" ")}
       ></video>
       {showShimmerUntilLoaded()}

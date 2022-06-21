@@ -79,6 +79,73 @@ const PromotedNFT = ({ post, mobile }) => {
     });
   };
 
+  const openBuyNowModal = (event: any) => {
+    // put back
+    // if (!loggedInUser?.ProfileEntryResponse) {
+    //   SharedDialogs.showCreateProfileToPerformActionDialog(router, "buy now");
+    //   return;
+    // }
+    // event.stopPropagation();
+    // const modalDetails = modalService.show(BuyNowModalComponent, {
+    //   class:
+    //     "modal-dialog-centered nft_placebid_modal_bx buy-modal modal-lg right-align-modal",
+    //   initialState: {
+    //     post: post,
+    //     clickedBuyNow: true,
+    //     serialNumber: null,
+    //     isEthNFT: false,
+    //     ethereumNFTSalePrice: "",
+    //     sellOrderId: "",
+    //   },
+    // });
+
+    // const onHideEvent = modalDetails.onHide;
+    // onHideEvent.subscribe((response) => {
+    //   if (response === "bid placed") {
+    //     loadBidData();
+    //     getNFTEntries();
+    //   }
+    // });
+  };
+
+  const openPlaceBidModal = (event: any) => {
+    // put back
+    // if (!loggedInUser?.ProfileEntryResponse) {
+    //   SharedDialogs.showCreateProfileToPerformActionDialog(
+    //     router,
+    //     "place a bid"
+    //   );
+    //   return;
+    // }
+    // track15("Open Place a Bid Modal");
+    // event.stopPropagation();
+    // const modalDetails = modalService.show(PlaceBidModalComponent, {
+    //   class:
+    //     "modal-dialog-centered nft_placebid_modal_bx buy-modal modal-lg right-align-modal",
+    //   initialState: {
+    //     post: post,
+    //     editionHasBids: true,
+    //     clickedPlaceABid: true,
+    //     isBuyNow: false,
+    //     serialNumber: null,
+    //   },
+    // });
+
+    // const onHideEvent = modalDetails.onHide;
+    // onHideEvent.subscribe((response) => {
+    //   if (response === "bid placed") {
+    //     // Do something
+    //   }
+    // });
+  };
+
+  const viewNFT = () => {
+    // Put back
+    // this.router.navigate(["/nft/" + this.post.PostHashHex], {
+    //   queryParamsHandling: "merge",
+    // });
+  };
+
   const getNFTEntries = () => {
     return GetNFTEntriesForNFTPost(
       localNode,
@@ -105,8 +172,8 @@ const PromotedNFT = ({ post, mobile }) => {
                   <div className={styles.profile_img}>
                     <Link
                       href={
-                        ("/" + RouteNames.USER_PREFIX,
-                        post?.ProfileEntryResponse?.Username)
+                        "/" + RouteNames.USER_PREFIX + "/" + 
+                        post?.ProfileEntryResponse?.Username
                       }
                     >
                       <Avatar
@@ -117,8 +184,8 @@ const PromotedNFT = ({ post, mobile }) => {
                   </div>
                   <Link
                     href={
-                      ("/" + RouteNames.USER_PREFIX,
-                      post?.ProfileEntryResponse?.Username)
+                      "/" + RouteNames.USER_PREFIX + "/" +
+                      post?.ProfileEntryResponse?.Username
                     }
                   >
                     <span className={styles.val}>

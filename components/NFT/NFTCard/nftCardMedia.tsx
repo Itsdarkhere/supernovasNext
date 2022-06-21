@@ -4,6 +4,7 @@ import videoIcon from "../../../public/icons/video-type-white.svg";
 import smallAudioIcon from "../../../public/icons/audio-play-small.svg";
 import musicIcon from "../../../public/icons/music-type-white.svg";
 import { transformVideoURL } from "../../../utils/sanitizeVideoURL";
+import { useState } from "react";
 
 // This component holds all the media of an nftCard
 // Image, video, iframe ...
@@ -11,9 +12,16 @@ const NFTCardMedia = ({
   postContent,
   constructedEmbedURL,
   isQuotedCard,
-  showAudioTypeIcon,
   imageURL,
 }) => {
+  const [showAudioTypeIcon, setShowAudioTypeIcon] = useState(false);
+  // Functions
+  const activateOnHoverAudio = (play) => {
+    if (postContent?.PostExtraData?.arweaveAudioSrc) {
+      setShowAudioTypeIcon(false);
+    }
+  };
+
   // Dom manipulation
   const showAudioIcon = () => {
     if (showAudioTypeIcon) {
